@@ -26,9 +26,15 @@ class Label {
     this.body.innerHTML = value.toString();
   };
 
+  public adjustMarginToSize = (): void => {
+    const margin = this.calculator.getElementMargin(this.body);
+    const adjustMargin = this.calculator.getAdjustMarginToSize(this.body, margin);
+    this.calculator.setElementsMargin(this.body, adjustMargin);
+  };
+
   private createLabel(): void {
     this.body = document.createElement('div');
-    this.body.className = 'light-range-slider__handle';
+    this.body.className = 'light-range-slider__label';
   }
 }
 
