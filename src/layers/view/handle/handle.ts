@@ -41,6 +41,12 @@ class Handle {
     this.calculator.setElementsMargin(this.body, correctMargin);
   };
 
+  public adjustMarginToSize = (): void => {
+    const margin = this.calculator.getElementMargin(this.body);
+    const adjustMargin = this.calculator.getAdjustMarginToSize(this.body, margin);
+    this.calculator.setElementsMargin(this.body, adjustMargin);
+  };
+
   private createHandle(): void {
     this.body = document.createElement('div');
     this.body.className = 'light-range-slider__handle';
@@ -48,7 +54,7 @@ class Handle {
 
   private addListeners = (): void => {
     this.body.addEventListener('pointerdown', this.handleHandlePointerDown);
-    this.body.addEventListener('pointerdown', this.handleHandlePointerUp);
+    this.body.addEventListener('pointerup', this.handleHandlePointerUp);
   };
 
   private handleHandlePointerDown = (event: PointerEvent): void => {
