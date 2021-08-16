@@ -36,7 +36,8 @@ describe("Label", function(): void {
       getLineLocation: view.getLineLocation 
     })
 
-    label = new Label({ margin: 250, value: 50, calculator })
+    label = new Label({ value: 50, calculator })
+    label.update(250, 50)
   })
 
   afterEach( function (): void {

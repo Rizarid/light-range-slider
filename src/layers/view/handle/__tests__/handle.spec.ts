@@ -36,7 +36,8 @@ describe("Handle", function(): void {
       getLineLocation: view.getLineLocation 
     })
 
-    handle = new Handle({ index: 0, margin: 50, calculator })
+    handle = new Handle({ index: 0, calculator })
+    handle.update(50)
   })
 
   afterEach( function (): void {

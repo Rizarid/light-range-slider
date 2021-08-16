@@ -2,9 +2,7 @@ import { ChangeObserver } from '../../observers/change-observer';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
 
-interface IHandle {
-  index: number, margin: number, calculator: HorizontalCalculator | VerticalCalculator
-}
+interface IHandle { index: number, calculator: HorizontalCalculator | VerticalCalculator }
 interface ICallback { function: (eventObject: { eventName: string, eventBody }) => void }
 
 class Handle {
@@ -22,7 +20,6 @@ class Handle {
     this.calculator = options.calculator;
     this.index = options.index;
     this.createHandle();
-    this.update(options.margin);
     this.addListeners();
   }
 
@@ -39,12 +36,6 @@ class Handle {
   public update = (margin: number): void => {
     const correctMargin = this.calculator.getAdjustMarginToSize(this.body, margin);
     this.calculator.setElementsMargin(this.body, correctMargin);
-  };
-
-  public adjustMarginToSize = (): void => {
-    const margin = this.calculator.getElementMargin(this.body);
-    const adjustMargin = this.calculator.getAdjustMarginToSize(this.body, margin);
-    this.calculator.setElementsMargin(this.body, adjustMargin);
   };
 
   private createHandle(): void {
