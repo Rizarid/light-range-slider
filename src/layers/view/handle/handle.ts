@@ -51,11 +51,17 @@ class Handle {
   private handleHandlePointerDown = (event: PointerEvent): void => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     event.target.setPointerCapture(event.pointerId);
-    const cursorLocation = this.calculator.getCursorLocation(event);
+
+    let cursorLocation = this.calculator.getCursorLocation(event);
+    cursorLocation = this.calculator.pxToPercentages(cursorLocation);
 
     let handleMargin = this.calculator.getElementMargin(this.body);
+    handleMargin = this.calculator.pxToPercentages(handleMargin);
     handleMargin = this.calculator.getNotAdjustMarginToSize(this.body, handleMargin);
-    this.cursorOffsetRelativeHandleAtStartDragging = cursorLocation - handleMargin;
+
+    this.cursorOffsetRelativeHandleAtStartDragging = (
+      Math.round((cursorLocation - handleMargin) * 100) / 100
+    );
 
     event.target.addEventListener('pointermove', this.handleHandlePointerMove);
   };
@@ -68,12 +74,14 @@ class Handle {
   };
 
   private handleHandlePointerMove = (event: PointerEvent): void => {
-    const cursorLocation = this.calculator.getCursorLocation(event);
+    let cursorLocation = this.calculator.getCursorLocation(event);
+    cursorLocation = this.calculator.pxToPercentages(cursorLocation);
+
     const newValue = cursorLocation - this.cursorOffsetRelativeHandleAtStartDragging;
 
     const eventObject = {
       eventName: 'handleMove',
-      eventBody: { handlesIndex: this.index, newValue },
+      eventBody: { handlesIndex: this.index, newValue: Math.round(newValue * 100) / 100 },
     };
 
     this.changeObserver.notify(eventObject);

@@ -24,28 +24,36 @@ class HorizontalCalculator {
   public getElementMargin = (target: HTMLElement): number => target.offsetLeft;
 
   public setElementsMargin = (target: HTMLElement, newValue: number): void => {
-    target.style.left = `${newValue}px`;
+    target.style.left = `${newValue}%`;
   };
 
   public setProgressBarMargin = (target: HTMLElement, newValue: number): void => {
-    target.style.left = `${newValue}px`;
+    target.style.left = `${newValue}%`;
   };
 
   public setElementsSize = (target: HTMLElement, newValue: number): void => {
-    target.style.width = `${newValue}px`;
+    target.style.width = `${newValue}%`;
   };
 
   public getAdjustMarginToSize = (target: HTMLElement, margin: number): number => (
-    margin - this.getElementsSize(target) / 2
+    margin - Math.round((this.getElementsSize(target) / this.getLineSize() / 2) * 100 * 10) / 10
   );
 
   public getNotAdjustMarginToSize = (target: HTMLElement, adjustMargin: number): number => (
-    adjustMargin + this.getElementsSize(target) / 2
+    adjustMargin + Math.round((this.getElementsSize(target) / this.getLineSize() / 2) * 100 * 10) / 10
   );
 
   public getScaleMarginRatio = (quantityItems: number): number => (
-    this.getLineSize() / (quantityItems - 1)
+    ((this.getLineSize() / (quantityItems - 1)) / this.getLineSize()) * 100
   );
+
+  public pxToPercentages(value: number): number {
+    return (value / this.getLineSize()) * 100;
+  }
+
+  public percentagesToPx(value: number): number {
+    return (value / 100) * this.getLineSize();
+  }
 }
 
 export { HorizontalCalculator };

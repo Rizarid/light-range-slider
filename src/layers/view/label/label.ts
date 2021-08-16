@@ -16,9 +16,9 @@ class Label {
   public getBody = (): HTMLElement => this.body;
 
   public update = (margin: number, value: number): void => {
+    this.body.innerHTML = value.toString();
     const correctMargin = this.calculator.getAdjustMarginToSize(this.body, margin);
     this.calculator.setElementsMargin(this.body, correctMargin);
-    this.body.innerHTML = value.toString();
   };
 
   private createLabel(): void {

@@ -74,24 +74,27 @@ describe("VerticalCalculator", function (): void{
 
   it("should set top property of element", function():void{
 
-    const div: HTMLElement = document.querySelector(".slider");
-    expect(div.style.top).to.equal("");
-
     const body: HTMLElement = document.querySelector("body");
     body.style.height = "500px";
+    body.style.position = 'relative'
 
-    calculator.setElementsMargin(div, 200);
+    let div: HTMLElement = document.querySelector('.slider')
+    div.style.position = 'absolute'
 
-    expect(div.style.top).to.equal("300px");
+    calculator.setElementsMargin(div, 40);
+
+    expect(div.offsetTop).to.equal(300);
 
   })
 
   it("should set height of element", function():void{
+    const body: HTMLElement = document.querySelector("body");
+    body.style.height = "500px";
 
     let div: HTMLElement = document.querySelector(".slider");
-    calculator.setElementsSize(div, 100);
+    calculator.setElementsSize(div, 20);
 
-    expect(div.style.height).to.equal("100px");
+    expect(div.offsetHeight).to.equal(100);
   })
 
   it("should return adjust margin to size", function():void{
@@ -119,7 +122,7 @@ describe("VerticalCalculator", function (): void{
     let div: HTMLElement = document.querySelector(".slider");
     body.style.height = '500px'
 
-    expect(calculator.getScaleMarginRatio(11)).to.equal(50);
+    expect(calculator.getScaleMarginRatio(11)).to.equal(10);
   })
 
 })

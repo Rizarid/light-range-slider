@@ -15,6 +15,7 @@ describe("ProgressBar", function(): void {
 
     body.innerHTML = `
       <style> 
+        html{ margin: 0; padding: 0 }
         body{ margin: 0; padding: 0 }
         .slider{ width: 500px; height: 20px; margin: 20px 0 0 50px; padding: 0; position: relative }
         .light-range-slider__progress-bar{ height: 100%; position: absolute }
@@ -36,7 +37,8 @@ describe("ProgressBar", function(): void {
       getLineLocation: view.getLineLocation 
     })
 
-    progressBar = new ProgressBar({ margins: [200], calculator })
+    progressBar = new ProgressBar({ calculator })
+    slider.appendChild(progressBar.getBody());
   })
 
   afterEach( function (): void {
@@ -45,16 +47,11 @@ describe("ProgressBar", function(): void {
   })
 
   it('Should return div with class "light-range-slider__progress-bar"', function() {
-    const slider = document.querySelector('.slider')
-    slider.appendChild(progressBar.getBody());
     expect(document.querySelector('.light-range-slider__progress-bar').tagName).to.equal('DIV');
   })
 
   it('Should update margin in case of not interval', function() {
-    const slider = document.querySelector('.slider')
-    slider.appendChild(progressBar.getBody());
-
-    progressBar.update([300]);
+    progressBar.update([60]);
 
     expect(progressBar.getBody().offsetLeft).to.equal(0);
     expect(progressBar.getBody().offsetWidth).to.equal(300);
@@ -64,7 +61,7 @@ describe("ProgressBar", function(): void {
     const slider = document.querySelector('.slider')
     slider.appendChild(progressBar.getBody());
 
-    progressBar.update([100, 300]);
+    progressBar.update([20, 60]);
 
     expect(progressBar.getBody().offsetLeft).to.equal(100);
     expect(progressBar.getBody().offsetWidth).to.equal(200);

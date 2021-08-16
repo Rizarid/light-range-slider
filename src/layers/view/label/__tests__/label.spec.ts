@@ -37,7 +37,8 @@ describe("Label", function(): void {
     })
 
     label = new Label({ value: 50, calculator })
-    label.update(250, 50)
+    slider.appendChild(label.getBody());
+    label.update(50, 50)
   })
 
   afterEach( function (): void {
@@ -46,20 +47,15 @@ describe("Label", function(): void {
   })
 
   it('Should return div with class "light-range-slider__label"', function() {
-    const slider = document.querySelector('.slider')
-    slider.appendChild(label.getBody());
     expect(document.querySelector('.light-range-slider__label').tagName).to.equal('DIV');
   })
 
   it('Should update margin', function() {
-    const slider = document.querySelector('.slider')
-    slider.appendChild(label.getBody());
-    label.adjustMarginToSize();
 
     expect(label.getBody().offsetLeft).to.equal(242);
     expect(label.getBody().innerText).to.equal('50');
 
-    label.update(300, 60);
+    label.update(60, 60);
 
     expect(label.getBody().offsetLeft).to.equal(292);
     expect(label.getBody().innerText).to.equal('60');

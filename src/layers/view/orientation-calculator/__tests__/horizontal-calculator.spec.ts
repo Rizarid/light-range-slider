@@ -64,28 +64,32 @@ describe("HorizontalCalculator", function (): void{
   })
 
   it("should set left property of element", function():void{
-
-    const div: HTMLElement = document.querySelector(".slider");
-    expect(div.style.left).to.equal("");
-
     const body: HTMLElement = document.querySelector("body");
     body.style.width = "500px";
+    body.style.position = 'relative'
 
-    calculator.setElementsMargin(div, 200);
+    const div: HTMLElement = document.querySelector(".slider");
+    div.style.position = 'absolute'
 
-    expect(div.style.left).to.equal("200px");
+    calculator.setElementsMargin(div, 40);
+
+    expect(div.offsetLeft).to.equal(200);
 
   })
 
   it("should set width of element", function():void{
+    const body: HTMLElement = document.querySelector("body");
+    body.style.width = "500px";
 
     let div: HTMLElement = document.querySelector(".slider");
-    calculator.setElementsSize(div, 100);
+    calculator.setElementsSize(div, 20);
 
-    expect(div.style.width).to.equal("100px");
+    expect(div.offsetWidth).to.equal(100);
   })
 
   it("should return adjust margin to size", function():void{
+    const body: HTMLElement = document.querySelector("body");
+    body.style.width = "500px";
 
     let div: HTMLElement = document.querySelector(".slider");
     calculator.setElementsSize(div, 10);
@@ -101,12 +105,12 @@ describe("HorizontalCalculator", function (): void{
     expect(calculator.getNotAdjustMarginToSize(div, 45)).to.equal(50);
   })
 
-  it("should return scale step in pixels", function():void{
+  it("should return scale step in percentages", function():void{
     let body: HTMLElement = document.querySelector("body");
     let div: HTMLElement = document.querySelector(".slider");
     body.style.width = '500px'
 
-    expect(calculator.getScaleMarginRatio(11)).to.equal(50);
+    expect(calculator.getScaleMarginRatio(11)).to.equal(10);
   })
 
 })

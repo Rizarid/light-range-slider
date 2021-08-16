@@ -12,6 +12,7 @@ describe("View", function(): void {
 
     body.innerHTML = `
       <style> 
+        html{ margin: 0; padding: 0 }
         body{ margin: 0; padding: 0 }
         .light-range-slider{ width: 500px; height: 20px; margin: 20px 0 0 50px; padding: 0; position: relative }
         .light-range-slider .light-range-slider__line{ width: 100%; height: 6px; position: relative }
@@ -37,7 +38,7 @@ describe("View", function(): void {
       slider,
       extremeValues: [300, 400],
       currentValues: [350],
-      margins: [250],
+      margins: [50],
       scaleStep: 10,
       isVertical: false,
       isInterval: false,
@@ -88,7 +89,7 @@ describe("View", function(): void {
       slider,
       extremeValues: [300, 400],
       currentValues: [350],
-      margins: [250],
+      margins: [50],
       scaleStep: 10,
       isVertical: true,
       isInterval: false,
@@ -111,7 +112,7 @@ describe("View", function(): void {
         slider,
         extremeValues: [300, 400],
         currentValues: [350],
-        margins: [350],
+        margins: [50],
         scaleStep: 10,
         isVertical: true,
         isInterval: false,
@@ -136,7 +137,7 @@ describe("View", function(): void {
         slider,
         extremeValues: [300, 400],
         currentValues: [350],
-        margins: [350],
+        margins: [50],
         scaleStep: 10,
         isVertical: true,
         isInterval: false,
@@ -161,7 +162,7 @@ describe("View", function(): void {
         slider,
         extremeValues: [300, 400],
         currentValues: [350],
-        margins: [350],
+        margins: [50],
         scaleStep: 10,
         isVertical: true,
         isInterval: false,
@@ -187,7 +188,7 @@ describe("View", function(): void {
         slider,
         extremeValues: [300, 400],
         currentValues: [350],
-        margins: [350],
+        margins: [50],
         scaleStep: 10,
         isVertical: true,
         isInterval: false,
@@ -200,20 +201,20 @@ describe("View", function(): void {
   })
 
   it('Should update handles', function() {
-    view.update({ margins: [300], currentValues: [360]})
+    view.update({ margins: [60], currentValues: [360]})
     const handle = document.querySelector('.light-range-slider__handle')
     expect(handle.offsetLeft).to.equal(295);
   })
 
   it('Should update labels', function() {
-    view.update({ margins: [300], currentValues: [360]})
+    view.update({ margins: [60], currentValues: [360]})
     const label = document.querySelector('.light-range-slider__label')
     expect(label.offsetLeft).to.equal(288);
     expect(label.innerHTML).to.equal('360');
   })
 
   it('Should update progress bar', function() {
-    view.update({ margins: [300], currentValues: [360]})
+    view.update({ margins: [60], currentValues: [360]})
     const progressBar = document.querySelector('.light-range-slider__progress-bar')
     expect(progressBar.offsetLeft).to.equal(0);
     expect(progressBar.offsetWidth).to.equal(300);
@@ -228,7 +229,7 @@ describe("View", function(): void {
       slider,
       extremeValues: [300, 400],
       currentValues: [330, 370],
-      margins: [150, 350],
+      margins: [30, 70],
       scaleStep: 10,
       isVertical: false,
       isInterval: true,

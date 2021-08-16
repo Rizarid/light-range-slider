@@ -36,9 +36,10 @@ class Scale {
 
   public adjustMarginToSize = (): void => {
     this.items.map((item) => {
-      const margin = this.calculator.getElementMargin(item);
-      const adjustMar = this.calculator.getAdjustMarginToSize(item, margin);
-      this.calculator.setElementsMargin(item, adjustMar);
+      let margin = this.calculator.getElementMargin(item);
+      margin = this.calculator.pxToPercentages(margin);
+      const adjustMargin = this.calculator.getAdjustMarginToSize(item, margin);
+      this.calculator.setElementsMargin(item, adjustMargin);
       return null;
     });
   };
