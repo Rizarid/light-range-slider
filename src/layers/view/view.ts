@@ -49,6 +49,7 @@ class View {
 
   constructor(options: IView) {
     this.body = options.slider;
+    this.modifySlidersClass(options.isVertical);
     this.switchCalculator(options.isVertical);
 
     this.createElements({
@@ -61,6 +62,15 @@ class View {
     });
 
     this.appendElements({ haveLabel: options.haveLabel, haveScale: options.haveScale });
+
+    if (options.haveScale) {
+      this.createScale({ extremeValues: options.extremeValues, scaleStep: options.scaleStep });
+      this.body.appendChild(this.scale.getBody());
+      this.scale.adjustMarginToSize();
+    }
+
+    this.update({ margins: options.margins, currentValues: options.currentValues });
+
     this.initConsolidatingObserver();
   }
 
@@ -72,18 +82,30 @@ class View {
     this.consolidatingObserver.unsubscribe(callback);
   }
 
-  public getLineSize = () => this.line.getSize();
+  public getLineSize = (): number => this.line.getSize();
 
-  public getLineLocation = () => this.line.getLocation();
+  public getLineLocation = (): number => this.line.getLocation();
+
+  public update = (options: { margins: number[], currentValues: number[] }): void => {
+    this.handles.map((item, index) => item.update(options.margins[index]));
+    this.progressBar.update(options.margins);
+
+    this.labels.map((item, index) => item.update(
+      options.margins[index],
+      options.currentValues[index],
+    ));
+  };
+
+  private modifySlidersClass(isVertical: boolean) :void {
+    this.body.classList.add('light-range-slider');
+    if (isVertical) this.body.classList.add('light-range-slider_vertical');
+  }
 
   private createElements(options: ICreateElements): void {
     this.line = new Line(this.calculator);
     this.createHandles(options.margins);
-    this.progressBar = new ProgressBar({ margins: options.margins, calculator: this.calculator });
-    if (options.haveLabel) this.createLabels(options.margins, options.currentValues);
-    if (options.haveLabel) {
-      this.createScale({ extremeValues: options.extremeValues, scaleStep: options.scaleStep });
-    }
+    this.progressBar = new ProgressBar({ calculator: this.calculator });
+    if (options.haveLabel) this.createLabels(options.currentValues);
   }
 
   private appendElements(options: { haveLabel: boolean, haveScale: boolean }): void {
@@ -95,23 +117,17 @@ class View {
     }
 
     this.body.appendChild(this.line.getBody());
-
-    if (options.haveScale) {
-      this.body.appendChild(this.scale.getBody());
-    }
   }
 
   private createHandles(margins: number[]): void {
     this.handles = margins.map((item, index) => new Handle({
       index,
-      margin: item,
       calculator: this.calculator,
     }));
   }
 
-  private createLabels(margins: number[], currentValues: number[]): void {
-    margins.map((item, index) => new Label({
-      margin: item,
+  private createLabels(currentValues: number[]): void {
+    this.labels = currentValues.map((item, index) => new Label({
       value: currentValues[index],
       calculator: this.calculator,
     }));
