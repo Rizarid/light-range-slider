@@ -46,6 +46,7 @@ class Handle {
   private addListeners = (): void => {
     this.body.addEventListener('pointerdown', this.handleHandlePointerDown);
     this.body.addEventListener('pointerup', this.handleHandlePointerUp);
+    this.body.addEventListener('click', this.handleHandleClick);
   };
 
   private handleHandlePointerDown = (event: PointerEvent): void => {
@@ -55,28 +56,26 @@ class Handle {
     let cursorLocation = this.calculator.getCursorLocation(event);
     cursorLocation = this.calculator.pxToPercentages(cursorLocation);
 
-    let handleMargin = this.calculator.getElementMargin(this.body);
+    let handleMargin = this.calculator.getHandleMargin(this.body);
     handleMargin = this.calculator.pxToPercentages(handleMargin);
     handleMargin = this.calculator.getNotAdjustMarginToSize(this.body, handleMargin);
 
-    this.cursorOffsetRelativeHandleAtStartDragging = (
-      Math.round((cursorLocation - handleMargin) * 100) / 100
-    );
+    this.cursorOffsetRelativeHandleAtStartDragging = cursorLocation - handleMargin;
 
     event.target.addEventListener('pointermove', this.handleHandlePointerMove);
   };
 
   private handleHandlePointerUp = (event: PointerEvent): void => {
-    this.cursorOffsetRelativeHandleAtStartDragging = 0;
     event.target.removeEventListener('pointermove', this.handleHandlePointerMove);
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     event.target.releasePointerCapture(event.pointerId);
+    this.cursorOffsetRelativeHandleAtStartDragging = 0;
   };
 
   private handleHandlePointerMove = (event: PointerEvent): void => {
     let cursorLocation = this.calculator.getCursorLocation(event);
     cursorLocation = this.calculator.pxToPercentages(cursorLocation);
-
     const newValue = cursorLocation - this.cursorOffsetRelativeHandleAtStartDragging;
 
     const eventObject = {
@@ -85,6 +84,10 @@ class Handle {
     };
 
     this.changeObserver.notify(eventObject);
+  };
+
+  private handleHandleClick = (event: MouseEvent): void => {
+    event.stopPropagation();
   };
 }
 

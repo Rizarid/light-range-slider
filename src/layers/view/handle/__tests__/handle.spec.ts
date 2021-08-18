@@ -68,7 +68,7 @@ describe("Handle", function(): void {
       pointerId: 1
     }))
 
-    expect(handle.cursorOffsetRelativeHandleAtStartDragging).to.equal(0.4);
+    expect(Math.round(handle.cursorOffsetRelativeHandleAtStartDragging * 100) / 100).to.equal(0.4);
   })
 
   it('Should active pointermove event', function() {
