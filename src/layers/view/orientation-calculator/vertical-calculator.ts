@@ -16,21 +16,27 @@ class VerticalCalculator {
   public getElementsSize = (target: HTMLElement): number => target.offsetHeight;
 
   public getCursorLocation = (eventObject: IEventObject): number => {
-    const adjustedPageY: number = eventObject.pageY - this.getLineSize();
-    return this.getLineLocation() - adjustedPageY;
+    const adjustedPageY: number = eventObject.pageY - this.getLineLocation();
+    return this.getLineSize() - adjustedPageY;
   };
 
-  public getElementsLocation = (target: HTMLElement): number => target.getBoundingClientRect().top;
+  public getElementsLocation = (target: HTMLElement): number => target.getBoundingClientRect().top + pageYOffset;
 
   public getElementMargin = (target: HTMLElement): number => target.offsetTop;
+
+  public getHandleMargin = (target: HTMLElement): number => this.getLineSize() - target.offsetTop;
 
   public setElementsMargin = (target: HTMLElement, newValue: number): void => {
     const reverseNewValue: number = 100 - newValue;
     target.style.top = `${reverseNewValue}%`;
   };
 
+  public setScaleItemMarginAfterAdjust = (target: HTMLElement, newValue: number): void => {
+    target.style.top = `${newValue}%`;
+  };
+
   public setProgressBarMargin = (target: HTMLElement, newValue: number): void => {
-    const reverseNewValue: number = 100 - newValue - this.pxToPercentages(this.getElementsSize(target));
+    const reverseNewValue: number = 100 - newValue - parseInt(target.style.height);
     target.style.top = `${reverseNewValue}%`;
   };
 
@@ -39,11 +45,21 @@ class VerticalCalculator {
   };
 
   public getAdjustMarginToSize = (target: HTMLElement, margin: number): number => (
-    margin + (this.getElementsSize(target) / this.getLineSize() / 2) * 100
+    margin + Math.round((this.getElementsSize(target) / this.getLineSize() / 2) * 100 * 10) / 10
   );
 
   public getNotAdjustMarginToSize = (target: HTMLElement, adjustMargin: number): number => (
-    adjustMargin - (this.getElementsSize(target) / this.getLineSize() / 2) * 100
+    adjustMargin - Math.round((this.getElementsSize(target) / this.getLineSize() / 2) * 100 * 10) / 10
+  );
+
+  public getScaleItemAdjustMarginToSize = (target: HTMLElement, margin: number): number => (
+    margin - (this.getElementsSize(target) / this.getLineSize() / 2) * 100
+  );
+
+  public getScaleItemNotAdjustMarginToSize = (
+    target: HTMLElement, adjustMargin: number,
+  ): number => (
+    adjustMargin + (this.getElementsSize(target) / this.getLineSize() / 2) * 100
   );
 
   public getScaleMarginRatio = (quantityItems: number): number => (
