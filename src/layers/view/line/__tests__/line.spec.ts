@@ -81,7 +81,7 @@ describe("Line", function(): void {
   it('Should create event object with horizontal value', function() {
     const eventObject = {
       eventName: 'lineClick',
-      eventBody: { cursorLocation: 200 }
+      eventBody: { newValue: 40 }
     }
 
     let testValue: {eventName: string, eventBody: { cursorLocation: number } }
@@ -102,7 +102,7 @@ describe("Line", function(): void {
   it('Should create event object with vertical value', function() {
     const eventObject = {
       eventName: 'lineClick',
-      eventBody: { cursorLocation: 520 }
+      eventBody: { newValue: 74.28571428571429 }
     }
 
     calculator = new VerticalCalculator({ 
