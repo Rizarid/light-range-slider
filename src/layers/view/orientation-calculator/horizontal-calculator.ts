@@ -19,15 +19,21 @@ class HorizontalCalculator {
     return adjustedPageX;
   };
 
-  public getElementsLocation = (target: HTMLElement): number => target.getBoundingClientRect().left;
+  public getElementsLocation = (target: HTMLElement): number => target.getBoundingClientRect().left + pageXOffset;
 
   public getElementMargin = (target: HTMLElement): number => target.offsetLeft;
+
+  public getHandleMargin = (target: HTMLElement): number => target.offsetLeft;
 
   public setElementsMargin = (target: HTMLElement, newValue: number): void => {
     target.style.left = `${newValue}%`;
   };
 
   public setProgressBarMargin = (target: HTMLElement, newValue: number): void => {
+    target.style.left = `${newValue}%`;
+  };
+
+  public setScaleItemMarginAfterAdjust = (target: HTMLElement, newValue: number): void => {
     target.style.left = `${newValue}%`;
   };
 
@@ -41,6 +47,16 @@ class HorizontalCalculator {
 
   public getNotAdjustMarginToSize = (target: HTMLElement, adjustMargin: number): number => (
     adjustMargin + Math.round((this.getElementsSize(target) / this.getLineSize() / 2) * 100 * 10) / 10
+  );
+
+  public getScaleItemAdjustMarginToSize = (target: HTMLElement, margin: number): number => (
+    margin - (this.getElementsSize(target) / this.getLineSize() / 2) * 100
+  );
+
+  public getScaleItemNotAdjustMarginToSize = (
+    target: HTMLElement, adjustMargin: number,
+  ): number => (
+    adjustMargin + (this.getElementsSize(target) / this.getLineSize() / 2) * 100
   );
 
   public getScaleMarginRatio = (quantityItems: number): number => (
