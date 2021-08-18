@@ -38,8 +38,8 @@ class Scale {
     this.items.map((item) => {
       let margin = this.calculator.getElementMargin(item);
       margin = this.calculator.pxToPercentages(margin);
-      const adjustMargin = this.calculator.getAdjustMarginToSize(item, margin);
-      this.calculator.setElementsMargin(item, adjustMargin);
+      const adjustMargin = this.calculator.getScaleItemAdjustMarginToSize(item, margin);
+      this.calculator.setScaleItemMarginAfterAdjust(item, adjustMargin);
       return null;
     });
   };
@@ -49,10 +49,14 @@ class Scale {
     this.body.className = 'light-range-slider__scale';
   }
 
-  private getScaleItem = (value: number): HTMLElement => {
+  private getScaleItem = (value: number, extremeValues: number[]): HTMLElement => {
     const item = document.createElement('div');
     item.className = 'light-range-slider__scale-item';
     item.innerHTML = value.toString();
+
+    const margin = ((value - extremeValues[0]) / (extremeValues[1] - extremeValues[0])) * 100;
+    this.calculator.setElementsMargin(item, margin);
+
     return item;
   };
 
@@ -61,17 +65,10 @@ class Scale {
 
     let i = extremeValues[0];
     for (i; i < extremeValues[1]; i += scaleStep) {
-      this.items.push(this.getScaleItem(i));
+      this.items.push(this.getScaleItem(i, extremeValues));
     }
 
-    this.items.push(this.getScaleItem(extremeValues[1]));
-
-    const marginRatio = this.calculator.getScaleMarginRatio(this.items.length);
-
-    this.items.map((item, index) => {
-      this.calculator.setElementsMargin(item, index * marginRatio);
-      return null;
-    });
+    this.items.push(this.getScaleItem(extremeValues[1], extremeValues));
   };
 
   private addListeners = (): void => {
