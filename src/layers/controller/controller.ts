@@ -1,5 +1,5 @@
 import {
-  IEventObject, IUpdateObject, IFullUpdate, IViewEvent, IOutsideUpdate,
+  IEventObject, IFullUpdate, IViewEvent, IOutsideUpdate,
 } from '../interfaces/interfaces';
 import { Model } from '../model/model';
 import { View } from '../view/view';
@@ -15,6 +15,8 @@ interface IController {
   haveScale: boolean,
   haveLabel: boolean,
   callbacks: ((updateObject: IOutsideUpdate) => void)[]
+  collection: string[] | number[] | HTMLElement[],
+  isCollection: boolean
 }
 
 interface IChangeParameterObject {
@@ -103,6 +105,16 @@ class Controller {
       const { haveScale } = eventObject.eventBody;
       this.model.setHaveScale(haveScale);
     }
+
+    if (eventObject.eventName === 'isCollectionChanged') {
+      const { isCollection } = eventObject.eventBody;
+      this.model.setIsCollection(isCollection);
+    }
+
+    if (eventObject.eventName === 'collectionChanged') {
+      const { collection } = eventObject.eventBody;
+      this.model.setCollection(collection);
+    }
   }
 
   private handleModelEvents = (event: IEventObject): void => {
@@ -132,7 +144,8 @@ class Controller {
     }
 
     if (event.eventName === 'scaleItemClick') {
-      const { newValue } = event.eventBody;
+      let { newValue } = event.eventBody;
+      newValue = this.model.percentToValue(newValue);
       this.model.setNearestValue(newValue);
     }
   };
@@ -148,6 +161,8 @@ class Controller {
       haveScale: options.haveScale,
       haveLabel: options.haveLabel,
       callbacks: options.callbacks,
+      collection: options.collection,
+      isCollection: options.isCollection,
     });
   }
 
@@ -161,6 +176,8 @@ class Controller {
       isVertical: eventObject.eventBody.isVertical,
       haveScale: eventObject.eventBody.haveScale,
       haveLabel: eventObject.eventBody.haveLabel,
+      isCollection: eventObject.eventBody.isCollection,
+      collection: eventObject.eventBody.collection,
     });
   }
 }

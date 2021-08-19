@@ -14,9 +14,10 @@ interface IView {
   margins: number[],
   scaleStep: number,
   isVertical: boolean,
-  isInterval: boolean,
   haveScale: boolean,
-  haveLabel: boolean
+  haveLabel: boolean,
+  collection: string[] | number[] | HTMLElement[],
+  isCollection: boolean
 }
 
 interface ICreateElements {
@@ -25,10 +26,16 @@ interface ICreateElements {
   currentValues: number[],
   scaleStep: number,
   haveScale: boolean,
-  haveLabel: boolean
+  haveLabel: boolean,
+  isCollection: boolean
 }
 
 interface ICallback { function: (eventObject: { eventName: string, eventBody }) => void }
+interface IViewUpdate {
+  margins: number[],
+  currentValues: number[],
+  collection: string[] | number[] | HTMLElement[]
+}
 
 class View {
   private body: HTMLElement;
@@ -48,28 +55,30 @@ class View {
   private consolidatingObserver: ConsolidatingObserver = new ConsolidatingObserver();
 
   constructor(options: IView) {
-    this.body = options.slider;
-    this.modifySlidersClass(options.isVertical);
-    this.switchCalculator(options.isVertical);
+    const {
+      slider, extremeValues, currentValues, margins, scaleStep, isVertical, haveScale,
+      haveLabel, collection, isCollection,
+    } = options;
+
+    this.body = slider;
+    this.modifySlidersClass(isVertical);
+    this.switchCalculator(isVertical);
+    const { calculator } = this;
 
     this.createElements({
-      margins: options.margins,
-      extremeValues: options.extremeValues,
-      currentValues: options.currentValues,
-      scaleStep: options.scaleStep,
-      haveScale: options.haveScale,
-      haveLabel: options.haveLabel,
+      margins, extremeValues, currentValues, scaleStep, haveScale, haveLabel, isCollection,
     });
+    this.appendElements(haveLabel);
 
-    this.appendElements({ haveLabel: options.haveLabel, haveScale: options.haveScale });
-
-    if (options.haveScale) {
-      this.createScale({ extremeValues: options.extremeValues, scaleStep: options.scaleStep });
+    if (haveScale) {
+      this.scale = new Scale({
+        scaleStep, extremeValues, calculator, isCollection, collection,
+      });
       this.body.appendChild(this.scale.getBody());
       this.scale.adjustMarginToSize();
     }
 
-    this.update({ margins: options.margins, currentValues: options.currentValues });
+    this.update({ margins, currentValues, collection });
 
     this.initConsolidatingObserver();
   }
@@ -82,63 +91,60 @@ class View {
     this.consolidatingObserver.unsubscribe(callback);
   }
 
+  public getBody = (): HTMLElement => this.body;
+
   public getLineSize = (): number => this.line.getSize();
 
   public getLineLocation = (): number => this.line.getLocation();
 
-  public update = (options: { margins: number[], currentValues: number[] }): void => {
+  public update = (options: IViewUpdate): void => {
     this.handles.map((item, index) => item.update(options.margins[index]));
     this.progressBar.update(options.margins);
-
-    this.labels.map((item, index) => item.update(
-      options.margins[index],
-      options.currentValues[index],
-    ));
+    console.log(options.collection, this.labels);
+    if (this.labels) {
+      this.labels.map((item, index) => item.update({
+        margin: options.margins[index],
+        value: options.currentValues[index],
+        collection: options.collection,
+      }));
+    }
   };
 
   private modifySlidersClass(isVertical: boolean) :void {
     this.body.classList.add('light-range-slider');
     if (isVertical) this.body.classList.add('light-range-slider_vertical');
+    else this.body.classList.remove('light-range-slider_vertical');
   }
 
   private createElements(options: ICreateElements): void {
-    this.line = new Line(this.calculator);
-    this.createHandles(options.margins);
-    this.progressBar = new ProgressBar({ calculator: this.calculator });
-    if (options.haveLabel) this.createLabels(options.currentValues);
+    const { calculator } = this;
+    const {
+      margins, currentValues, haveLabel, isCollection,
+    } = options;
+
+    this.line = new Line(calculator);
+    this.handles = margins.map((item, index) => new Handle({ index, calculator }));
+    this.progressBar = new ProgressBar({ calculator });
+    if (haveLabel) this.createLabels(currentValues, isCollection);
   }
 
-  private appendElements(options: { haveLabel: boolean, haveScale: boolean }): void {
+  private appendElements(haveLabel: boolean): void {
     this.handles.map((item) => this.line.getBody().appendChild(item.getBody()));
     this.line.getBody().appendChild(this.progressBar.getBody());
 
-    if (options.haveLabel) {
+    if (haveLabel) {
       this.labels.map((item) => this.line.getBody().appendChild(item.getBody()));
     }
 
     this.body.appendChild(this.line.getBody());
   }
 
-  private createHandles(margins: number[]): void {
-    this.handles = margins.map((item, index) => new Handle({
-      index,
-      calculator: this.calculator,
-    }));
-  }
-
-  private createLabels(currentValues: number[]): void {
+  private createLabels(currentValues: number[], isCollection: boolean): void {
     this.labels = currentValues.map((item, index) => new Label({
       value: currentValues[index],
       calculator: this.calculator,
+      isCollection,
     }));
-  }
-
-  private createScale(options: { extremeValues: number[], scaleStep: number }): void {
-    this.scale = new Scale({
-      scaleStep: options.scaleStep,
-      extremeValues: options.extremeValues,
-      calculator: this.calculator,
-    });
   }
 
   private switchCalculator(isVertical: boolean): void {
@@ -162,8 +168,10 @@ class View {
       item.subscribe(this.consolidatingObserver.getSubscribeFunction('handles'))
     ));
 
-    this.consolidatingObserver.addObserver('scale');
-    this.scale.subscribe(this.consolidatingObserver.getSubscribeFunction('scale'));
+    if (this.scale) {
+      this.consolidatingObserver.addObserver('scale');
+      this.scale.subscribe(this.consolidatingObserver.getSubscribeFunction('scale'));
+    }
   }
 }
 

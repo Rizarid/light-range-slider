@@ -12,49 +12,51 @@ class HorizontalCalculator {
     this.getLineSize = options.getLineSize;
   }
 
-  public getElementsSize = (target: HTMLElement): number => target.offsetWidth;
+  public getElementsSize = (target: HTMLElement | EventTarget): number => target.offsetWidth;
 
   public getCursorLocation = (eventObject: IEventObject): number => {
     const adjustedPageX: number = eventObject.pageX - this.getLineLocation();
     return adjustedPageX;
   };
 
-  public getElementsLocation = (target: HTMLElement): number => target.getBoundingClientRect().left + pageXOffset;
+  public getElementsLocation = (target: HTMLElement | EventTarget): number => (
+    target.getBoundingClientRect().left + pageXOffset
+  );
 
-  public getElementMargin = (target: HTMLElement): number => target.offsetLeft;
+  public getElementMargin = (target: HTMLElement | EventTarget): number => target.offsetLeft;
 
-  public getHandleMargin = (target: HTMLElement): number => target.offsetLeft;
+  public getHandleMargin = (target: HTMLElement | EventTarget): number => target.offsetLeft;
 
-  public setElementsMargin = (target: HTMLElement, newValue: number): void => {
+  public setElementsMargin = (target: HTMLElement | EventTarget, newValue: number): void => {
     target.style.left = `${newValue}%`;
   };
 
-  public setProgressBarMargin = (target: HTMLElement, newValue: number): void => {
+  public setProgressBarMargin = (target: HTMLElement | EventTarget, newValue: number): void => {
     target.style.left = `${newValue}%`;
   };
 
-  public setScaleItemMarginAfterAdjust = (target: HTMLElement, newValue: number): void => {
+  public setScaleItemMarginAfterAdjust = (target: HTMLElement | EventTarget, newValue: number): void => {
     target.style.left = `${newValue}%`;
   };
 
-  public setElementsSize = (target: HTMLElement, newValue: number): void => {
+  public setElementsSize = (target: HTMLElement | EventTarget, newValue: number): void => {
     target.style.width = `${newValue}%`;
   };
 
-  public getAdjustMarginToSize = (target: HTMLElement, margin: number): number => (
-    margin - Math.round((this.getElementsSize(target) / this.getLineSize() / 2) * 100 * 10) / 10
+  public getAdjustMarginToSize = (target: HTMLElement | EventTarget, margin: number): number => (
+    margin - (this.getElementsSize(target) / this.getLineSize() / 2) * 100
   );
 
-  public getNotAdjustMarginToSize = (target: HTMLElement, adjustMargin: number): number => (
-    adjustMargin + Math.round((this.getElementsSize(target) / this.getLineSize() / 2) * 100 * 10) / 10
+  public getNotAdjustMarginToSize = (target: HTMLElement | EventTarget, adjustMargin: number): number => (
+    adjustMargin + (this.getElementsSize(target) / this.getLineSize() / 2) * 100
   );
 
-  public getScaleItemAdjustMarginToSize = (target: HTMLElement, margin: number): number => (
+  public getScaleItemAdjustMarginToSize = (target: HTMLElement | EventTarget, margin: number): number => (
     margin - (this.getElementsSize(target) / this.getLineSize() / 2) * 100
   );
 
   public getScaleItemNotAdjustMarginToSize = (
-    target: HTMLElement, adjustMargin: number,
+    target: HTMLElement | EventTarget, adjustMargin: number,
   ): number => (
     adjustMargin + (this.getElementsSize(target) / this.getLineSize() / 2) * 100
   );

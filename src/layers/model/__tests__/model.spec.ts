@@ -14,7 +14,8 @@ describe("Model", function (): void{
       isVertical: false,
       isInterval: false,
       haveScale: true,
-      haveLabel: true
+      haveLabel: true,
+      callbacks: []
     });
 
   })
@@ -103,23 +104,31 @@ describe("Model", function (): void{
     expect(model.getHaveScale()).to.be.false;
   })
 
+  it("Should take the value return percent" , function() {
+    expect(model.valueToPercent(320)).to.equal(20);
+  })
+
+  it("Should take the percent return value" , function() {
+    expect(model.percentToValue(20)).to.equal(320);
+  })
+
   it("Should send updates" , function() {
     const valuesUpdate = {
       eventName: 'valuesUpdate',
       eventBody: {
-        currentValues: [350],
+        currentValues: [320],
+        margins: [20]
       }
     }
 
     const fullUpdate = {
       eventName: 'fullUpdate',
       eventBody: {
-        extremeValues: [320, 500],
-        currentValues: [350, 350],
-        step: 1,
+        extremeValues: [300, 400],
+        currentValues: [320, 320],
+        margins: [20, 20],
         scaleStep: 10,
-        isVertical: false,       
-        isInterval: true,       
+        isVertical: false,             
         haveScale: true,     
         haveLabel: true
       }
@@ -129,7 +138,7 @@ describe("Model", function (): void{
     const callback = (event: { eventName: string, eventBody }):void => { testValue = event };
     model.subscribe({ function: callback });
 
-    model.setCurrentValues([320, 500]);
+    model.setCurrentValues([320]);
 
     expect(testValue).to.deep.equal(valuesUpdate);
 

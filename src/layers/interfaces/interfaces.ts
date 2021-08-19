@@ -1,13 +1,15 @@
 interface IModel {
   extremeValues: number[],
-  currentValues: number[];
+  currentValues: number[],
+  callbacks: ((updateObject: IOutsideUpdate) => void)[],
+  collection: string[] | number[] | HTMLElement[]
   step : number,
   scaleStep: number,
   isVertical: boolean,
   isInterval: boolean,
   haveScale: boolean,
   haveLabel: boolean,
-  callbacks: ((updateObject: IOutsideUpdate) => void)[]
+  isCollection: boolean,
 }
 
 interface IUpdateCallback { function: (eventObject: IUpdateObject) => void }
@@ -22,6 +24,8 @@ interface IFullUpdate {
     isVertical: boolean,
     haveScale: boolean,
     haveLabel: boolean,
+    collection: string[] | number[] | HTMLElement[],
+    isCollection: boolean
   }
 }
 
@@ -30,6 +34,7 @@ interface IValuesUpdate {
   eventBody: {
     currentValues: number[],
     margins: number[],
+    collection: string[] | number[] | HTMLElement[]
   }
 }
 

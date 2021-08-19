@@ -3,9 +3,28 @@ import { HorizontalCalculator } from '../orientation-calculator/horizontal-calcu
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
 
 interface IScale {
-  scaleStep: number, extremeValues: number[], calculator: HorizontalCalculator | VerticalCalculator
+  scaleStep: number,
+  extremeValues: number[],
+  calculator: HorizontalCalculator | VerticalCalculator,
+  isCollection: boolean,
+  collection: string[] | number[] | HTMLElement[]
+}
+interface ICreateScaleItems{
+  scaleStep: number,
+  extremeValues: number[],
+  collection: string[] | number[] | HTMLElement[]
 }
 interface ICallback { function: (eventObject: { eventName: string, eventBody }) => void }
+interface IAddContent {
+  target: HTMLElement,
+  value: number,
+  collection: string[] | number[] | HTMLElement[]
+}
+interface IGetScaleItem {
+  value: number,
+  extremeValues: number[],
+  collection: string[] | number[] | HTMLElement[]
+}
 
 class Scale {
   private body: HTMLElement;
@@ -16,10 +35,21 @@ class Scale {
 
   private changeObserver: ChangeObserver = new ChangeObserver();
 
+  private addContent: (options: IAddContent) => void;
+
   constructor(options: IScale) {
-    this.calculator = options.calculator;
+    const {
+      scaleStep, extremeValues, collection, calculator, isCollection,
+    } = options;
+    console.log(calculator);
+    this.calculator = calculator;
+
+    this.addContent = isCollection
+      ? this.addContentByIsCollection
+      : this.addContentByNotIsCollection;
+
     this.createScale();
-    this.createScaleItems(options.scaleStep, options.extremeValues);
+    this.createScaleItems({ scaleStep, extremeValues, collection });
     this.items.map((item) => this.body.appendChild(item));
     this.addListeners();
   }
@@ -49,10 +79,12 @@ class Scale {
     this.body.className = 'light-range-slider__scale';
   }
 
-  private getScaleItem = (value: number, extremeValues: number[]): HTMLElement => {
+  private getScaleItem = (options: IGetScaleItem): HTMLElement => {
+    const { value, extremeValues, collection } = options;
+
     const item = document.createElement('div');
     item.className = 'light-range-slider__scale-item';
-    item.innerHTML = value.toString();
+    this.addContent({ target: item, value, collection });
 
     const margin = ((value - extremeValues[0]) / (extremeValues[1] - extremeValues[0])) * 100;
     this.calculator.setElementsMargin(item, margin);
@@ -60,15 +92,16 @@ class Scale {
     return item;
   };
 
-  private createScaleItems = (scaleStep: number, extremeValues: number[]): void => {
+  private createScaleItems = (options: ICreateScaleItems): void => {
+    const { extremeValues, scaleStep, collection } = options;
     this.items = [];
 
     let i = extremeValues[0];
     for (i; i < extremeValues[1]; i += scaleStep) {
-      this.items.push(this.getScaleItem(i, extremeValues));
+      this.items.push(this.getScaleItem({ value: i, extremeValues, collection }));
     }
 
-    this.items.push(this.getScaleItem(extremeValues[1], extremeValues));
+    this.items.push(this.getScaleItem({ value: extremeValues[1], extremeValues, collection }));
   };
 
   private addListeners = (): void => {
@@ -79,7 +112,10 @@ class Scale {
   };
 
   private handleScaleItemClick = (event: PointerEvent): void => {
-    const newValue = Number(event.target.textContent!);
+    const { target } = event;
+    let newValue = this.calculator.getElementMargin(target);
+    newValue = this.calculator.pxToPercentages(newValue);
+    newValue = this.calculator.getScaleItemNotAdjustMarginToSize(target, newValue);
 
     const eventObject = {
       eventName: 'scaleItemClick',
@@ -87,6 +123,16 @@ class Scale {
     };
 
     this.changeObserver.notify(eventObject);
+  };
+
+  private addContentByIsCollection = (options: IAddContent): void => {
+    const { target } = options;
+    target.innerHTML = options.collection[options.value].toString();
+  };
+
+  private addContentByNotIsCollection = (options: IAddContent): void => {
+    const { target } = options;
+    target.innerHTML = options.value.toString();
   };
 }
 
