@@ -113,8 +113,11 @@ class Model {
     else {
       const distances = this.currentValues.map((item) => Math.abs(item - newValue));
 
-      if (distances[0] <= distances[1]) this.setCurrentValueBeIndex({ index: 0, newValue });
-      else this.setCurrentValueBeIndex({ index: 1, newValue });
+      if (distances[0] < distances[1]) this.setCurrentValueBeIndex({ index: 0, newValue });
+      else if (distances[0] > distances[1]) this.setCurrentValueBeIndex({ index: 1, newValue });
+      else if (newValue < this.currentValues[0]) {
+        this.setCurrentValueBeIndex({ index: 0, newValue });
+      } else this.setCurrentValueBeIndex({ index: 1, newValue });
     }
   }
 
@@ -245,7 +248,6 @@ class Model {
     } else {
       eventObject = this.getFullUpdate();
     }
-    console.log('model haveLabel', this.haveLabel);
     this.changeObserver.notify(eventObject);
   }
 
