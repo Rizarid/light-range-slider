@@ -117,13 +117,17 @@ class View {
   }
 
   private createElements(options: ICreateElements): void {
-    const { calculator } = this;
+    const { calculator, cleanWasActiveClass } = this;
     const {
       margins, currentValues, haveLabel, isCollection,
     } = options;
 
     this.line = new Line(calculator);
-    this.handles = margins.map((item, index) => new Handle({ index, calculator }));
+
+    this.handles = margins.map((item, index) => (
+      new Handle({ index, calculator, cleanWasActiveClass })
+    ));
+
     this.progressBar = new ProgressBar({ calculator });
     if (haveLabel) this.createLabels(currentValues, isCollection);
   }
@@ -172,6 +176,10 @@ class View {
       this.consolidatingObserver.addObserver('scale');
       this.scale.subscribe(this.consolidatingObserver.getSubscribeFunction('scale'));
     }
+  }
+
+  private cleanWasActiveClass = (): void => {
+    this.handles.map((item) => item.getBody().classList.remove('light-range-slider__handle_was-active'));
   }
 }
 

@@ -2,7 +2,11 @@ import { ChangeObserver } from '../../observers/change-observer';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
 
-interface IHandle { index: number, calculator: HorizontalCalculator | VerticalCalculator }
+interface IHandle { 
+  index: number, 
+  calculator: HorizontalCalculator | VerticalCalculator, 
+  cleanWasActiveClass: () => void, 
+}
 interface ICallback { function: (eventObject: { eventName: string, eventBody }) => void }
 
 class Handle {
@@ -16,9 +20,14 @@ class Handle {
 
   private changeObserver: ChangeObserver = new ChangeObserver();
 
+  private cleanWasActiveClass: () => void
+
   constructor(options: IHandle) {
-    this.calculator = options.calculator;
-    this.index = options.index;
+    const { index, calculator, cleanWasActiveClass } = options
+
+    this.calculator = calculator;
+    this.index = index;
+    this.cleanWasActiveClass = cleanWasActiveClass;
     this.createHandle();
     this.addListeners();
   }
@@ -52,6 +61,7 @@ class Handle {
   private handleHandlePointerDown = (event: PointerEvent): void => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     event.target.setPointerCapture(event.pointerId);
+    this.body.classList.add('light-range-slider__handle_active')
 
     let cursorLocation = this.calculator.getCursorLocation(event);
     cursorLocation = this.calculator.pxToPercentages(cursorLocation);
@@ -67,6 +77,9 @@ class Handle {
 
   private handleHandlePointerUp = (event: PointerEvent): void => {
     event.target.removeEventListener('pointermove', this.handleHandlePointerMove);
+    this.body.classList.remove('light-range-slider__handle_active');
+    this.cleanWasActiveClass();
+    this.body.classList.add('light-range-slider__handle_was-active');
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     event.target.releasePointerCapture(event.pointerId);
