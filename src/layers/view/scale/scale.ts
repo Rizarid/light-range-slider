@@ -38,10 +38,7 @@ class Scale {
   private addContent: (options: IAddContent) => void;
 
   constructor(options: IScale) {
-    const {
-      scaleStep, extremeValues, collection, calculator, isCollection,
-    } = options;
-    console.log(calculator);
+    const { scaleStep, extremeValues, collection, calculator, isCollection } = options;
     this.calculator = calculator;
 
     this.addContent = isCollection

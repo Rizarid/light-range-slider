@@ -2,10 +2,10 @@ import { ChangeObserver } from '../../observers/change-observer';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
 
-interface IHandle { 
-  index: number, 
-  calculator: HorizontalCalculator | VerticalCalculator, 
-  cleanWasActiveClass: () => void, 
+interface IHandle {
+  index: number,
+  calculator: HorizontalCalculator | VerticalCalculator,
+  cleanWasActiveClass: () => void,
 }
 interface ICallback { function: (eventObject: { eventName: string, eventBody }) => void }
 
@@ -20,10 +20,10 @@ class Handle {
 
   private changeObserver: ChangeObserver = new ChangeObserver();
 
-  private cleanWasActiveClass: () => void
+  private cleanWasActiveClass: () => void;
 
   constructor(options: IHandle) {
-    const { index, calculator, cleanWasActiveClass } = options
+    const { index, calculator, cleanWasActiveClass } = options;
 
     this.calculator = calculator;
     this.index = index;
@@ -61,7 +61,7 @@ class Handle {
   private handleHandlePointerDown = (event: PointerEvent): void => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     event.target.setPointerCapture(event.pointerId);
-    this.body.classList.add('light-range-slider__handle_active')
+    this.body.classList.add('light-range-slider__handle_active');
 
     let cursorLocation = this.calculator.getCursorLocation(event);
     cursorLocation = this.calculator.pxToPercentages(cursorLocation);

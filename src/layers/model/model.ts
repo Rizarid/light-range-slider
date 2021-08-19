@@ -31,17 +31,22 @@ class Model {
   private isInit = true;
 
   constructor(options: IModel) {
-    this.setExtremeValues(options.extremeValues);
-    this.setCurrentValues(options.currentValues);
-    this.setStep(options.step);
-    this.setScaleStep(options.scaleStep);
-    this.setIsVertical(options.isVertical);
-    this.setIsInterval(options.isInterval);
-    this.setHaveLabel(options.haveLabel);
-    this.setHaveScale(options.haveScale);
-    this.setCallbacks(options.callbacks);
-    this.setCollection(options.collection);
-    this.setIsCollection(options.isCollection);
+    const {
+      extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveLabel,
+      haveScale, callbacks, collection, isCollection,
+    } = options;
+
+    this.setExtremeValues(extremeValues);
+    this.setCurrentValues(currentValues);
+    this.setStep(step);
+    this.setScaleStep(scaleStep);
+    this.setIsVertical(isVertical);
+    this.setIsInterval(isInterval);
+    this.setHaveLabel(haveLabel);
+    this.setHaveScale(haveScale);
+    this.setCallbacks(callbacks);
+    this.setCollection(collection);
+    this.setIsCollection(isCollection);
 
     this.correctCurrentValueToInterval();
     this.correctQuantityCurrentValues();
@@ -59,12 +64,14 @@ class Model {
 
   public getExtremeValues = (): number[] => this.extremeValues;
 
-  public setExtremeValues = (newValues: number[]): void => {
-    this.extremeValues = newValues;
+  public setExtremeValues = (newValue: number[]): void => {
+    if (this.checkExtremeValuesNewValue(newValue)) {
+      this.extremeValues = newValue;
 
-    if (!this.isInit) {
-      this.correctCurrentValueToInterval();
-      this.sendUpdate();
+      if (!this.isInit) {
+        this.correctCurrentValueToInterval();
+        this.sendUpdate();
+      }
     }
   };
 
@@ -82,27 +89,26 @@ class Model {
 
   public getCurrentValues = (): number[] => this.currentValues;
 
-  public setCurrentValues = (newValues: number[]): void => {
-    this.currentValues = newValues;
+  public setCurrentValues = (newValue: number[]): void => {
+    if (this.checkCurrentValuesNewValue(newValue)) {
+      this.currentValues = newValue;
 
-    if (!this.isInit) {
-      this.correctCurrentValueToInterval();
-      this.correctQuantityCurrentValues();
-      this.sendUpdate('valuesUpdate');
+      if (!this.isInit) {
+        this.correctCurrentValueToInterval();
+        this.correctQuantityCurrentValues();
+        this.sendUpdate('valuesUpdate');
+      }
     }
   };
 
   public setCurrentValueBeIndex = (options: { index: number, newValue: number }): void => {
     const { currentValues } = this;
+    const { index, newValue } = options;
 
-    if (options.index === 0) {
-      currentValues[0] = (this.currentValues[1] < options.newValue)
-        ? this.currentValues[1]
-        : options.newValue;
+    if (index === 0) {
+      currentValues[0] = (newValue > this.currentValues[1]) ? this.currentValues[1] : newValue;
     } else {
-      currentValues[1] = this.currentValues[0] > options.newValue
-        ? this.currentValues[0]
-        : options.newValue;
+      currentValues[1] = (newValue < this.currentValues[0]) ? this.currentValues[0] : newValue;
     }
 
     this.setCurrentValues(currentValues);
@@ -142,69 +148,83 @@ class Model {
   public getStep = (): number => this.step;
 
   public setStep = (newValue: number): void => {
-    this.step = newValue;
-    this.sendUpdate();
+    if (this.checkStepAndScaleStepNewValue(newValue)) {
+      this.step = newValue;
+      this.sendUpdate();
+    }
   };
 
   public getScaleStep = (): number => this.scaleStep;
 
   public setScaleStep = (newValue: number): void => {
-    this.scaleStep = newValue;
-    this.sendUpdate();
+    if (this.checkStepAndScaleStepNewValue(newValue)) {
+      this.scaleStep = newValue;
+      this.sendUpdate();
+    }
   };
 
   public getIsVertical = (): boolean => this.isVertical;
 
   public setIsVertical = (newValue: boolean): void => {
-    this.isVertical = newValue;
-    this.sendUpdate();
+    if (this.checkBooleanNewValue(newValue)) {
+      this.isVertical = newValue;
+      this.sendUpdate();
+    }
   };
 
   public getIsInterval = (): boolean => this.isInterval;
 
   public setIsInterval = (newValue: boolean): void => {
-    this.isInterval = newValue;
-    this.correctQuantityCurrentValues();
-    this.sendUpdate();
+    if (this.checkBooleanNewValue(newValue)) {
+      this.isInterval = newValue;
+      this.correctQuantityCurrentValues();
+      this.sendUpdate();
+    }
   };
 
   public getHaveLabel = (): boolean => this.haveLabel;
 
   public setHaveLabel = (newValue: boolean): void => {
-    this.haveLabel = newValue;
-    this.sendUpdate();
+    if (this.checkBooleanNewValue(newValue)) {
+      this.haveLabel = newValue;
+      this.sendUpdate();
+    }
   };
 
   public getHaveScale = (): boolean => this.haveScale;
 
   public setHaveScale = (newValue: boolean): void => {
-    this.haveScale = newValue;
-    this.sendUpdate();
+    if (this.checkBooleanNewValue(newValue)) {
+      this.haveScale = newValue;
+      this.sendUpdate();
+    }
   };
 
   public getCallbacks = (): ((updateObject: IOutsideUpdate) => void)[] => this.callbacks;
 
   public setCallbacks = (newValue: ((updateObject: IOutsideUpdate) => void)[]): void => {
-    this.callbacks = newValue;
+    if (this.checkCallbacksNewValue(newValue)) this.callbacks = newValue;
   };
 
   public getCollection = (): string[] | number[] | HTMLElement[] => this.collection;
 
   public setCollection = (newValue: string[] | number[] | HTMLElement[]): void => {
-    this.collection = newValue;
+    if (this.checkCollectionNewValue(newValue)) this.collection = newValue;
   };
 
   public getIsCollection = (): boolean => this.isCollection;
 
   public setIsCollection = (newValue: boolean): void => {
-    if (!newValue) {
-      this.isCollection = newValue;
-      this.sendUpdate();
-    } else {
-      this.step = 1;
-      this.scaleStep = 1;
-      this.isCollection = newValue;
-      this.setExtremeValues([0, this.collection.length - 1]);
+    if (this.checkIsCollectionNewValue(newValue)) {
+      if (!newValue) {
+        this.isCollection = newValue;
+        this.sendUpdate();
+      } else {
+        this.step = 1;
+        this.scaleStep = 1;
+        this.isCollection = newValue;
+        this.setExtremeValues([0, this.collection.length - 1]);
+      }
     }
   };
 
@@ -282,6 +302,161 @@ class Model {
       if (this.callbacks.length) this.callbacks.map((item) => item(updateObject));
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  private checkExtremeValuesNewValue = (newValue: number[]):boolean => {
+    try {
+      if (!Array.isArray(newValue)) {
+        throw new Error(`Expected array of number, passed argument is ${typeof newValue}`);
+      }
+
+      if (newValue.length !== 2) {
+        throw new Error(`Expected length of array 2, length of passed array is ${newValue.length}`);
+      }
+
+      newValue.map((item) => {
+        if (typeof item !== 'number') throw new Error(`Expected array of number, passed array contain ${typeof item} element`);
+        return null;
+      });
+
+      if (newValue[0] >= newValue[1]) throw new Error('The maximum must be greater than the minimum');
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+  private checkCurrentValuesNewValue = (newValue: number[]): boolean => {
+    try {
+      if (!Array.isArray(newValue)) {
+        throw new Error(`Expected array of number, passed argument is ${typeof newValue}`);
+      }
+
+      if (newValue.length > 0 && newValue.length <= 2) {
+        throw new Error(`Expected length of array 2, length of passed array is ${newValue.length}`);
+      }
+
+      newValue.map((item) => {
+        if (typeof item !== 'number') {
+          throw new Error(`Expected array of number, passed array contain ${typeof item} element`);
+        }
+        return null;
+      });
+
+      if (newValue.length === 2) {
+        if (newValue[0] > newValue[1]) {
+          throw new Error('The maximum must be greater or equal than the minimum');
+        }
+      }
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+  private checkStepAndScaleStepNewValue = (newValue: number): boolean => {
+    try {
+      const halfOfInterval = (this.extremeValues[1] - this.extremeValues[0]) / 2;
+
+      if (typeof newValue !== 'number') {
+        throw new Error(`Expected number type, passed ${typeof newValue} type`);
+      }
+
+      if (newValue <= 0) { throw new Error('Step must by greater than zero'); }
+
+      if (newValue > halfOfInterval) {
+        throw new Error('Step must by less than half of the interval of slider');
+      }
+
+      if (this.isCollection) {
+        throw new Error('You cannot change the step if the flag is activated');
+      }
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+  private checkBooleanNewValue = (newValue: boolean): boolean => {
+    try {
+      if (typeof newValue !== 'boolean') {
+        throw new Error(`Expected boolean type, passed ${typeof newValue} type`);
+      }
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+  private checkIsCollectionNewValue = (newValue: boolean): boolean => {
+    try {
+      if (typeof newValue !== 'boolean') {
+        throw new Error(`Expected boolean type, passed ${typeof newValue} type`);
+      }
+
+      if (this.collection.length < 2) {
+        throw new Error('You cannot activate the isCollection mode if the array collection length is less than 2');
+      }
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+  private checkCallbacksNewValue = (
+    newValue: ((updateObject: IOutsideUpdate) => void)[],
+  ): boolean => {
+    try {
+      if (!Array.isArray(newValue)) {
+        throw new Error(`Expected array of number, passed argument is ${typeof newValue}`);
+      }
+
+      if (newValue.length) {
+        newValue.map((item) => {
+          if (typeof item !== 'function') {
+            throw new Error(`Expected array of functions, passed array contain ${typeof item} element`);
+          }
+          return null;
+        });
+      }
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+  private checkCollectionNewValue = (newValue: number[] | string[] | HTMLElement[]): boolean => {
+    try {
+      if (!Array.isArray(newValue)) {
+        throw new Error(`Expected array, passed argument is ${typeof newValue}`);
+      }
+
+      if (newValue.length) {
+        newValue.map((item) => {
+          if (typeof item !== 'number' || typeof item !== 'string' || typeof item !== 'object') {
+            throw new Error(`Expected array of numbers or strings or objects, passed array contain ${typeof item} element`);
+          }
+          return null;
+        });
+      }
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
     }
   };
 }

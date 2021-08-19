@@ -100,7 +100,7 @@ class View {
   public update = (options: IViewUpdate): void => {
     this.handles.map((item, index) => item.update(options.margins[index]));
     this.progressBar.update(options.margins);
-    console.log(options.collection, this.labels);
+    
     if (this.labels) {
       this.labels.map((item, index) => item.update({
         margin: options.margins[index],
@@ -180,7 +180,7 @@ class View {
 
   private cleanWasActiveClass = (): void => {
     this.handles.map((item) => item.getBody().classList.remove('light-range-slider__handle_was-active'));
-  }
+  };
 }
 
 export { View };
