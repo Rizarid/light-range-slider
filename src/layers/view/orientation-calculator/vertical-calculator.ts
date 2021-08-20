@@ -9,64 +9,57 @@ class VerticalCalculator {
   private getLineLocation: () => number;
 
   constructor(options: IVerticalCalculator) {
-    this.getLineLocation = options.getLineLocation;
-    this.getLineSize = options.getLineSize;
+    const { getLineLocation, getLineSize } = options;
+    this.getLineLocation = getLineLocation;
+    this.getLineSize = getLineSize;
   }
 
-  public getElementsSize = (target: HTMLElement | EventTarget): number => target.offsetHeight;
+  public getElementsSize = (target: HTMLElement): number => target.offsetHeight;
 
   public getCursorLocation = (eventObject: IEventObject): number => {
-    const adjustedPageY: number = eventObject.pageY - this.getLineLocation();
-    return this.getLineSize() - adjustedPageY;
+    const cursorLocationRelativeSlider = eventObject.pageY - this.getLineLocation();
+    return this.getReverseValueRelativeLine(cursorLocationRelativeSlider);
   };
 
-  public getElementsLocation = (target: HTMLElement | EventTarget): number => (
-    target.getBoundingClientRect().top + pageYOffset
-  );
-
-  public getElementMargin = (target: HTMLElement | EventTarget): number => target.offsetTop;
-
-  public getHandleMargin = (target: HTMLElement | EventTarget): number => this.getLineSize() - target.offsetTop;
-
-  public setElementsMargin = (target: HTMLElement | EventTarget, newValue: number): void => {
-    const reverseNewValue: number = 100 - newValue;
-    target.style.top = `${reverseNewValue}%`;
+  public getElementsLocation = (target: HTMLElement): number => {
+    const topMarginFromWindow = target.getBoundingClientRect().top;
+    return topMarginFromWindow + window.scrollY;
   };
 
-  public setScaleItemMarginAfterAdjust = (target: HTMLElement | EventTarget, newValue: number): void => {
-    target.style.top = `${newValue}%`;
+  public getElementMargin = (target: HTMLElement): number => (
+    this.getReverseValueRelativeLine(target.offsetTop)
+  );
+
+  public setElementsMargin = (target: HTMLElement, newValueInPercent: number): void => {
+    const { style } = target;
+    const reverseNewValue: number = 100 - newValueInPercent;
+    style.top = `${reverseNewValue}%`;
   };
 
-  public setProgressBarMargin = (target: HTMLElement | EventTarget, newValue: number): void => {
-    const reverseNewValue: number = 100 - newValue - parseInt(target.style.height);
-    target.style.top = `${reverseNewValue}%`;
+  public setProgressBarMargin = (target: HTMLElement, newValueInPercent: number): void => {
+    const { style } = target;
+    const heightInPercent = parseFloat(style.height);
+    const reverseNewValue: number = 100 - newValueInPercent;
+    const adjustedNewValueToElementHeight = reverseNewValue - heightInPercent;
+    style.top = `${adjustedNewValueToElementHeight}%`;
   };
 
-  public setElementsSize = (target: HTMLElement | EventTarget, newValue: number): void => {
-    target.style.height = `${newValue}%`;
+  public setElementsSize = (target: HTMLElement, newValueInPercent: number): void => {
+    const { style } = target;
+    style.height = `${newValueInPercent}%`;
   };
 
-  public getAdjustMarginToSize = (target: HTMLElement | EventTarget, margin: number): number => (
-    margin + (this.getElementsSize(target) / this.getLineSize() / 2) * 100
-  );
+  public getAdjustedMarginToSize = (target: HTMLElement, marginInPercent: number): number => {
+    const halfElementSize = this.getElementsSize(target) / 2;
+    return marginInPercent + this.pxToPercentages(halfElementSize);
+  };
 
-  public getNotAdjustMarginToSize = (target: HTMLElement | EventTarget, adjustMargin: number): number => (
-    adjustMargin - (this.getElementsSize(target) / this.getLineSize() / 2) * 100
-  );
-
-  public getScaleItemAdjustMarginToSize = (target: HTMLElement | EventTarget, margin: number): number => (
-    margin - (this.getElementsSize(target) / this.getLineSize() / 2) * 100
-  );
-
-  public getScaleItemNotAdjustMarginToSize = (
-    target: HTMLElement | EventTarget, adjustMargin: number,
-  ): number => (
-    adjustMargin + (this.getElementsSize(target) / this.getLineSize() / 2) * 100
-  );
-
-  public getScaleMarginRatio = (quantityItems: number): number => (
-    ((this.getLineSize() / (quantityItems - 1)) / this.getLineSize()) * 100
-  );
+  public getNotAdjustedMarginToSize = (
+    target: HTMLElement, adjustedMarginInPercent: number,
+  ): number => {
+    const halfElementSize = this.getElementsSize(target) / 2;
+    return adjustedMarginInPercent + this.pxToPercentages(halfElementSize);
+  };
 
   public pxToPercentages(value: number): number {
     return (value / this.getLineSize()) * 100;
@@ -75,6 +68,8 @@ class VerticalCalculator {
   public percentagesToPx(value: number): number {
     return (value / 100) * this.getLineSize();
   }
+
+  private getReverseValueRelativeLine = (value: number): number => this.getLineSize() - value;
 }
 
 export { VerticalCalculator };

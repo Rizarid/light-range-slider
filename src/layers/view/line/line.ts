@@ -1,9 +1,7 @@
 import { ChangeObserver } from '../../observers/change-observer';
+import { IClickEventObject, ICallback } from '../../interfaces/interfaces';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
-
-interface IEventObject { pageX: number, pageY: number }
-interface ICallback { function: (eventObject: { eventName: string, eventBody }) => void }
 
 class Line {
   private body: HTMLElement;
@@ -51,8 +49,10 @@ class Line {
     this.body.addEventListener('click', this.handleLineClick);
   }
 
-  private handleLineClick = (event: IEventObject): void => {
-    const newValue = this.calculator.pxToPercentages(this.calculator.getCursorLocation(event));
+  private handleLineClick = (event: IClickEventObject): void => {
+    let newValue = this.calculator.getCursorLocation(event);
+    newValue = this.calculator.pxToPercentages(newValue);
+
     const eventObject = {
       eventName: 'lineClick',
       eventBody: { newValue },

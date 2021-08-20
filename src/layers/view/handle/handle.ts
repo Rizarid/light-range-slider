@@ -1,13 +1,7 @@
 import { ChangeObserver } from '../../observers/change-observer';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
-
-interface IHandle {
-  index: number,
-  calculator: HorizontalCalculator | VerticalCalculator,
-  cleanWasActiveClass: () => void,
-}
-interface ICallback { function: (eventObject: { eventName: string, eventBody }) => void }
+import { IHandle, ICallback } from '../../interfaces/interfaces';
 
 class Handle {
   private body: HTMLElement;
@@ -43,8 +37,8 @@ class Handle {
   public getBody = (): HTMLElement => this.body;
 
   public update = (margin: number): void => {
-    const correctMargin = this.calculator.getAdjustMarginToSize(this.body, margin);
-    this.calculator.setElementsMargin(this.body, correctMargin);
+    const adjustedMarginToSize = this.calculator.getAdjustedMarginToSize(this.body, margin);
+    this.calculator.setElementsMargin(this.body, adjustedMarginToSize);
   };
 
   private createHandle(): void {
@@ -59,41 +53,46 @@ class Handle {
   };
 
   private handleHandlePointerDown = (event: PointerEvent): void => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    event.target.setPointerCapture(event.pointerId);
+    const { target, pointerId } = event;
+    (target.setPointerCapture as (pointerId: number) => void)(pointerId);
     this.body.classList.add('light-range-slider__handle_active');
 
-    let cursorLocation = this.calculator.getCursorLocation(event);
-    cursorLocation = this.calculator.pxToPercentages(cursorLocation);
+    const cursorLocation = this.calculator.getCursorLocation(event);
+    const cursorLocationInPercent = this.calculator.pxToPercentages(cursorLocation);
 
-    let handleMargin = this.calculator.getHandleMargin(this.body);
-    handleMargin = this.calculator.pxToPercentages(handleMargin);
-    handleMargin = this.calculator.getNotAdjustMarginToSize(this.body, handleMargin);
+    const handlesMargin = this.calculator.getElementMargin(this.body);
+    const handlesMarginInPercent = this.calculator.pxToPercentages(handlesMargin);
+    const adjustedHandlesMarginToSize = this.calculator.getNotAdjustedMarginToSize(
+      this.body, handlesMarginInPercent,
+    );
 
-    this.cursorOffsetRelativeHandleAtStartDragging = cursorLocation - handleMargin;
+    this.cursorOffsetRelativeHandleAtStartDragging = (
+      cursorLocationInPercent - adjustedHandlesMarginToSize
+    );
 
-    event.target.addEventListener('pointermove', this.handleHandlePointerMove);
+    target.addEventListener('pointermove', this.handleHandlePointerMove);
   };
 
   private handleHandlePointerUp = (event: PointerEvent): void => {
-    event.target.removeEventListener('pointermove', this.handleHandlePointerMove);
+    const { target, pointerId } = event;
+    target.removeEventListener('pointermove', this.handleHandlePointerMove);
+
     this.body.classList.remove('light-range-slider__handle_active');
     this.cleanWasActiveClass();
     this.body.classList.add('light-range-slider__handle_was-active');
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    event.target.releasePointerCapture(event.pointerId);
+    (target.releasePointerCapture as (pointerId: number) => void)(pointerId);
     this.cursorOffsetRelativeHandleAtStartDragging = 0;
   };
 
   private handleHandlePointerMove = (event: PointerEvent): void => {
-    let cursorLocation = this.calculator.getCursorLocation(event);
-    cursorLocation = this.calculator.pxToPercentages(cursorLocation);
-    const newValue = cursorLocation - this.cursorOffsetRelativeHandleAtStartDragging;
+    const cursorLocation = this.calculator.getCursorLocation(event);
+    const cursorLocationInPercent = this.calculator.pxToPercentages(cursorLocation);
+    const newValue = cursorLocationInPercent - this.cursorOffsetRelativeHandleAtStartDragging;
 
     const eventObject = {
       eventName: 'handleMove',
-      eventBody: { handlesIndex: this.index, newValue: Math.round(newValue * 100) / 100 },
+      eventBody: { handlesIndex: this.index, newValue },
     };
 
     this.changeObserver.notify(eventObject);

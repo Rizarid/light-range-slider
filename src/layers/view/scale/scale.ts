@@ -1,30 +1,9 @@
 import { ChangeObserver } from '../../observers/change-observer';
+import {
+  IScale, ICreateScaleItems, IScaleAddContent, IGetScaleItem, ICallback,
+} from '../../interfaces/interfaces';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
-
-interface IScale {
-  scaleStep: number,
-  extremeValues: number[],
-  calculator: HorizontalCalculator | VerticalCalculator,
-  isCollection: boolean,
-  collection: string[] | number[] | HTMLElement[]
-}
-interface ICreateScaleItems{
-  scaleStep: number,
-  extremeValues: number[],
-  collection: string[] | number[] | HTMLElement[]
-}
-interface ICallback { function: (eventObject: { eventName: string, eventBody }) => void }
-interface IAddContent {
-  target: HTMLElement,
-  value: number,
-  collection: string[] | number[] | HTMLElement[]
-}
-interface IGetScaleItem {
-  value: number,
-  extremeValues: number[],
-  collection: string[] | number[] | HTMLElement[]
-}
 
 class Scale {
   private body: HTMLElement;
@@ -35,10 +14,13 @@ class Scale {
 
   private changeObserver: ChangeObserver = new ChangeObserver();
 
-  private addContent: (options: IAddContent) => void;
+  private addContent: (options: IScaleAddContent) => void;
 
   constructor(options: IScale) {
-    const { scaleStep, extremeValues, collection, calculator, isCollection } = options;
+    const {
+      scaleStep, extremeValues, collection, calculator, isCollection,
+    } = options;
+
     this.calculator = calculator;
 
     this.addContent = isCollection
@@ -63,10 +45,12 @@ class Scale {
 
   public adjustMarginToSize = (): void => {
     this.items.map((item) => {
-      let margin = this.calculator.getElementMargin(item);
-      margin = this.calculator.pxToPercentages(margin);
-      const adjustMargin = this.calculator.getScaleItemAdjustMarginToSize(item, margin);
-      this.calculator.setScaleItemMarginAfterAdjust(item, adjustMargin);
+      const margin = this.calculator.getElementMargin(item);
+      const marginInPercent = this.calculator.pxToPercentages(margin);
+      const adjustedMarginToSize = this.calculator.getAdjustedMarginToSize(
+        item, marginInPercent,
+      );
+      this.calculator.setElementsMargin(item, adjustedMarginToSize);
       return null;
     });
   };
@@ -78,13 +62,16 @@ class Scale {
 
   private getScaleItem = (options: IGetScaleItem): HTMLElement => {
     const { value, extremeValues, collection } = options;
+    const [minValue, maxValue] = extremeValues;
 
     const item = document.createElement('div');
     item.className = 'light-range-slider__scale-item';
     this.addContent({ target: item, value, collection });
 
-    const margin = ((value - extremeValues[0]) / (extremeValues[1] - extremeValues[0])) * 100;
-    this.calculator.setElementsMargin(item, margin);
+    const range = maxValue - minValue;
+    const valueInRange = value - minValue;
+    const marginInPercent = (valueInRange / range) * 100;
+    this.calculator.setElementsMargin(item, marginInPercent);
 
     return item;
   };
@@ -110,9 +97,12 @@ class Scale {
 
   private handleScaleItemClick = (event: PointerEvent): void => {
     const { target } = event;
-    let newValue = this.calculator.getElementMargin(target);
-    newValue = this.calculator.pxToPercentages(newValue);
-    newValue = this.calculator.getScaleItemNotAdjustMarginToSize(target, newValue);
+
+    const elementMargin = this.calculator.getElementMargin((target as HTMLElement));
+    const elementMarginInPercent = this.calculator.pxToPercentages(elementMargin);
+    const newValue = this.calculator.getNotAdjustedMarginToSize(
+      (target as HTMLElement), elementMarginInPercent,
+    );
 
     const eventObject = {
       eventName: 'scaleItemClick',
@@ -122,14 +112,14 @@ class Scale {
     this.changeObserver.notify(eventObject);
   };
 
-  private addContentByIsCollection = (options: IAddContent): void => {
-    const { target } = options;
-    target.innerHTML = options.collection[options.value].toString();
+  private addContentByIsCollection = (options: IScaleAddContent): void => {
+    const { target, collection, value } = options;
+    target.innerHTML = collection[value].toString();
   };
 
-  private addContentByNotIsCollection = (options: IAddContent): void => {
-    const { target } = options;
-    target.innerHTML = options.value.toString();
+  private addContentByNotIsCollection = (options: IScaleAddContent): void => {
+    const { target, value } = options;
+    target.innerHTML = value.toString();
   };
 }
 

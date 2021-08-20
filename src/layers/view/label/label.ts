@@ -1,38 +1,33 @@
+import { ILabel, ILabelAddContent, ILabelUpdate } from '../../interfaces/interfaces';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
-
-interface IHandle {
-  value: number,
-  calculator: HorizontalCalculator | VerticalCalculator,
-  isCollection: boolean
-}
-
-interface IAddContent { value: number, collection: string[] | number[] | HTMLElement[] }
-
-interface IUpdate { margin: number, value: number, collection: string[] | number[] | HTMLElement[] }
 
 class Label {
   private body: HTMLElement;
 
   private calculator: HorizontalCalculator | VerticalCalculator;
 
-  private addContent: (options: IAddContent) => void;
+  private addContent: (options: ILabelAddContent) => void;
 
-  constructor(options: IHandle) {
-    this.calculator = options.calculator;
+  constructor(options: ILabel) {
+    const { calculator, isCollection } = options;
+
+    this.calculator = calculator;
     this.createLabel();
-    this.addContent = options.isCollection
+
+    this.addContent = isCollection
       ? this.addContentByIsCollection
       : this.addContentByNotIsCollection;
   }
 
   public getBody = (): HTMLElement => this.body;
 
-  public update = (options: IUpdate): void => {
-    console.log(options.value, options.collection);
-    this.addContent({ value: options.value, collection: options.collection });
-    const correctMargin = this.calculator.getAdjustMarginToSize(this.body, options.margin);
-    this.calculator.setElementsMargin(this.body, correctMargin);
+  public update = (options: ILabelUpdate): void => {
+    const { margin, value, collection } = options;
+
+    this.addContent({ value, collection });
+    const adjustedMarginToSize = this.calculator.getAdjustedMarginToSize(this.body, margin);
+    this.calculator.setElementsMargin(this.body, adjustedMarginToSize);
   };
 
   private createLabel(): void {
@@ -40,12 +35,14 @@ class Label {
     this.body.className = 'light-range-slider__label';
   }
 
-  private addContentByIsCollection = (options: IAddContent): void => {
-    this.body.innerHTML = options.collection[options.value].toString();
+  private addContentByIsCollection = (options: ILabelAddContent): void => {
+    const { value, collection } = options;
+    this.body.innerHTML = collection[value].toString();
   };
 
-  private addContentByNotIsCollection = (options: IAddContent): void => {
-    this.body.innerHTML = options.value.toString();
+  private addContentByNotIsCollection = (options: ILabelAddContent): void => {
+    const { value } = options;
+    this.body.innerHTML = value.toString();
   };
 }
 
