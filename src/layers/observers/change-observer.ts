@@ -1,11 +1,9 @@
-class ChangeObserver {
-  private subscribers: {
-    function(eventObject: { eventName: string, eventBody }): void
-  }[] = [];
+import { ICallback, IEventObject } from '../interfaces/interfaces'
 
-  public subscribe(
-    callback: { function(eventObject: { eventName: string, eventBody }): void },
-  ): void {
+class ChangeObserver {
+  private subscribers: ICallback[] = [];
+
+  public subscribe(callback: ICallback): void {
     if (typeof (callback.function) !== 'function') {
       throw new Error('callback must be a function');
     }
@@ -20,13 +18,11 @@ class ChangeObserver {
     this.subscribers.push(callback);
   }
 
-  public unsubscribe(
-    callback: { function(eventObject: { eventName: string, eventBody }): void },
-  ): void {
+  public unsubscribe(callback: ICallback): void {
     this.subscribers = this.subscribers.filter((item) => item.function !== callback.function);
   }
 
-  public notify = (eventObject: { eventName: string, eventBody }): void => {
+  public notify = (eventObject: IEventObject): void => {
     this.subscribers.map((item) => item.function(eventObject));
   };
 }

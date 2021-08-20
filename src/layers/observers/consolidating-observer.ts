@@ -1,13 +1,16 @@
 import { ChangeObserver } from './change-observer';
-
-interface ICallback { function(eventObject: { eventName: string, eventBody }): void }
+import { ICallback } from '../interfaces/interfaces'
 
 class ConsolidatingObserver {
   private observers: { [key: string]: ChangeObserver } = {};
 
   public addObserver(observerName: string): void {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const isObserverExists: boolean = Object.prototype.hasOwnProperty.call(
+    const isObserverExists = (
+      Object.prototype.hasOwnProperty.call as (
+        observers: { [key: string]: ChangeObserver },
+        observerName:string
+      ) => boolean
+    )(
       this.observers, observerName,
     );
 
@@ -15,8 +18,12 @@ class ConsolidatingObserver {
   }
 
   public removeObserver(observerName: string): void {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const isObserverExists: boolean = Object.prototype.hasOwnProperty.call(
+    const isObserverExists = (
+      Object.prototype.hasOwnProperty.call as (
+        observers: { [key: string]: ChangeObserver },
+        observerName:string
+      ) => boolean
+    )(
       this.observers, observerName,
     );
 
