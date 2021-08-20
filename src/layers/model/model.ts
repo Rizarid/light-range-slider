@@ -1,5 +1,6 @@
+/* eslint-disable no-console */
 import {
-  IModel, IUpdateCallback, IFullUpdate, IValuesUpdate, IOutsideUpdate,
+  IModel, IUpdateCallback, IFullUpdate, IValuesUpdate,
 } from '../interfaces/interfaces';
 import { ChangeObserver } from '../observers/change-observer';
 
@@ -8,7 +9,7 @@ class Model {
 
   private currentValues: number[];
 
-  private callbacks: ((updateObject: IOutsideUpdate) => void)[] = [];
+  private callbacks: ((updateObject: IModel) => void)[] = [];
 
   private collection: string[] | number[] | HTMLElement[] = [];
 
@@ -200,9 +201,9 @@ class Model {
     }
   };
 
-  public getCallbacks = (): ((updateObject: IOutsideUpdate) => void)[] => this.callbacks;
+  public getCallbacks = (): ((updateObject: IModel) => void)[] => this.callbacks;
 
-  public setCallbacks = (newValue: ((updateObject: IOutsideUpdate) => void)[]): void => {
+  public setCallbacks = (newValue: ((updateObject: IModel) => void)[]): void => {
     if (this.checkCallbacksNewValue(newValue)) this.callbacks = newValue;
   };
 
@@ -229,45 +230,54 @@ class Model {
   };
 
   public valueToPercent = (value: number): number => {
-    const range = this.extremeValues[1] - this.extremeValues[0];
-    const valueInRange = value - this.extremeValues[0];
+    const [minValue, maxValue] = this.extremeValues;
+    const range = maxValue - minValue;
+    const valueInRange = value - minValue;
     return (valueInRange / range) * 100;
   };
 
   public percentToValue = (percentValue: number): number => {
-    const range = (this.extremeValues[1] - this.extremeValues[0]) / this.step;
-    const valueInRange = Math.round(range * (percentValue / 100));
-    return Math.round((valueInRange * this.step + this.extremeValues[0]) * 1000) / 1000;
+    const [minValue, maxValue] = this.extremeValues;
+
+    const range = maxValue - minValue;
+    const adjustedRangeTpStep = range / this.step;
+
+    const valueInAdjustedRange = adjustedRangeTpStep * (percentValue / 100);
+    const valueInRange = Math.round(valueInAdjustedRange) * this.step;
+    const value = valueInRange + minValue;
+
+    const accuracy = (this.step < 1) ? 1 / this.step : 1;
+
+    return Math.round(value * accuracy) / accuracy;
   };
 
-  private correctCurrentValueToInterval = (): void => {
-    this.currentValues = this.currentValues.map((item) => (
-      (item < this.extremeValues[0]) ? this.extremeValues[0] : item
-    ));
+  public sendOutsideUpdate = (): void => this.notifyCallbacks(this.getOutsideUpdate());
 
-    this.currentValues = this.currentValues.map((item) => (
-      (item > this.extremeValues[1]) ? this.extremeValues[1] : item
-    ));
+  private correctCurrentValueToInterval = (): void => {
+    const [minValue, maxValue] = this.extremeValues;
+    this.currentValues = this.currentValues.map((item) => ((item < minValue) ? minValue : item));
+    this.currentValues = this.currentValues.map((item) => ((item > maxValue) ? maxValue : item));
   };
 
   private correctQuantityCurrentValues(): void {
+    const [minCurrentValue] = this.currentValues;
+
     if (this.isInterval && (this.currentValues.length === 1)) {
-      this.currentValues = [this.currentValues[0], this.currentValues[0]];
+      this.currentValues = [minCurrentValue, minCurrentValue];
     }
 
     if (!this.isInterval && (this.currentValues.length === 2)) {
-      this.currentValues = [this.currentValues[0]];
+      this.currentValues = [minCurrentValue];
     }
   }
 
   private sendUpdate(eventName?: string): void {
     let eventObject: IValuesUpdate | IFullUpdate;
-    if (eventName === 'valuesUpdate') {
-      eventObject = this.getValuesUpdate();
-      this.notifyCallbacks(this.getOutsideUpdate());
-    } else {
-      eventObject = this.getFullUpdate();
-    }
+
+    if (eventName === 'valuesUpdate') eventObject = this.getValuesUpdate();
+    else eventObject = this.getFullUpdate();
+
+    this.sendOutsideUpdate();
     this.changeObserver.notify(eventObject);
   }
 
@@ -295,9 +305,28 @@ class Model {
     },
   });
 
-  private getOutsideUpdate = (): IOutsideUpdate => ({ currentValues: this.currentValues });
+  private getOutsideUpdate = (): IModel => {
+    const {
+      extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveLabel,
+      haveScale, callbacks, collection, isCollection,
+    } = this;
 
-  private notifyCallbacks = (updateObject: IOutsideUpdate): void => {
+    return {
+      extremeValues,
+      currentValues,
+      step,
+      scaleStep,
+      isVertical,
+      isInterval,
+      haveLabel,
+      haveScale,
+      callbacks,
+      collection,
+      isCollection,
+    };
+  } ;
+
+  private notifyCallbacks = (updateObject: IModel): void => {
     try {
       if (this.callbacks.length) this.callbacks.map((item) => item(updateObject));
     } catch (error) {
@@ -335,7 +364,7 @@ class Model {
         throw new Error(`Expected array of number, passed argument is ${typeof newValue}`);
       }
 
-      if (newValue.length > 0 && newValue.length <= 2) {
+      if (newValue.length < 0 && newValue.length <= 2) {
         throw new Error(`Expected length of array 2, length of passed array is ${newValue.length}`);
       }
 
@@ -361,7 +390,8 @@ class Model {
 
   private checkStepAndScaleStepNewValue = (newValue: number): boolean => {
     try {
-      const halfOfInterval = (this.extremeValues[1] - this.extremeValues[0]) / 2;
+      const [minValue, maxValue] = this.extremeValues;
+      const halfOfInterval = (maxValue - minValue) / 2;
 
       if (typeof newValue !== 'number') {
         throw new Error(`Expected number type, passed ${typeof newValue} type`);
@@ -415,7 +445,7 @@ class Model {
   };
 
   private checkCallbacksNewValue = (
-    newValue: ((updateObject: IOutsideUpdate) => void)[],
+    newValue: ((updateObject: IModel) => void)[],
   ): boolean => {
     try {
       if (!Array.isArray(newValue)) {
@@ -446,7 +476,10 @@ class Model {
 
       if (newValue.length) {
         newValue.map((item) => {
-          if (typeof item !== 'number' || typeof item !== 'string' || typeof item !== 'object') {
+          const isNumber = typeof item === 'number';
+          const isString = typeof item === 'string';
+          const isObject = typeof item === 'object';
+          if (!(isNumber || isString || isObject)) {
             throw new Error(`Expected array of numbers or strings or objects, passed array contain ${typeof item} element`);
           }
           return null;
