@@ -70,6 +70,11 @@ class Controller {
       this.model.setIsInterval(isInterval);
     }
 
+    if (eventName === 'haveProgressBarChanged') {
+      const { haveProgressBar } = eventObject.eventBody;
+      this.model.setHaveProgressBar(haveProgressBar);
+    }
+
     if (eventName === 'haveLabelChanged') {
       const { haveLabel } = eventObject.eventBody;
       this.model.setHaveLabel(haveLabel);
@@ -130,40 +135,24 @@ class Controller {
   private createModel(options: IController): void {
     const {
       extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveScale,
-      haveLabel, callbacks, collection, isCollection,
+      haveProgressBar, haveLabel, callbacks, collection, isCollection,
     } = options;
 
     this.model = new Model({
-      extremeValues,
-      currentValues,
-      step,
-      scaleStep,
-      isVertical,
-      isInterval,
-      haveScale,
-      haveLabel,
-      callbacks,
-      collection,
-      isCollection,
+      extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveProgressBar,
+      haveScale, haveLabel, callbacks, collection, isCollection,
     });
   }
 
   private createView(slider: HTMLElement, eventObject: IFullUpdate): void {
     const {
       extremeValues, currentValues, scaleStep, isVertical, haveScale, haveLabel,
-      collection, isCollection, margins,
+      collection, isCollection, margins, haveProgressBar,
     } = eventObject.eventBody;
+
     this.view = new View({
-      slider,
-      extremeValues,
-      currentValues,
-      margins,
-      scaleStep,
-      isVertical,
-      haveScale,
-      haveLabel,
-      isCollection,
-      collection,
+      slider, extremeValues, currentValues, margins, scaleStep, isVertical, haveProgressBar,
+      haveScale, haveLabel, isCollection, collection,
     });
   }
 }

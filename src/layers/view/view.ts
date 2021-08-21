@@ -14,6 +14,7 @@ interface IView {
   margins: number[],
   scaleStep: number,
   isVertical: boolean,
+  haveProgressBar: boolean,
   haveScale: boolean,
   haveLabel: boolean,
   collection: string[] | number[] | HTMLElement[],
@@ -25,6 +26,7 @@ interface ICreateElements {
   extremeValues: number[],
   currentValues: number[],
   scaleStep: number,
+  haveProgressBar: boolean,
   haveScale: boolean,
   haveLabel: boolean,
   isCollection: boolean
@@ -57,7 +59,7 @@ class View {
   constructor(options: IView) {
     const {
       slider, extremeValues, currentValues, margins, scaleStep, isVertical, haveScale,
-      haveLabel, collection, isCollection,
+      haveLabel, collection, isCollection, haveProgressBar,
     } = options;
 
     this.body = slider;
@@ -67,8 +69,9 @@ class View {
 
     this.createElements({
       margins, extremeValues, currentValues, scaleStep, haveScale, haveLabel, isCollection,
+      haveProgressBar,
     });
-    this.appendElements(haveLabel);
+    this.appendElements(haveLabel, haveProgressBar);
 
     if (haveScale) {
       this.scale = new Scale({
@@ -99,7 +102,7 @@ class View {
 
   public update = (options: IViewUpdate): void => {
     this.handles.map((item, index) => item.update(options.margins[index]));
-    this.progressBar.update(options.margins);
+    if (this.progressBar) this.progressBar.update(options.margins);
 
     if (this.labels) {
       this.labels.map((item, index) => item.update({
@@ -118,9 +121,7 @@ class View {
 
   private createElements(options: ICreateElements): void {
     const { calculator, cleanWasActiveClass } = this;
-    const {
-      margins, currentValues, haveLabel, isCollection,
-    } = options;
+    const { margins, currentValues, haveLabel, isCollection, haveProgressBar } = options;
 
     this.line = new Line(calculator);
 
@@ -128,13 +129,13 @@ class View {
       new Handle({ index, calculator, cleanWasActiveClass })
     ));
 
-    this.progressBar = new ProgressBar({ calculator });
+    if (haveProgressBar) this.progressBar = new ProgressBar({ calculator });
     if (haveLabel) this.createLabels(currentValues, isCollection);
   }
 
-  private appendElements(haveLabel: boolean): void {
+  private appendElements(haveLabel: boolean, haveProgressBar: boolean): void {
     this.handles.map((item) => this.line.getBody().appendChild(item.getBody()));
-    this.line.getBody().appendChild(this.progressBar.getBody());
+    if (haveProgressBar) this.line.getBody().appendChild(this.progressBar.getBody());
 
     if (haveLabel) {
       this.labels.map((item) => this.line.getBody().appendChild(item.getBody()));

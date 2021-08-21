@@ -21,6 +21,8 @@ class Model {
 
   private isInterval: boolean;
 
+  private haveProgressBar: boolean;
+
   private haveScale: boolean;
 
   private haveLabel: boolean;
@@ -33,8 +35,8 @@ class Model {
 
   constructor(options: IModel) {
     const {
-      extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveLabel,
-      haveScale, callbacks, collection, isCollection,
+      extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveProgressBar,
+      haveLabel, haveScale, callbacks, collection, isCollection,
     } = options;
 
     this.setExtremeValues(extremeValues);
@@ -43,6 +45,7 @@ class Model {
     this.setScaleStep(scaleStep);
     this.setIsVertical(isVertical);
     this.setIsInterval(isInterval);
+    this.setHaveProgressBar(haveProgressBar);
     this.setHaveLabel(haveLabel);
     this.setHaveScale(haveScale);
     this.setCallbacks(callbacks);
@@ -184,6 +187,16 @@ class Model {
     }
   };
 
+  public getHaveProgressBar = (): boolean => this.haveProgressBar;
+
+  public setHaveProgressBar = (newValue: boolean): void => {
+    if (this.checkBooleanNewValue(newValue)) {
+      this.haveProgressBar = newValue;
+      this.adjustQuantityOfCurrentValues();
+      this.sendUpdate();
+    }
+  };
+
   public getHaveLabel = (): boolean => this.haveLabel;
 
   public setHaveLabel = (newValue: boolean): void => {
@@ -300,6 +313,7 @@ class Model {
       margins: this.currentValues.map((item) => this.valueToPercent(item)),
       scaleStep: this.scaleStep,
       isVertical: this.isVertical,
+      haveProgressBar: this.haveProgressBar,
       haveScale: this.haveScale,
       haveLabel: this.haveLabel,
       isCollection: this.isCollection,
@@ -309,22 +323,13 @@ class Model {
 
   private getOutsideUpdate = (): IModel => {
     const {
-      extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveLabel,
-      haveScale, callbacks, collection, isCollection,
+      extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveProgressBar,
+      haveLabel, haveScale, callbacks, collection, isCollection,
     } = this;
 
     return {
-      extremeValues,
-      currentValues,
-      step,
-      scaleStep,
-      isVertical,
-      isInterval,
-      haveLabel,
-      haveScale,
-      callbacks,
-      collection,
-      isCollection,
+      extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveProgressBar,
+      haveLabel, haveScale, callbacks, collection, isCollection,
     };
   } ;
 
