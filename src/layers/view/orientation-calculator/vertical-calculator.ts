@@ -58,7 +58,7 @@ class VerticalCalculator {
     target: HTMLElement, adjustedMarginInPercent: number,
   ): number => {
     const halfElementSize = this.getElementsSize(target) / 2;
-    return adjustedMarginInPercent + this.pxToPercentages(halfElementSize);
+    return adjustedMarginInPercent - this.pxToPercentages(halfElementSize);
   };
 
   public pxToPercentages(value: number): number {
@@ -73,3 +73,4 @@ class VerticalCalculator {
 }
 
 export { VerticalCalculator };
+
