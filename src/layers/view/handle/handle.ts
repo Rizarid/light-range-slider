@@ -10,6 +10,8 @@ class Handle {
 
   private cursorOffsetRelativeHandleAtStartDragging: number;
 
+  private isPointerMoveBlocked = false;
+
   private calculator: HorizontalCalculator | VerticalCalculator;
 
   private changeObserver: ChangeObserver = new ChangeObserver();
@@ -86,16 +88,21 @@ class Handle {
   };
 
   private handleHandlePointerMove = (event: PointerEvent): void => {
-    const cursorLocation = this.calculator.getCursorLocation(event);
-    const cursorLocationInPercent = this.calculator.pxToPercentages(cursorLocation);
-    const newValue = cursorLocationInPercent - this.cursorOffsetRelativeHandleAtStartDragging;
+    if (!this.isPointerMoveBlocked) {
+      const cursorLocation = this.calculator.getCursorLocation(event);
+      const cursorLocationInPercent = this.calculator.pxToPercentages(cursorLocation);
+      const newValue = cursorLocationInPercent - this.cursorOffsetRelativeHandleAtStartDragging;
 
-    const eventObject = {
-      eventName: 'handleMove',
-      eventBody: { handlesIndex: this.index, newValue },
-    };
+      const eventObject = {
+        eventName: 'handleMove',
+        eventBody: { handlesIndex: this.index, newValue },
+      };
 
-    this.changeObserver.notify(eventObject);
+      this.changeObserver.notify(eventObject);
+
+      this.isPointerMoveBlocked = true;
+      setTimeout(() => { this.isPointerMoveBlocked = false; }, 100);
+    }
   };
 
   private handleHandleClick = (event: MouseEvent): void => {
