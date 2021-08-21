@@ -1,5 +1,5 @@
 import { ChangeObserver } from '../../observers/change-observer';
-import { IClickEventObject, ICallback } from '../../interfaces/interfaces';
+import { ICallback } from '../../interfaces/interfaces';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
 
@@ -49,7 +49,7 @@ class Line {
     this.body.addEventListener('click', this.handleLineClick);
   }
 
-  private handleLineClick = (event: IClickEventObject): void => {
+  private handleLineClick = (event: MouseEvent): void => {
     let newValue = this.calculator.getCursorLocation(event);
     newValue = this.calculator.pxToPercentages(newValue);
 

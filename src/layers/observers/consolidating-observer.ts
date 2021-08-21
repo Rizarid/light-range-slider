@@ -1,5 +1,5 @@
 import { ChangeObserver } from './change-observer';
-import { ICallback } from '../interfaces/interfaces'
+import { ICallback } from '../interfaces/interfaces';
 
 class ConsolidatingObserver {
   private observers: { [key: string]: ChangeObserver } = {};

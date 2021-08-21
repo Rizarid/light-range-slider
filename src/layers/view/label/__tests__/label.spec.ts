@@ -38,7 +38,7 @@ describe("Label", function(): void {
 
     label = new Label({ value: 50, calculator })
     slider.appendChild(label.getBody());
-    label.update(50, 50)
+    label.update({ margin: 50, value: 50, collection: []})
   })
 
   afterEach( function (): void {
@@ -55,7 +55,7 @@ describe("Label", function(): void {
     expect(label.getBody().offsetLeft).to.equal(242);
     expect(label.getBody().innerText).to.equal('50');
 
-    label.update(60, 60);
+    label.update({ margin: 60, value: 60, collection: []});
 
     expect(label.getBody().offsetLeft).to.equal(292);
     expect(label.getBody().innerText).to.equal('60');

@@ -100,7 +100,7 @@ class View {
   public update = (options: IViewUpdate): void => {
     this.handles.map((item, index) => item.update(options.margins[index]));
     this.progressBar.update(options.margins);
-    
+
     if (this.labels) {
       this.labels.map((item, index) => item.update({
         margin: options.margins[index],

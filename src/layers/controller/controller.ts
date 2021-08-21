@@ -1,37 +1,8 @@
 import {
-  IEventObject, IFullUpdate, IViewEvent, IOutsideUpdate,
+  IEventObject, IFullUpdate, IViewEvent, IController, IChangeParameterObject,
 } from '../interfaces/interfaces';
 import { Model } from '../model/model';
 import { View } from '../view/view';
-
-interface IController {
-  slider: HTMLElement,
-  extremeValues: number[],
-  currentValues: number[],
-  step: number,
-  scaleStep: number,
-  isVertical: boolean,
-  isInterval: boolean,
-  haveScale: boolean,
-  haveLabel: boolean,
-  callbacks: ((updateObject: IOutsideUpdate) => void)[]
-  collection: string[] | number[] | HTMLElement[],
-  isCollection: boolean
-}
-
-interface IChangeParameterObject {
-  eventName: string,
-  eventBody: {
-    extremeValues: number[],
-    currentValues: number[],
-    step: number,
-    scaleStep: number,
-    isVertical: boolean,
-    isInterval: boolean,
-    haveScale: boolean,
-    haveLabel: boolean
-  }
-}
 
 class Controller {
   private model: Model;
@@ -39,111 +10,117 @@ class Controller {
   private view: View;
 
   constructor(options: IController) {
+    const { slider } = options;
     this.createModel(options);
-    this.createView(options.slider, this.model.getFullUpdate());
+    this.createView(slider, this.model.getFullUpdate());
     this.model.subscribe({ function: this.handleModelEvents });
     this.view.subscribe({ function: this.handleViewEvents });
   }
 
   public changeParameter(eventObject: IChangeParameterObject): void {
-    if (eventObject.eventName === 'extremeValuesChanged') {
+    const { eventName } = eventObject;
+
+    if (eventName === 'extremeValuesChanged') {
       const { extremeValues } = eventObject.eventBody;
       this.model.setExtremeValues(extremeValues);
     }
 
-    if (eventObject.eventName === 'minChanged') {
+    if (eventName === 'minChanged') {
       const { min } = eventObject.eventBody;
       this.model.setMinValue(min);
     }
 
-    if (eventObject.eventName === 'maxChanged') {
+    if (eventName === 'maxChanged') {
       const { max } = eventObject.eventBody;
       this.model.setMaxValue(max);
     }
 
-    if (eventObject.eventName === 'currentValuesChanged') {
+    if (eventName === 'currentValuesChanged') {
       const { currentValues } = eventObject.eventBody;
       this.model.setCurrentValues(currentValues);
     }
 
-    if (eventObject.eventName === 'currentMinChanged') {
+    if (eventName === 'currentMinChanged') {
       const { currentMinValue } = eventObject.eventBody;
       this.model.setMinCurrentValue(currentMinValue);
     }
 
-    if (eventObject.eventName === 'currentMaxChanged') {
+    if (eventName === 'currentMaxChanged') {
       const { currentMaxValue } = eventObject.eventBody;
       this.model.setMaxCurrentValue(currentMaxValue);
     }
 
-    if (eventObject.eventName === 'stepChanged') {
+    if (eventName === 'stepChanged') {
       const { step } = eventObject.eventBody;
       this.model.setStep(step);
     }
 
-    if (eventObject.eventName === 'scaleStepChanged') {
+    if (eventName === 'scaleStepChanged') {
       const { scaleStep } = eventObject.eventBody;
       this.model.setScaleStep(scaleStep);
     }
 
-    if (eventObject.eventName === 'isVerticalChanged') {
+    if (eventName === 'isVerticalChanged') {
       const { isVertical } = eventObject.eventBody;
       this.model.setIsVertical(isVertical);
     }
 
-    if (eventObject.eventName === 'isIntervalChanged') {
+    if (eventName === 'isIntervalChanged') {
       const { isInterval } = eventObject.eventBody;
       this.model.setIsInterval(isInterval);
     }
 
-    if (eventObject.eventName === 'haveLabelChanged') {
+    if (eventName === 'haveLabelChanged') {
       const { haveLabel } = eventObject.eventBody;
       this.model.setHaveLabel(haveLabel);
     }
 
-    if (eventObject.eventName === 'haveScaleChanged') {
+    if (eventName === 'haveScaleChanged') {
       const { haveScale } = eventObject.eventBody;
       this.model.setHaveScale(haveScale);
     }
 
-    if (eventObject.eventName === 'isCollectionChanged') {
+    if (eventName === 'isCollectionChanged') {
       const { isCollection } = eventObject.eventBody;
       this.model.setIsCollection(isCollection);
     }
 
-    if (eventObject.eventName === 'collectionChanged') {
+    if (eventName === 'collectionChanged') {
       const { collection } = eventObject.eventBody;
       this.model.setCollection(collection);
     }
   }
 
   private handleModelEvents = (event: IEventObject): void => {
-    if (event.eventName === 'fullUpdate') {
+    const { eventName } = event;
+
+    if (eventName === 'fullUpdate') {
       const slider = this.view.getBody();
       slider.innerHTML = '';
       this.createView(slider, event);
       this.view.subscribe({ function: this.handleViewEvents });
     }
 
-    if (event.eventName === 'valuesUpdate') this.view.update(event.eventBody);
+    if (eventName === 'valuesUpdate') this.view.update(event.eventBody);
   };
 
   private handleViewEvents = (event: IViewEvent): void => {
-    if (event.eventName === 'handleMove') {
-      let { newValue } = event.eventBody;
-      const { handlesIndex } = event.eventBody;
+    const { eventName } = event;
 
-      newValue = this.model.percentToValue(newValue);
+    if (eventName === 'handleMove') {
+      const { newValue: newValueInPercent, handlesIndex } = event.eventBody;
+
+      const newValue = this.model.percentToValue(newValueInPercent);
       this.model.setCurrentValueBeIndex({ index: handlesIndex, newValue });
     }
 
-    if (event.eventName === 'lineClick') {
+    if (eventName === 'lineClick') {
       let { newValue } = event.eventBody;
       newValue = this.model.percentToValue(newValue);
       this.model.setNearestValue(newValue);
     }
 
-    if (event.eventName === 'scaleItemClick') {
+    if (eventName === 'scaleItemClick') {
       let { newValue } = event.eventBody;
       newValue = this.model.percentToValue(newValue);
       this.model.setNearestValue(newValue);
@@ -151,33 +128,42 @@ class Controller {
   };
 
   private createModel(options: IController): void {
+    const {
+      extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveScale,
+      haveLabel, callbacks, collection, isCollection,
+    } = options;
+
     this.model = new Model({
-      extremeValues: options.extremeValues,
-      currentValues: options.currentValues,
-      step: options.step,
-      scaleStep: options.scaleStep,
-      isVertical: options.isVertical,
-      isInterval: options.isInterval,
-      haveScale: options.haveScale,
-      haveLabel: options.haveLabel,
-      callbacks: options.callbacks,
-      collection: options.collection,
-      isCollection: options.isCollection,
+      extremeValues,
+      currentValues,
+      step,
+      scaleStep,
+      isVertical,
+      isInterval,
+      haveScale,
+      haveLabel,
+      callbacks,
+      collection,
+      isCollection,
     });
   }
 
   private createView(slider: HTMLElement, eventObject: IFullUpdate): void {
+    const {
+      extremeValues, currentValues, scaleStep, isVertical, haveScale, haveLabel,
+      collection, isCollection, margins,
+    } = eventObject.eventBody;
     this.view = new View({
       slider,
-      extremeValues: eventObject.eventBody.extremeValues,
-      currentValues: eventObject.eventBody.currentValues,
-      margins: eventObject.eventBody.margins,
-      scaleStep: eventObject.eventBody.scaleStep,
-      isVertical: eventObject.eventBody.isVertical,
-      haveScale: eventObject.eventBody.haveScale,
-      haveLabel: eventObject.eventBody.haveLabel,
-      isCollection: eventObject.eventBody.isCollection,
-      collection: eventObject.eventBody.collection,
+      extremeValues,
+      currentValues,
+      margins,
+      scaleStep,
+      isVertical,
+      haveScale,
+      haveLabel,
+      isCollection,
+      collection,
     });
   }
 }

@@ -94,7 +94,7 @@ describe("HorizontalCalculator", function (): void{
     let div: HTMLElement = document.querySelector(".slider");
     calculator.setElementsSize(div, 10);
 
-    expect(calculator.getAdjustMarginToSize(div, 50)).to.equal(45);
+    expect(calculator.getAdjustedMarginToSize(div, 50)).to.equal(45);
   })
 
   it("should return not adjust margin to size", function():void{
@@ -102,16 +102,9 @@ describe("HorizontalCalculator", function (): void{
     let div: HTMLElement = document.querySelector(".slider");
     calculator.setElementsSize(div, 10);
 
-    expect(calculator.getNotAdjustMarginToSize(div, 45)).to.equal(50);
+    expect(Math.round(calculator.getNotAdjustedMarginToSize(div, 45))).to.equal(50);
   })
 
-  it("should return scale step in percentages", function():void{
-    let body: HTMLElement = document.querySelector("body");
-    let div: HTMLElement = document.querySelector(".slider");
-    body.style.width = '500px'
-
-    expect(calculator.getScaleMarginRatio(11)).to.equal(10);
-  })
 
 })
 

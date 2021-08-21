@@ -50,7 +50,7 @@ class Model {
     this.setIsCollection(isCollection);
 
     this.correctCurrentValueToInterval();
-    this.correctQuantityCurrentValues();
+    this.adjustQuantityOfCurrentValues();
 
     this.isInit = false;
   }
@@ -96,7 +96,7 @@ class Model {
 
       if (!this.isInit) {
         this.correctCurrentValueToInterval();
-        this.correctQuantityCurrentValues();
+        this.adjustQuantityOfCurrentValues();
         this.sendUpdate('valuesUpdate');
       }
     }
@@ -104,12 +104,13 @@ class Model {
 
   public setCurrentValueBeIndex = (options: { index: number, newValue: number }): void => {
     const { currentValues } = this;
+    const [minCurrentValue, maxCurrentValue] = currentValues;
     const { index, newValue } = options;
 
     if (index === 0) {
-      currentValues[0] = (newValue > this.currentValues[1]) ? this.currentValues[1] : newValue;
+      currentValues[0] = (newValue > maxCurrentValue) ? maxCurrentValue : newValue;
     } else {
-      currentValues[1] = (newValue < this.currentValues[0]) ? this.currentValues[0] : newValue;
+      currentValues[1] = (newValue < minCurrentValue) ? minCurrentValue : newValue;
     }
 
     this.setCurrentValues(currentValues);
@@ -178,7 +179,7 @@ class Model {
   public setIsInterval = (newValue: boolean): void => {
     if (this.checkBooleanNewValue(newValue)) {
       this.isInterval = newValue;
-      this.correctQuantityCurrentValues();
+      this.adjustQuantityOfCurrentValues();
       this.sendUpdate();
     }
   };
@@ -223,6 +224,7 @@ class Model {
       } else {
         this.step = 1;
         this.scaleStep = 1;
+        this.currentValues = this.currentValues.map((item) => Math.round(item));
         this.isCollection = newValue;
         this.setExtremeValues([0, this.collection.length - 1]);
       }
@@ -259,7 +261,7 @@ class Model {
     this.currentValues = this.currentValues.map((item) => ((item > maxValue) ? maxValue : item));
   };
 
-  private correctQuantityCurrentValues(): void {
+  private adjustQuantityOfCurrentValues(): void {
     const [minCurrentValue] = this.currentValues;
 
     if (this.isInterval && (this.currentValues.length === 1)) {
@@ -433,7 +435,7 @@ class Model {
         throw new Error(`Expected boolean type, passed ${typeof newValue} type`);
       }
 
-      if (this.collection.length < 2) {
+      if (this.isCollection && (this.collection.length < 2)) {
         throw new Error('You cannot activate the isCollection mode if the array collection length is less than 2');
       }
 

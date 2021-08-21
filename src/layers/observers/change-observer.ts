@@ -1,4 +1,4 @@
-import { ICallback, IEventObject } from '../interfaces/interfaces'
+import { ICallback, IEventObject } from '../interfaces/interfaces';
 
 class ChangeObserver {
   private subscribers: ICallback[] = [];

@@ -29,7 +29,8 @@ describe("Handle", function(): void {
 
     let view = {
       getLineSize: () => slider.offsetWidth,
-      getLineLocation: () => slider.getBoundingClientRect().left
+      getLineLocation: () => slider.getBoundingClientRect().left,
+      cleanWasActiveClass: () => handle.getBody().classList.remove('light-range-slider__handle_was-active')
     }
 
     calculator = new HorizontalCalculator({ 
@@ -37,7 +38,7 @@ describe("Handle", function(): void {
       getLineLocation: view.getLineLocation 
     })
 
-    handle = new Handle({ index: 0, calculator })
+    handle = new Handle({ index: 0, calculator, cleanWasActiveClass: view.cleanWasActiveClass })
     slider.appendChild(handle.getBody());
     handle.update(50)
   })

@@ -15,7 +15,9 @@ describe("Model", function (): void{
       isInterval: false,
       haveScale: true,
       haveLabel: true,
-      callbacks: []
+      callbacks: [],
+      isCollection: false,
+      collection: []
     });
 
   })
@@ -117,7 +119,8 @@ describe("Model", function (): void{
       eventName: 'valuesUpdate',
       eventBody: {
         currentValues: [320],
-        margins: [20]
+        margins: [20],
+        collection: []
       }
     }
 
@@ -130,7 +133,9 @@ describe("Model", function (): void{
         scaleStep: 10,
         isVertical: false,             
         haveScale: true,     
-        haveLabel: true
+        haveLabel: true,
+        isCollection: false,
+        collection: []
       }
     }
 
