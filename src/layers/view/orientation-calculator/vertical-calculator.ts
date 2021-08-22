@@ -73,4 +73,3 @@ class VerticalCalculator {
 }
 
 export { VerticalCalculator };
-

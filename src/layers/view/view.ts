@@ -6,38 +6,7 @@ import { HorizontalCalculator } from './orientation-calculator/horizontal-calcul
 import { VerticalCalculator } from './orientation-calculator/vertical-calculator';
 import { ProgressBar } from './progress-bar/progress-bar';
 import { Scale } from './scale/scale';
-
-interface IView {
-  slider: HTMLElement;
-  extremeValues: number[],
-  currentValues: number[],
-  margins: number[],
-  scaleStep: number,
-  isVertical: boolean,
-  haveProgressBar: boolean,
-  haveScale: boolean,
-  haveLabel: boolean,
-  collection: string[] | number[] | HTMLElement[],
-  isCollection: boolean
-}
-
-interface ICreateElements {
-  margins: number[],
-  extremeValues: number[],
-  currentValues: number[],
-  scaleStep: number,
-  haveProgressBar: boolean,
-  haveScale: boolean,
-  haveLabel: boolean,
-  isCollection: boolean
-}
-
-interface ICallback { function: (eventObject: { eventName: string, eventBody }) => void }
-interface IViewUpdate {
-  margins: number[],
-  currentValues: number[],
-  collection: string[] | number[] | HTMLElement[]
-}
+import { IView, ICreateElements, IViewUpdate, ICallback } from '../interfaces/interfaces';
 
 class View {
   private body: HTMLElement;
@@ -101,14 +70,15 @@ class View {
   public getLineLocation = (): number => this.line.getLocation();
 
   public update = (options: IViewUpdate): void => {
-    this.handles.map((item, index) => item.update(options.margins[index]));
-    if (this.progressBar) this.progressBar.update(options.margins);
+    const { margins, currentValues, collection } = options;
+    this.handles.map((item, index) => item.update(margins[index]));
+    if (this.progressBar) this.progressBar.update(margins);
 
     if (this.labels) {
       this.labels.map((item, index) => item.update({
-        margin: options.margins[index],
-        value: options.currentValues[index],
-        collection: options.collection,
+        margin: margins[index],
+        value: currentValues[index],
+        collection,
       }));
     }
   };
@@ -153,15 +123,11 @@ class View {
   }
 
   private switchCalculator(isVertical: boolean): void {
+    const { getLineSize, getLineLocation } = this;
+
     this.calculator = isVertical
-      ? new VerticalCalculator({
-        getLineSize: this.getLineSize,
-        getLineLocation: this.getLineLocation,
-      })
-      : new HorizontalCalculator({
-        getLineSize: this.getLineSize,
-        getLineLocation: this.getLineLocation,
-      });
+      ? new VerticalCalculator({ getLineSize, getLineLocation })
+      : new HorizontalCalculator({ getLineSize, getLineLocation });
   }
 
   private initConsolidatingObserver(): void {

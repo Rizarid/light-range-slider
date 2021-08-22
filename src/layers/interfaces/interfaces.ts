@@ -126,27 +126,74 @@ interface IController {
 interface IChangeParameterObject {
   eventName: string,
   eventBody: {
-    extremeValues: number[],
-    min: number,
-    max: number,
-    currentValues: number[],
-    currentMinValue: number,
-    currentMaxValue: number,
-    step: number,
-    scaleStep: number,
-    haveProgressBar: boolean,
-    isVertical: boolean,
-    isInterval: boolean,
-    haveScale: boolean,
-    haveLabel: boolean,
-    isCollection: boolean,
-    collection: string[] | number[] | HTMLElement[]
+    extremeValues?: number[],
+    min?: number,
+    max?: number,
+    currentValues?: number[],
+    currentMinValue?: number,
+    currentMaxValue?: number,
+    step?: number,
+    scaleStep?: number,
+    haveProgressBar?: boolean,
+    isVertical?: boolean,
+    isInterval?: boolean,
+    haveScale?: boolean,
+    haveLabel?: boolean,
+    isCollection?: boolean,
+    collection?: string[] | number[] | HTMLElement[]
   }
+}
+
+interface ISliderOptions {
+  slider?: HTMLElement,
+  extremeValues?: number[],
+  currentValues?: number[],
+  step?: number,
+  scaleStep?: number,
+  isVertical?: boolean,
+  isInterval?: boolean,
+  haveProgressBar?: boolean,
+  haveScale?: boolean,
+  haveLabel?: boolean,
+  callbacks?: ((updateObject: IOutsideUpdate) => void)[]
+  collection?: string[] | number[] | HTMLElement[],
+  isCollection?: boolean
+}
+
+interface IView {
+  slider: HTMLElement;
+  extremeValues: number[],
+  currentValues: number[],
+  margins: number[],
+  scaleStep: number,
+  isVertical: boolean,
+  haveProgressBar: boolean,
+  haveScale: boolean,
+  haveLabel: boolean,
+  collection: string[] | number[] | HTMLElement[],
+  isCollection: boolean
+}
+
+interface ICreateElements {
+  margins: number[],
+  extremeValues: number[],
+  currentValues: number[],
+  scaleStep: number,
+  haveProgressBar: boolean,
+  haveScale: boolean,
+  haveLabel: boolean,
+  isCollection: boolean
+}
+
+interface IViewUpdate {
+  margins: number[],
+  currentValues: number[],
+  collection: string[] | number[] | HTMLElement[]
 }
 
 export {
   IModel, IUpdateCallback, IFullUpdate, IValuesUpdate, IEventObject, IViewEvent, IOutsideUpdate,
   IHandle, ICallback, ILabel, ILabelAddContent, ILabelUpdate, IScale, ICreateScaleItems,
   IScaleAddContent, IGetScaleItem, IClickEventObject, IProgressBar, IController,
-  IChangeParameterObject,
+  IChangeParameterObject, ISliderOptions, IView, ICreateElements, IViewUpdate,
 };
