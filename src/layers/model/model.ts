@@ -440,7 +440,7 @@ class Model {
         throw new Error(`Expected boolean type, passed ${typeof newValue} type`);
       }
 
-      if (this.isCollection && (this.collection.length < 2)) {
+      if (newValue && (this.collection.length < 2)) {
         throw new Error('You cannot activate the isCollection mode if the array collection length is less than 2');
       }
 
