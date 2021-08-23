@@ -140,6 +140,7 @@ class ControlPanel {
 
     this.step.addEventListener('input', this.handleStepInput);
     this.scaleStep.addEventListener('input', this.handleScaleStepInput);
+    this.collection.addEventListener('change', this.handleCollectionChange);
 
     this.isVertical.addEventListener('change', this.handleIsVerticalChange);
     this.isInterval.addEventListener('change', this.handleIsIntervalChange);
@@ -196,6 +197,12 @@ class ControlPanel {
 
   private handleHaveProgressBarChange = (): void => {
     (this.slider['changeHaveProgressBar'] as (arg: boolean) => JQuery)(this.haveProgressBar.checked);
+  };
+
+  private handleCollectionChange = (): void => {
+    (this.slider['changeCollection'] as (arg: string[] | number[]) => JQuery)(
+      this.collection.value.split(', '),
+    );
   };
 
   private handleSliderUpdate = (event: IModel) => {
