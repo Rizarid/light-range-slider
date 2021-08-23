@@ -27,7 +27,7 @@ class Label {
 
     this.addContent({ value, collection });
     const adjustedMarginToSize = this.calculator.getAdjustedMarginToSize(this.body, margin);
-    this.calculator.setElementsMargin(this.body, adjustedMarginToSize);
+    this.calculator.setElementsMargin(this.body, Math.round(adjustedMarginToSize));
   };
 
   private createLabel(): void {
