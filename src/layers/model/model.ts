@@ -313,9 +313,10 @@ class Model {
 
   private adjustQuantityOfCurrentValues(): void {
     const [minCurrentValue] = this.currentValues;
+    const maxValue = this.extremeValues[1];
 
     if (this.isInterval && (this.currentValues.length === 1)) {
-      this.currentValues = [minCurrentValue, minCurrentValue];
+      this.currentValues = [minCurrentValue, maxValue];
     }
 
     if (!this.isInterval && (this.currentValues.length === 2)) {
