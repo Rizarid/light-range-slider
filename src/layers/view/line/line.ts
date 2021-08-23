@@ -6,17 +6,21 @@ import { VerticalCalculator } from '../orientation-calculator/vertical-calculato
 class Line {
   private body: HTMLElement;
 
+  private isResizeBlocked = true;
+
   private calculator: HorizontalCalculator | VerticalCalculator;
 
   private changeObserver: ChangeObserver = new ChangeObserver();
 
   private resizeObserver: ResizeObserver = new ResizeObserver(() => {
-    const eventObject = {
-      eventName: 'lineResize',
-      eventBody: { lineSize: this.calculator.getElementsSize(this.body) },
-    };
+    if (!this.isResizeBlocked) {
+      const eventObject = {
+        eventName: 'lineResize',
+        eventBody: {},
+      };
 
-    this.changeObserver.notify(eventObject);
+      this.changeObserver.notify(eventObject);
+    }
   });
 
   constructor(calculator: HorizontalCalculator | VerticalCalculator) {
@@ -39,6 +43,10 @@ class Line {
   public getSize = (): number => this.calculator.getElementsSize(this.body);
 
   public getLocation = (): number => this.calculator.getElementsLocation(this.body);
+
+  public setIsResizeBlocked = (newValue: boolean): void => {
+    this.isResizeBlocked = newValue;
+  };
 
   private createLine(): void {
     this.body = document.createElement('div');

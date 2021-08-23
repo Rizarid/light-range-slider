@@ -6,7 +6,9 @@ import { HorizontalCalculator } from './orientation-calculator/horizontal-calcul
 import { VerticalCalculator } from './orientation-calculator/vertical-calculator';
 import { ProgressBar } from './progress-bar/progress-bar';
 import { Scale } from './scale/scale';
-import { IView, ICreateElements, IViewUpdate, ICallback } from '../interfaces/interfaces';
+import { 
+  IView, ICreateElements, IViewUpdate, ICallback, IScaleUpdateBody, IScale 
+} from '../interfaces/interfaces';
 
 class View {
   private body: HTMLElement;
@@ -43,11 +45,7 @@ class View {
     this.appendElements(haveLabel, haveProgressBar);
 
     if (haveScale) {
-      this.scale = new Scale({
-        scaleStep, extremeValues, calculator, isCollection, collection,
-      });
-      this.body.appendChild(this.scale.getBody());
-      this.scale.adjustMarginToSize();
+      this.createScale({ scaleStep, extremeValues, calculator, isCollection, collection });
     }
 
     this.update({ margins, currentValues, collection });
@@ -81,6 +79,27 @@ class View {
         collection,
       }));
     }
+  };
+
+  public scaleUpdate = (options: IScaleUpdateBody): void => {
+    const { scaleStep, extremeValues, isCollection, collection, haveScale } = options;
+    const { calculator } = this;
+
+    if (haveScale) {
+      this.scale.remove();
+      this.createScale({ scaleStep, extremeValues, calculator, isCollection, collection });
+      this.scale.subscribe(this.consolidatingObserver.getSubscribeFunction('scale'));
+    }
+  };
+
+  private createScale = (options: IScale): void => {
+    this.scale = new Scale(options);
+    this.body.appendChild(this.scale.getBody());
+    this.scale.adjustMarginToSize();
+  };
+
+  public setIsResizeBlocked = (newValue: boolean): void => {
+    this.line.setIsResizeBlocked(newValue);
   };
 
   private modifySlidersClass(isVertical: boolean) :void {
