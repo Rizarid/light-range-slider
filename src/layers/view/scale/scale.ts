@@ -50,9 +50,14 @@ class Scale {
       const adjustedMarginToSize = this.calculator.getAdjustedMarginToSize(
         item, marginInPercent,
       );
+
       this.calculator.setElementsMargin(item, adjustedMarginToSize);
       return null;
     });
+  };
+
+  public remove = (): void => {
+    this.body.remove();
   };
 
   private createScale(): void {
@@ -97,12 +102,7 @@ class Scale {
 
   private handleScaleItemClick = (event: PointerEvent): void => {
     const { target } = event;
-
-    const elementMargin = this.calculator.getElementMargin((target as HTMLElement));
-    const elementMarginInPercent = this.calculator.pxToPercentages(elementMargin);
-    const newValue = this.calculator.getNotAdjustedMarginToSize(
-      (target as HTMLElement), elementMarginInPercent,
-    );
+    const newValue = (target as HTMLElement).innerHTML;
 
     const eventObject = {
       eventName: 'scaleItemClick',

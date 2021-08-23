@@ -15,6 +15,7 @@ class Controller {
     this.createView(slider, this.model.getFullUpdate());
     this.model.subscribe({ function: this.handleModelEvents });
     this.view.subscribe({ function: this.handleViewEvents });
+    this.view.setIsResizeBlocked(false);
   }
 
   public changeParameter(eventObject: IChangeParameterObject): void {
@@ -107,6 +108,8 @@ class Controller {
     }
 
     if (eventName === 'valuesUpdate') this.view.update(event.eventBody);
+
+    if (eventName === 'scaleUpdate') this.view.scaleUpdate(event.eventBody);
   };
 
   private handleViewEvents = (event: IViewEvent): void => {
@@ -127,8 +130,21 @@ class Controller {
 
     if (eventName === 'scaleItemClick') {
       let { newValue } = event.eventBody;
-      newValue = this.model.percentToValue(newValue);
+      const isCollection = this.model.getIsCollection();
+
+      if (isCollection) {
+        // eslint-disable-next-line eqeqeq
+        newValue = this.model.getCollection().findIndex((item) => item == newValue);
+      } else {
+        newValue = this.model.valueToPercent(Number(newValue));
+        newValue = this.model.percentToValue(newValue);
+      }
+
       this.model.setNearestValue(newValue);
+    }
+
+    if (eventName === 'lineResize') {
+      this.model.sendUpdate('scaleUpdate');
     }
   };
 
