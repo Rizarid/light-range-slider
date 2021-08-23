@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import {
-  IModel, IUpdateCallback, IFullUpdate, IValuesUpdate,
+  IModel, IUpdateCallback, IFullUpdate, IValuesUpdate, IScaleUpdate,
 } from '../interfaces/interfaces';
 import { ChangeObserver } from '../observers/change-observer';
 
@@ -252,21 +252,58 @@ class Model {
   };
 
   public percentToValue = (percentValue: number): number => {
-    const [minValue, maxValue] = this.extremeValues;
+    const valueInAdjustedRange = this.percentToAdjustedRangeToStep(percentValue);
+    const value = this.valueInAdjustedRangeToValue(valueInAdjustedRange);
 
-    const range = maxValue - minValue;
-    const adjustedRangeTpStep = range / this.step;
-
-    const valueInAdjustedRange = adjustedRangeTpStep * (percentValue / 100);
-    const valueInRange = Math.round(valueInAdjustedRange) * this.step;
-    const value = valueInRange + minValue;
-
-    const accuracy = (this.step < 1) ? 1 / this.step : 1;
+    const accuracy = 10 ** this.getNumberOfDecimalPlaces(this.step);
 
     return Math.round(value * accuracy) / accuracy;
   };
 
   public sendOutsideUpdate = (): void => this.notifyCallbacks(this.getOutsideUpdate());
+
+  public sendUpdate = (eventName?: string): void => {
+    let eventObject: IValuesUpdate | IFullUpdate | IScaleUpdate;
+
+    if (eventName === 'valuesUpdate') eventObject = this.getValuesUpdate();
+    else if (eventName === 'scaleUpdate') eventObject = this.getScaleUpdate();
+    else eventObject = this.getFullUpdate();
+
+    this.sendOutsideUpdate();
+    this.changeObserver.notify(eventObject);
+  };
+
+  private getNumberOfDecimalPlaces = (value: number): number => {
+    const str = value.toString();
+    return str.split('.').pop().length;
+  };
+
+  private getAdjustedRangeToStep = () => {
+    const [minValue, maxValue] = this.extremeValues;
+    const range = maxValue - minValue;
+    return range / this.step;
+  };
+
+  private percentToAdjustedRangeToStep = (percentValue: number): number => {
+    const adjustedRange = this.getAdjustedRangeToStep();
+    return adjustedRange * (percentValue / 100);
+  };
+
+  private checkForExceedingTheLastStep = (valueInAdjustedRange: number): boolean => {
+    const adjustedRange = this.getAdjustedRangeToStep();
+    return (Math.round(valueInAdjustedRange * 10) / 10 > Math.round(adjustedRange));
+  };
+
+  private valueInAdjustedRangeToValue = (valueInAdjustedRange: number): number => {
+    const [minValue] = this.extremeValues;
+    const adjustedRange = this.getAdjustedRangeToStep();
+
+    const valueInRange = this.checkForExceedingTheLastStep(valueInAdjustedRange)
+      ? adjustedRange * this.step
+      : Math.round(valueInAdjustedRange) * this.step;
+
+    return valueInRange + minValue;
+  };
 
   private correctCurrentValueToInterval = (): void => {
     const [minValue, maxValue] = this.extremeValues;
@@ -286,21 +323,22 @@ class Model {
     }
   }
 
-  private sendUpdate(eventName?: string): void {
-    let eventObject: IValuesUpdate | IFullUpdate;
-
-    if (eventName === 'valuesUpdate') eventObject = this.getValuesUpdate();
-    else eventObject = this.getFullUpdate();
-
-    this.sendOutsideUpdate();
-    this.changeObserver.notify(eventObject);
-  }
-
   private getValuesUpdate = (): IValuesUpdate => ({
     eventName: 'valuesUpdate',
     eventBody: {
       currentValues: this.currentValues,
       margins: this.currentValues.map((item) => this.valueToPercent(item)),
+      collection: this.collection,
+    },
+  });
+
+  private getScaleUpdate = (): IScaleUpdate => ({
+    eventName: 'scaleUpdate',
+    eventBody: {
+      extremeValues: this.extremeValues,
+      scaleStep: this.scaleStep,
+      haveScale: this.haveScale,
+      isCollection: this.isCollection,
       collection: this.collection,
     },
   });
