@@ -16,14 +16,11 @@ class Handle {
 
   private changeObserver: ChangeObserver = new ChangeObserver();
 
-  private cleanWasActiveClass: () => void;
-
   constructor(options: IHandle) {
-    const { index, calculator, cleanWasActiveClass } = options;
+    const { index, calculator } = options;
 
     this.calculator = calculator;
     this.index = index;
-    this.cleanWasActiveClass = cleanWasActiveClass;
     this.createHandle();
     this.addListeners();
   }
@@ -73,18 +70,28 @@ class Handle {
     );
 
     target.addEventListener('pointermove', this.handleHandlePointerMove);
+
+    const eventObject = {
+      eventName: 'handlePointerDown',
+      eventBody: { index: this.index },
+    };
+
+    this.changeObserver.notify(eventObject);
   };
 
   private handleHandlePointerUp = (event: PointerEvent): void => {
     const { target, pointerId } = event;
     target.removeEventListener('pointermove', this.handleHandlePointerMove);
 
-    this.body.classList.remove('light-range-slider__handle_active');
-    this.cleanWasActiveClass();
-    this.body.classList.add('light-range-slider__handle_was-active');
-
     ((target as HTMLElement).releasePointerCapture as (pointerId: number) => void)(pointerId);
     this.cursorOffsetRelativeHandleAtStartDragging = 0;
+
+    const eventObject = {
+      eventName: 'handlePointerUp',
+      eventBody: { index: this.index },
+    };
+
+    this.changeObserver.notify(eventObject);
   };
 
   private handleHandlePointerMove = (event: PointerEvent): void => {

@@ -6,8 +6,8 @@ import { HorizontalCalculator } from './orientation-calculator/horizontal-calcul
 import { VerticalCalculator } from './orientation-calculator/vertical-calculator';
 import { ProgressBar } from './progress-bar/progress-bar';
 import { Scale } from './scale/scale';
-import { 
-  IView, ICreateElements, IViewUpdate, ICallback, IScaleUpdateBody, IScale 
+import {
+  IView, ICreateElements, IViewUpdate, ICallback, IScaleUpdateBody, IScale, IEventObject,
 } from '../interfaces/interfaces';
 
 class View {
@@ -49,8 +49,8 @@ class View {
     }
 
     this.update({ margins, currentValues, collection });
-
     this.initConsolidatingObserver();
+    this.handles.map((item) => item.subscribe({ function: this.handleHandleEvents }));
   }
 
   public subscribe(callback: ICallback): void {
@@ -115,7 +115,7 @@ class View {
     this.line = new Line(calculator);
 
     this.handles = margins.map((item, index) => (
-      new Handle({ index, calculator, cleanWasActiveClass })
+      new Handle({ index, calculator })
     ));
 
     if (haveProgressBar) this.progressBar = new ProgressBar({ calculator });
@@ -164,8 +164,23 @@ class View {
     }
   }
 
-  private cleanWasActiveClass = (): void => {
-    this.handles.map((item) => item.getBody().classList.remove('light-range-slider__handle_was-active'));
+  private handleHandleEvents = (event: IEventObject):void => {
+    const { eventName } = event;
+    const { index } = (event.eventBody as { index: number });
+
+    if (eventName === 'handlePointerDown') {
+      this.handles.map((item) => item.getBody().classList.remove('light-range-slider__handle_was-active'));
+      this.labels.map((item) => item.getBody().classList.remove('light-range-slider__label_was-active'));
+      this.handles[index].getBody().classList.add('light-range-slider__handle_active');
+      this.labels[index].getBody().classList.add('light-range-slider__label_active');
+    }
+
+    if (eventName === 'handlePointerUp') {
+      this.handles.map((item) => item.getBody().classList.remove('light-range-slider__handle_active'));
+      this.labels.map((item) => item.getBody().classList.remove('light-range-slider__label_active'));
+      this.handles[index].getBody().classList.add('light-range-slider__handle_was-active');
+      this.labels[index].getBody().classList.add('light-range-slider__label_was-active');
+    }
   };
 }
 
