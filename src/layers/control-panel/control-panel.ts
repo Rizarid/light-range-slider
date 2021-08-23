@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 import * as $ from 'jquery';
 import { IController, IModel } from '../interfaces/interfaces';
+import './control-panel.sass';
 
 class ControlPanel {
   private body: HTMLElement;
@@ -119,6 +120,7 @@ class ControlPanel {
 
   private appendElement = (textOfLabel: string, element: HTMLInputElement): void => {
     const label = this.getLabel(textOfLabel);
+    label.classList.add(element.type);
     label.appendChild(element);
     this.controlPanel.appendChild(label);
   };
