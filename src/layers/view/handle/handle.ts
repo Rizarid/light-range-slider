@@ -14,13 +14,15 @@ class Handle {
 
   private calculator: HorizontalCalculator | VerticalCalculator;
 
-  private changeObserver: ChangeObserver = new ChangeObserver();
+  private changeObserver: ChangeObserver;
 
   constructor(options: IHandle) {
-    const { index, calculator } = options;
+    const { index, calculator, changeObserver } = options;
 
     this.calculator = calculator;
+    this.changeObserver = changeObserver;
     this.index = index;
+
     this.createHandle();
     this.addListeners();
   }

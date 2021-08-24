@@ -12,16 +12,17 @@ class Scale {
 
   private calculator: HorizontalCalculator | VerticalCalculator;
 
-  private changeObserver: ChangeObserver = new ChangeObserver();
+  private changeObserver: ChangeObserver;
 
   private addContent: (options: IScaleAddContent) => void;
 
   constructor(options: IScale) {
     const {
-      scaleStep, extremeValues, collection, calculator, isCollection,
+      scaleStep, extremeValues, collection, calculator, isCollection, changeObserver,
     } = options;
 
     this.calculator = calculator;
+    this.changeObserver = changeObserver;
 
     this.addContent = isCollection
       ? this.addContentByIsCollection

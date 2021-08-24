@@ -1,5 +1,5 @@
 import { ChangeObserver } from '../../observers/change-observer';
-import { ICallback } from '../../interfaces/interfaces';
+import { ICallback, ILine } from '../../interfaces/interfaces';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
 
@@ -10,7 +10,7 @@ class Line {
 
   private calculator: HorizontalCalculator | VerticalCalculator;
 
-  private changeObserver: ChangeObserver = new ChangeObserver();
+  private changeObserver: ChangeObserver;
 
   private resizeObserver: ResizeObserver = new ResizeObserver(() => {
     if (!this.isResizeBlocked) {
@@ -23,10 +23,15 @@ class Line {
     }
   });
 
-  constructor(calculator: HorizontalCalculator | VerticalCalculator) {
+  constructor(options: ILine) {
+    const { calculator, changeObserver } = options;
+
     this.calculator = calculator;
+    this.changeObserver = changeObserver;
+
     this.createLine();
     this.addListeners();
+
     this.resizeObserver.observe(this.body);
   }
 

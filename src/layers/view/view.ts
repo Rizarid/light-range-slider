@@ -1,4 +1,3 @@
-import { ConsolidatingObserver } from '../observers/consolidating-observer';
 import { Handle } from './handle/handle';
 import { Label } from './label/label';
 import { Line } from './line/line';
@@ -9,6 +8,7 @@ import { Scale } from './scale/scale';
 import {
   IView, ICreateElements, IViewUpdate, ICallback, IScaleUpdateBody, IScale, IEventObject,
 } from '../interfaces/interfaces';
+import { ChangeObserver } from '../observers/change-observer';
 
 class View {
   private body: HTMLElement;
@@ -25,7 +25,7 @@ class View {
 
   private calculator: HorizontalCalculator | VerticalCalculator;
 
-  private consolidatingObserver: ConsolidatingObserver = new ConsolidatingObserver();
+  private changeObserver: ChangeObserver = new ChangeObserver();
 
   constructor(options: IView) {
     const {
@@ -45,20 +45,22 @@ class View {
     this.appendElements(haveLabel, haveProgressBar);
 
     if (haveScale) {
-      this.createScale({ scaleStep, extremeValues, calculator, isCollection, collection });
+      const { changeObserver } = this;
+      this.createScale({
+        scaleStep, extremeValues, calculator, isCollection, collection, changeObserver,
+      });
     }
 
     this.update({ margins, currentValues, collection });
-    this.initConsolidatingObserver();
-    this.handles.map((item) => item.subscribe({ function: this.handleHandleEvents }));
+    this.changeObserver.subscribe({ function: this.handleHandleEvents });
   }
 
   public subscribe(callback: ICallback): void {
-    this.consolidatingObserver.subscribe(callback);
+    this.changeObserver.subscribe(callback);
   }
 
   public unsubscribe(callback: ICallback): void {
-    this.consolidatingObserver.unsubscribe(callback);
+    this.changeObserver.unsubscribe(callback);
   }
 
   public getBody = (): HTMLElement => this.body;
@@ -83,12 +85,13 @@ class View {
 
   public scaleUpdate = (options: IScaleUpdateBody): void => {
     const { scaleStep, extremeValues, isCollection, collection, haveScale } = options;
-    const { calculator } = this;
+    const { calculator, changeObserver } = this;
 
     if (haveScale) {
       this.scale.remove();
-      this.createScale({ scaleStep, extremeValues, calculator, isCollection, collection });
-      this.scale.subscribe(this.consolidatingObserver.getSubscribeFunction('scale'));
+      this.createScale({
+        scaleStep, extremeValues, calculator, isCollection, collection, changeObserver,
+      });
     }
   };
 
@@ -109,13 +112,13 @@ class View {
   }
 
   private createElements(options: ICreateElements): void {
-    const { calculator, cleanWasActiveClass } = this;
+    const { calculator, changeObserver } = this;
     const { margins, currentValues, haveLabel, isCollection, haveProgressBar } = options;
 
-    this.line = new Line(calculator);
+    this.line = new Line({ calculator, changeObserver });
 
     this.handles = margins.map((item, index) => (
-      new Handle({ index, calculator })
+      new Handle({ index, calculator, changeObserver })
     ));
 
     if (haveProgressBar) this.progressBar = new ProgressBar({ calculator });
@@ -135,7 +138,6 @@ class View {
 
   private createLabels(currentValues: number[], isCollection: boolean): void {
     this.labels = currentValues.map((item, index) => new Label({
-      value: currentValues[index],
       calculator: this.calculator,
       isCollection,
     }));
@@ -147,21 +149,6 @@ class View {
     this.calculator = isVertical
       ? new VerticalCalculator({ getLineSize, getLineLocation })
       : new HorizontalCalculator({ getLineSize, getLineLocation });
-  }
-
-  private initConsolidatingObserver(): void {
-    this.consolidatingObserver.addObserver('line');
-    this.line.subscribe(this.consolidatingObserver.getSubscribeFunction('line'));
-
-    this.consolidatingObserver.addObserver('handles');
-    this.handles.map((item) => (
-      item.subscribe(this.consolidatingObserver.getSubscribeFunction('handles'))
-    ));
-
-    if (this.scale) {
-      this.consolidatingObserver.addObserver('scale');
-      this.scale.subscribe(this.consolidatingObserver.getSubscribeFunction('scale'));
-    }
   }
 
   private handleHandleEvents = (event: IEventObject):void => {
