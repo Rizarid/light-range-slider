@@ -1,46 +1,37 @@
-import "chai"
+import { expect } from "chai"
 import { Handle } from '../handle'
 import { HorizontalCalculator } from '../../orientation-calculator/horizontal-calculator'
-import { VerticalCalculator } from '../../orientation-calculator/vertical-calculator'
+import { ChangeObserver } from "../../../observers/change-observer"
 
 describe("Handle", function(): void {
   let handle: Handle
-  let calculator: HorizontalCalculator | VerticalCalculator;
+  let state = {
+    handleEventObject: undefined,
+    margin: 0
+  }
 
-  let body: HTMLElement = document.querySelector("body");
+  let calculator = { 
+    getElementMargin: (target: HTMLElement): number => 250,
+    pxToPercentages: (value: number):number => value / 500 * 100,
+    getAdjustedMarginToSize: (target: HTMLElement, margin: number): number => margin - 5,
+    getNotAdjustedMarginToSize: (target: HTMLElement, margin: number): number => margin + 5,
+    getCursorLocation: (event: { pageX: number, pageY: number }): number => event.pageX - 50,
+    setElementsMargin: (target: HTMLElement, margin: number): void => { state.margin = margin },    
+  }
+
+  let changeObserver = {
+    notify: (event): void => state.handleEventObject = event,
+  }
 
   beforeEach(function(): void {
+    state.handleEventObject = undefined,
+    state.margin = 0;
 
-    let slider: HTMLElement = document.createElement("div");
-
-    body.innerHTML = `
-      <style> 
-        html{ margin: 0; padding: 0; box-sizing: border-box}
-        body{ margin: 0; padding: 0; box-sizing: border-box }
-        .slider{ width: 500px; height: 20px; margin: 20px 0 0 50px; padding: 0; position: relative; box-sizing: border-box }
-        .light-range-slider__handle{ width: 10px; height: 10px; position: absolute; box-sizing: border-box }
-
-        .slider.slider_vertical{ width: 20px; height: 700px; position: relative}
-        .slider.slider_vertical .light-range-slider__handle{ width: 10px; height: 10px; position: absolute }
-      </style>`
-
-    body.appendChild(slider);
-    slider.className = "slider";
-
-    let view = {
-      getLineSize: () => slider.offsetWidth,
-      getLineLocation: () => slider.getBoundingClientRect().left,
-      cleanWasActiveClass: () => handle.getBody().classList.remove('light-range-slider__handle_was-active')
-    }
-
-    calculator = new HorizontalCalculator({ 
-      getLineSize: view.getLineSize, 
-      getLineLocation: view.getLineLocation 
+    handle = new Handle({ 
+      index: 0, 
+      calculator: (calculator as HorizontalCalculator),
+      changeObserver: (changeObserver as ChangeObserver)
     })
-
-    handle = new Handle({ index: 0, calculator, cleanWasActiveClass: view.cleanWasActiveClass })
-    slider.appendChild(handle.getBody());
-    handle.update(50)
   })
 
   afterEach( function (): void {
@@ -49,65 +40,77 @@ describe("Handle", function(): void {
   })
 
   it('Should return div with class "light-range-slider__handle"', function() { 
-    expect(document.querySelector('.light-range-slider__handle').tagName).to.equal('DIV');
+    expect(handle.getBody().tagName).to.equal('DIV');
+    expect(handle.getBody().className).to.equal('light-range-slider__handle');
   })
 
   it('Should update margin', function() {
+    handle.update(250);
+    expect(state.margin).to.equal(245);
+  })
 
-    expect(handle.getBody().offsetLeft).to.equal(245);
+  it('Should return cursor location in percents', function() {
+    const cursorLocation = handle.getCursorLocationInPercent(({ pageX: 300 } as PointerEvent));
+    expect(cursorLocation).to.equal(50);
+  })
 
-    handle.update(70);
-
-    expect(handle.getBody().offsetLeft).to.equal(345);
+  it('Should return not adjusted margin to element size', function() {
+    const cursorLocation = handle.getNotAdjustedMargin(handle.getBody());
+    expect(cursorLocation).to.equal(55);
   })
 
   it('Should active pointerdown event', function() {
 
+    const eventObject = {
+      eventName: 'handlePointerDown',
+      eventBody: { index: 0 },
+    };
+
+    const body = document.querySelector('body');
+    body.appendChild(handle.getBody());
+
     handle.getBody().dispatchEvent(new PointerEvent('pointerdown', {
-      clientX: 302,
+      clientX: 327,
       clientY: 20,
       pointerId: 1
     }))
 
     expect(Math.round(handle.cursorOffsetRelativeHandleAtStartDragging * 100) / 100).to.equal(0.4);
+    expect(state.handleEventObject).to.deep.equal(eventObject);
   })
 
   it('Should active pointermove event', function() {
     const eventObject = {
       eventName: 'handleMove',
-      eventBody: { handlesIndex: 0, newValue: 70 },
+      eventBody: { handlesIndex: 0, newValue: 75 },
     };
-    
-    let testValue: {eventName: string, eventBody: { handlesIndex: number, newValue: number } }
 
-    const callback = (
-      event: {eventName: string, eventBody: { handlesIndex: number, newValue: number } }
-    ) => testValue = event
-
-    const slider = document.querySelector('.slider');
-    slider.appendChild(handle.getBody());
-
-    handle.subscribe({ function: callback });
+    const body = document.querySelector('body');
+    body.appendChild(handle.getBody());
 
     handle.getBody().dispatchEvent(new PointerEvent('pointerdown', {
-      clientX: 302, 
+      clientX: 327, 
       clientY: 20, 
       pointerId: 1
     }))
 
     handle.getBody().dispatchEvent(new PointerEvent('pointermove', {
-      clientX: 402, 
+      clientX: 427, 
       clientY: 20, 
       pointerId: 1
     }))
 
-    expect(testValue).to.deep.equal(eventObject);
+    expect(state.handleEventObject).to.deep.equal(eventObject);
   })
 
   it('Should active pointerup event', function() {
+    const eventObject = {
+      eventName: 'handlePointerUp',
+      eventBody: { index: 0 },
+    };
     
-    const slider = document.querySelector('.slider');
-    slider.appendChild(handle.getBody());
+    const body = document.querySelector('body');
+    body.appendChild(handle.getBody());
 
     handle.getBody().dispatchEvent(new PointerEvent('pointerdown', {
       clientX: 302,
@@ -120,6 +123,7 @@ describe("Handle", function(): void {
     }))
 
     expect(handle.cursorOffsetRelativeHandleAtStartDragging).to.equal(0);
+    expect(state.handleEventObject).to.deep.equal(eventObject);
   })
 
 

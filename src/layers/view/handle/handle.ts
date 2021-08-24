@@ -1,7 +1,7 @@
 import { ChangeObserver } from '../../observers/change-observer';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
-import { IHandle, ICallback } from '../../interfaces/interfaces';
+import { IHandle } from '../../interfaces/interfaces';
 
 class Handle {
   private body: HTMLElement;
@@ -27,14 +27,6 @@ class Handle {
     this.addListeners();
   }
 
-  public subscribe(callback: ICallback): void {
-    this.changeObserver.subscribe(callback);
-  }
-
-  public unsubscribe(callback: ICallback): void {
-    this.changeObserver.unsubscribe(callback);
-  }
-
   public getBody = (): HTMLElement => this.body;
 
   public update = (margin: number): void => {
@@ -42,10 +34,10 @@ class Handle {
     this.calculator.setElementsMargin(this.body, adjustedMarginToSize);
   };
 
-  private createHandle(): void {
+  private createHandle = (): void => {
     this.body = document.createElement('div');
     this.body.className = 'light-range-slider__handle';
-  }
+  };
 
   private addListeners = (): void => {
     this.body.addEventListener('pointerdown', this.handleHandlePointerDown);
@@ -53,19 +45,24 @@ class Handle {
     this.body.addEventListener('click', this.handleHandleClick);
   };
 
+  private getCursorLocationInPercent = (event: PointerEvent): number => {
+    const cursorLocation = this.calculator.getCursorLocation(event);
+    return this.calculator.pxToPercentages(cursorLocation);
+  };
+
+  private getNotAdjustedMargin = (target: HTMLElement): number => {
+    const handlesMargin = this.calculator.getElementMargin(target);
+    const handlesMarginInPercent = this.calculator.pxToPercentages(handlesMargin);
+    return this.calculator.getNotAdjustedMarginToSize(this.body, handlesMarginInPercent);
+  };
+
   private handleHandlePointerDown = (event: PointerEvent): void => {
     const { target, pointerId } = event;
     ((target as HTMLElement).setPointerCapture as (pointerId: number) => void)(pointerId);
     this.body.classList.add('light-range-slider__handle_active');
 
-    const cursorLocation = this.calculator.getCursorLocation(event);
-    const cursorLocationInPercent = this.calculator.pxToPercentages(cursorLocation);
-
-    const handlesMargin = this.calculator.getElementMargin(this.body);
-    const handlesMarginInPercent = this.calculator.pxToPercentages(handlesMargin);
-    const adjustedHandlesMarginToSize = this.calculator.getNotAdjustedMarginToSize(
-      this.body, handlesMarginInPercent,
-    );
+    const cursorLocationInPercent = this.getCursorLocationInPercent(event);
+    const adjustedHandlesMarginToSize = this.getNotAdjustedMargin(this.body);
 
     this.cursorOffsetRelativeHandleAtStartDragging = (
       cursorLocationInPercent - adjustedHandlesMarginToSize
@@ -98,8 +95,7 @@ class Handle {
 
   private handleHandlePointerMove = (event: PointerEvent): void => {
     if (!this.isPointerMoveBlocked) {
-      const cursorLocation = this.calculator.getCursorLocation(event);
-      const cursorLocationInPercent = this.calculator.pxToPercentages(cursorLocation);
+      const cursorLocationInPercent = this.getCursorLocationInPercent(event);
       const newValue = cursorLocationInPercent - this.cursorOffsetRelativeHandleAtStartDragging;
 
       const eventObject = {
