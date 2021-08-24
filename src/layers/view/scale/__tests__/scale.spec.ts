@@ -1,46 +1,38 @@
-import "chai"
+import { expect } from "chai"
 import { Scale } from '../scale'
 import { HorizontalCalculator } from '../../orientation-calculator/horizontal-calculator'
-import { VerticalCalculator } from '../../orientation-calculator/vertical-calculator'
+import { ChangeObserver } from "../../../observers/change-observer"
 
 describe("Scale", function(): void {
   let scale: Scale
-  let calculator: HorizontalCalculator | VerticalCalculator;
+  let state = {
+    scaleEventObject: undefined,
+    margin: 0
+  }
 
-  let body: HTMLElement = document.querySelector("body");
+  let calculator = { 
+    getElementMargin: (target: HTMLElement): number => 250,
+    pxToPercentages: (value: number): number => (value / 500 * 100),
+    getAdjustedMarginToSize: (target: HTMLElement, value: number): number => (value - 5) ,
+    setElementsMargin: (target: HTMLElement, margin: number): void => { state.margin = margin }
+  }
+
+  let changeObserver = {
+    notify: (event): void => state.scaleEventObject = event,
+  }
 
   beforeEach(function(): void {
+    state.scaleEventObject = undefined;
+    state.margin = 0;
 
-    let slider: HTMLElement = document.createElement("div");
-
-    body.innerHTML = `
-      <style> 
-        body{ margin: 0; padding: 0 }
-        .slider{ width: 500px; height: 20px; margin: 20px 0 0 50px; padding: 0; position: relative }
-        .slider .light-range-slider__scale{ width: 100%; height: 20px; position: relative }
-        .slider .light-range-slider__scale .light-range-slider__scale-item{ width: fit-content; height: fit-content; position: absolute}
-
-        .slider.slider_vertical{ width: 20px; height: 700px; position: relative}
-        .slider.slider_vertical .light-range-slider__scale{ width: 20px; height: 100%; position: relative }
-        .slider.slider_vertical .light-range-slider__scale .light-range-slider__scale-item{ width: fit-content; height: fit-content; position: absolute}
-      </style>`
-
-    body.appendChild(slider);
-    slider.className = "slider";
-
-    let view = {
-        getLineSize: () => slider.offsetWidth,
-        getLineLocation: () => slider.getBoundingClientRect().left
-    }
-
-    calculator = new HorizontalCalculator({ 
-      getLineSize: view.getLineSize, 
-      getLineLocation: view.getLineLocation 
+    scale = new Scale({ 
+      scaleStep: 10, 
+      extremeValues: [200, 300], 
+      calculator: (calculator as HorizontalCalculator),
+      changeObserver: (changeObserver as ChangeObserver),
+      isCollection: false,
+      collection: []
     })
-
-    scale = new Scale({ scaleStep: 10, extremeValues: [200, 300], calculator })
-    slider.appendChild(scale.getBody());
-    scale.adjustMarginToSize();
   })
 
   afterEach( function (): void {
@@ -49,18 +41,69 @@ describe("Scale", function(): void {
   })
 
   it('Should return div with class "light-range-slider__scale"', function() {
-    expect(document.querySelector('.light-range-slider__scale').tagName).to.equal('DIV');
+    expect(scale.getBody().tagName).to.equal('DIV');
+    expect(scale.getBody().className).to.equal('light-range-slider__scale');
   })
 
-  it('Should contain 11 div items with class "light-range-slider__scale-item"', function() {
-    expect(document.querySelectorAll('.light-range-slider__scale-item').length).to.equal(11);
+  it('Should return margin', function() {
+    expect(scale.calcMarginOfScaleItem(250, 200, 300)).to.equal(50);
   })
 
-  it('Should set margin and value for scale-item', function() { 
-    const item5: HTMLElement = document.querySelectorAll('.light-range-slider__scale-item')[5];
+  it('Should return scale item by parameter isCollection = false', function() {
+    const item = scale.getScaleItem({ value: 250, extremeValues: [200, 300], collection: [] });
 
-    expect(item5.offsetLeft).to.equal(238);
-    expect(item5.innerText).to.equal('250');
+    expect(item.tagName).to.equal('DIV');
+    expect(item.className).to.equal('light-range-slider__scale-item');
+    expect(item.innerText).to.equal('250');
+    expect(state.margin).to.equal(50);
+  
   })
+
+  it('Should return scale item by parameter isCollection = true', function() {
+    
+    scale = new Scale({ 
+      scaleStep: 1, 
+      extremeValues: [0, 2], 
+      calculator: (calculator as HorizontalCalculator),
+      changeObserver: (changeObserver as ChangeObserver),
+      isCollection: true,
+      collection: ['one', 'two', 'free']
+    })
+
+    const item = scale.getScaleItem({ value: 1, extremeValues: [0, 2], collection: ['one', 'two', 'free'] });
+
+    expect(item.tagName).to.equal('DIV');
+    expect(item.className).to.equal('light-range-slider__scale-item');
+    expect(item.innerText).to.equal('two');
+    expect(state.margin).to.equal(50);
+  
+  })
+
+  it('Should contain 11 div items in scale.items', function() {
+    expect(scale.items.length).to.equal(11);
+  })
+
+  it('Should adjust margins of scale items to element size', function() {
+    scale.adjustMarginToSize();
+    expect(state.margin).to.equal(45);
+  })
+
+  it('Should send event object after click on scale item', function() {
+    let body = document.querySelector('body');
+    body.appendChild(scale.getBody());
+
+    scale.items[1].dispatchEvent(new MouseEvent('click'));
+
+    const eventObject = {
+      eventName: 'scaleItemClick',
+      eventBody: { newValue: '210' },
+    };
+
+    expect(state.scaleEventObject).to.deep.equal(eventObject);
+  })
+
+
+
+
 
 })

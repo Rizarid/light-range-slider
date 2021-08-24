@@ -72,14 +72,18 @@ class Scale {
 
     const item = document.createElement('div');
     item.className = 'light-range-slider__scale-item';
-    this.addContent({ target: item, value, collection });
 
-    const range = maxValue - minValue;
-    const valueInRange = value - minValue;
-    const marginInPercent = (valueInRange / range) * 100;
+    this.addContent({ target: item, value, collection });
+    const marginInPercent = this.calcMarginOfScaleItem(value, minValue, maxValue);
     this.calculator.setElementsMargin(item, marginInPercent);
 
     return item;
+  };
+
+  private calcMarginOfScaleItem = (value: number, minValue: number, maxValue: number): number => {
+    const range = maxValue - minValue;
+    const valueInRange = value - minValue;
+    return (valueInRange / range) * 100;
   };
 
   private createScaleItems = (options: ICreateScaleItems): void => {
