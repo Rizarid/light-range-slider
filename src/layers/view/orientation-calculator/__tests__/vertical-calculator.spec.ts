@@ -12,8 +12,8 @@ describe("VerticalCalculator", function (): void{
     div.className = "slider";
 
     let view = {
-      getLineSize: () => body.offsetHeight,
-      getLineLocation: () => body.getBoundingClientRect().top
+      getLineSize: () => 500,
+      getLineLocation: () => 50
     }
     
     calculator = new VerticalCalculator({ 
@@ -36,27 +36,8 @@ describe("VerticalCalculator", function (): void{
   })
 
   it("should return location of cursor", function():void{
-
-    let body: HTMLElement = document.querySelector("body");
-    body.style.margin = "0";
-    body.style.padding = "0";
-
-    let div: HTMLElement = document.querySelector(".slider");
-    div.style.marginTop = "10px";
-    div.style.height = "500px";
-
-    let view = {
-      getLineSize: () => div.offsetHeight,
-      getLineLocation: () => div.getBoundingClientRect().top
-    }
-    
-    calculator = new VerticalCalculator({ 
-      getLineSize: view.getLineSize, 
-      getLineLocation: view.getLineLocation 
-    })
-
-    const event: {pageX: number, pageY: number} = {pageX: 60, pageY: 100};
-    expect(calculator.getCursorLocation(event)).to.equal(410);
+    const event: {pageX: number, pageY: number} = {pageX: 60, pageY: 250};
+    expect(calculator.getCursorLocation(event)).to.equal(300);
   })
 
   it("should return location of element", function():void{
@@ -114,7 +95,7 @@ describe("VerticalCalculator", function (): void{
     let div: HTMLElement = document.querySelector(".slider");
     calculator.setElementsSize(div, 10);
 
-    expect(Math.round(calculator.getNotAdjustedMarginToSize(div, 55))).to.equal(60);
+    expect(Math.round(calculator.getNotAdjustedMarginToSize(div, 55))).to.equal(50);
   })
 
 })

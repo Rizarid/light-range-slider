@@ -14,8 +14,8 @@ describe("HorizontalCalculator", function (): void{
     div.className = "slider";
 
     let view = {
-      getLineSize: () => body.offsetWidth,
-      getLineLocation: () => body.getBoundingClientRect().left
+      getLineSize: () => 500,
+      getLineLocation: () => 50
     }
     
     calculator = new HorizontalCalculator({ 
@@ -37,17 +37,8 @@ describe("HorizontalCalculator", function (): void{
   })
 
   it("should return location of cursor", function():void{
-
-    let body: HTMLElement = document.querySelector("body");
-    body.style.margin = "0 0 0 10px";
-    body.style.padding = "0";
-    body.style.height = "500px";
-
-    let div: HTMLElement = document.querySelector(".slider");
-
-    const event: {pageX: number, pageY: number} = {pageX: 60, pageY: 100};
-    expect(calculator.getCursorLocation(event)).to.equal(50);
-
+    const event = {pageX: 300, pageY: 100};
+    expect(calculator.getCursorLocation(event)).to.equal(250);
   })
 
   it("should return location of element", function():void{
@@ -98,6 +89,8 @@ describe("HorizontalCalculator", function (): void{
   })
 
   it("should return not adjust margin to size", function():void{
+    const body: HTMLElement = document.querySelector("body");
+    body.style.width = "500px";
 
     let div: HTMLElement = document.querySelector(".slider");
     calculator.setElementsSize(div, 10);
