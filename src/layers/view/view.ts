@@ -157,16 +157,16 @@ class View {
 
     if (eventName === 'handlePointerDown') {
       this.handles.map((item) => item.getBody().classList.remove('light-range-slider__handle_was-active'));
-      this.labels.map((item) => item.getBody().classList.remove('light-range-slider__label_was-active'));
+      if (this.labels) this.labels.map((item) => item.getBody().classList.remove('light-range-slider__label_was-active'));
       this.handles[index].getBody().classList.add('light-range-slider__handle_active');
-      this.labels[index].getBody().classList.add('light-range-slider__label_active');
+      if (this.labels) this.labels[index].getBody().classList.add('light-range-slider__label_active');
     }
 
     if (eventName === 'handlePointerUp') {
       this.handles.map((item) => item.getBody().classList.remove('light-range-slider__handle_active'));
-      this.labels.map((item) => item.getBody().classList.remove('light-range-slider__label_active'));
+      if (this.labels) this.labels.map((item) => item.getBody().classList.remove('light-range-slider__label_active'));
       this.handles[index].getBody().classList.add('light-range-slider__handle_was-active');
-      this.labels[index].getBody().classList.add('light-range-slider__label_was-active');
+      if (this.labels) this.labels[index].getBody().classList.add('light-range-slider__label_was-active');
     }
   };
 }
