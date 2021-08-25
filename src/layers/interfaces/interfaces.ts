@@ -1,3 +1,4 @@
+import { ChangeObserver } from '../observers/change-observer';
 import { HorizontalCalculator } from '../view/orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../view/orientation-calculator/vertical-calculator';
 
@@ -55,16 +56,20 @@ interface IViewEvent {
 
 interface IOutsideUpdate { currentValues: number[] }
 
+interface ILine {
+  calculator: HorizontalCalculator | VerticalCalculator,
+  changeObserver: ChangeObserver,
+}
+
 interface IHandle {
   index: number,
   calculator: HorizontalCalculator | VerticalCalculator,
-  cleanWasActiveClass: () => void,
+  changeObserver: ChangeObserver,
 }
 
 interface ICallback { function: (eventObject: { eventName: string, eventBody }) => void }
 
 interface ILabel {
-  value: number,
   calculator: HorizontalCalculator | VerticalCalculator,
   isCollection: boolean
 }
@@ -83,6 +88,7 @@ interface IScale {
   calculator: HorizontalCalculator | VerticalCalculator,
   isCollection: boolean,
   collection: string[] | number[] | HTMLElement[],
+  changeObserver: ChangeObserver,
 }
 
 interface ICreateScaleItems{
@@ -191,9 +197,22 @@ interface IViewUpdate {
   collection: string[] | number[] | HTMLElement[]
 }
 
+interface IScaleUpdateBody {
+  extremeValues: number[],
+  scaleStep: number,
+  haveScale: boolean,
+  isCollection: boolean,
+  collection: string[] | number[] | HTMLElement[]
+}
+interface IScaleUpdate {
+  eventName: string,
+  eventBody: IScaleUpdateBody
+}
+
 export {
   IModel, IUpdateCallback, IFullUpdate, IValuesUpdate, IEventObject, IViewEvent, IOutsideUpdate,
   IHandle, ICallback, ILabel, ILabelAddContent, ILabelUpdate, IScale, ICreateScaleItems,
   IScaleAddContent, IGetScaleItem, IClickEventObject, IProgressBar, IController,
-  IChangeParameterObject, ISliderOptions, IView, ICreateElements, IViewUpdate,
+  IChangeParameterObject, ISliderOptions, IView, ICreateElements, IViewUpdate, IScaleUpdate,
+  IScaleUpdateBody, ILine,
 };
