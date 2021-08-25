@@ -133,7 +133,7 @@ class Controller {
       const isCollection = this.model.getIsCollection();
 
       if (isCollection) {
-        // eslint-disable-next-line eqeqeq
+        // eslint-disable-next-line
         newValue = this.model.getCollection().findIndex((item) => item == newValue);
       } else {
         newValue = this.model.valueToPercent(Number(newValue));

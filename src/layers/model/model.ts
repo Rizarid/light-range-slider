@@ -275,7 +275,7 @@ class Model {
 
   private getNumberOfDecimalPlaces = (value: number): number => {
     const str = value.toString();
-    return str.split('.').pop().length;
+    return str.includes('.', 0) ? str.split('.').pop().length : 0;
   };
 
   private getAdjustedRangeToStep = () => {
@@ -410,8 +410,8 @@ class Model {
         throw new Error(`Expected array of number, passed argument is ${typeof newValue}`);
       }
 
-      if (newValue.length < 0 && newValue.length <= 2) {
-        throw new Error(`Expected length of array 2, length of passed array is ${newValue.length}`);
+      if (newValue.length < 1 || newValue.length > 2) {
+        throw new Error(`Expected length of array 1 or 2, length of passed array is ${newValue.length}`);
       }
 
       newValue.map((item) => {
