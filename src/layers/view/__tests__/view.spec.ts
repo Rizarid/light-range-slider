@@ -102,10 +102,4 @@ describe("View", function(): void {
     expect(view.labels[0].getBody().className).to.equal('element light-range-slider__label_was-active');
 
   })
-
-
-
-
-
-
 })

@@ -1,6 +1,6 @@
 import { ChangeObserver } from '../../observers/change-observer';
 import {
-  IScale, ICreateScaleItems, IScaleAddContent, IGetScaleItem, ICallback,
+  IScale, ICreateScaleItems, IScaleAddContent, IGetScaleItem,
 } from '../../interfaces/interfaces';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
@@ -32,14 +32,6 @@ class Scale {
     this.createScaleItems({ scaleStep, extremeValues, collection });
     this.items.map((item) => this.body.appendChild(item));
     this.addListeners();
-  }
-
-  public subscribe(callback: ICallback): void {
-    this.changeObserver.subscribe(callback);
-  }
-
-  public unsubscribe(callback: ICallback): void {
-    this.changeObserver.unsubscribe(callback);
   }
 
   public getBody = (): HTMLElement => this.body;

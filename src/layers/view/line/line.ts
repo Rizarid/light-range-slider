@@ -1,5 +1,5 @@
 import { ChangeObserver } from '../../observers/change-observer';
-import { ICallback, ILine } from '../../interfaces/interfaces';
+import { ILine } from '../../interfaces/interfaces';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
 
@@ -33,14 +33,6 @@ class Line {
     this.addListeners();
 
     this.resizeObserver.observe(this.body);
-  }
-
-  public subscribe(callback: ICallback): void {
-    this.changeObserver.subscribe(callback);
-  }
-
-  public unsubscribe(callback: ICallback): void {
-    this.changeObserver.unsubscribe(callback);
   }
 
   public getBody = (): HTMLElement => this.body;
