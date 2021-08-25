@@ -1,4 +1,5 @@
-import { ICallback, IEventObject } from '../interfaces/interfaces';
+interface IEventObject { eventName: string, eventBody }
+interface ICallback { function: (eventObject: { eventName: string, eventBody }) => void }
 
 class ChangeObserver {
   private subscribers: ICallback[] = [];
