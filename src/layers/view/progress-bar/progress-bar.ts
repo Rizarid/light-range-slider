@@ -13,6 +13,7 @@ class ProgressBar {
     const { calculator } = options;
     this.calculator = calculator;
     this.createProgressBar();
+    this.body.style.transition = '0s';
   }
 
   public getBody = (): HTMLElement => this.body;
@@ -23,6 +24,10 @@ class ProgressBar {
 
     this.calculator.setElementsSize(this.body, size);
     this.calculator.setProgressBarMargin(this.body, margin);
+  };
+
+  public activateTransition = (): void => {
+    this.body.style.transition = '';
   };
 
   private createProgressBar(): void {

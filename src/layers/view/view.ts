@@ -53,6 +53,8 @@ class View {
 
     this.update({ margins, currentValues, collection });
     this.changeObserver.subscribe({ function: this.handleHandleEvents });
+
+    this.activateTransitions();
   }
 
   public subscribe(callback: ICallback): void {
@@ -168,6 +170,14 @@ class View {
       this.handles[index].getBody().classList.add('light-range-slider__handle_was-active');
       if (this.labels) this.labels[index].getBody().classList.add('light-range-slider__label_was-active');
     }
+  };
+
+  private activateTransitions = (): void => {
+    setTimeout(() => {
+      this.handles.map((item) => item.activateTransition());
+      if (this.labels) this.labels.map((item) => item.activateTransition());
+      if (this.progressBar) this.progressBar.activateTransition();
+    }, 500);
   };
 }
 

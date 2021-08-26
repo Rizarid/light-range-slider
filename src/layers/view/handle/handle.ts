@@ -25,6 +25,7 @@ class Handle {
 
     this.createHandle();
     this.addListeners();
+    this.body.style.transition = '0s';
   }
 
   public getBody = (): HTMLElement => this.body;
@@ -32,6 +33,10 @@ class Handle {
   public update = (margin: number): void => {
     const adjustedMarginToSize = this.calculator.getAdjustedMarginToSize(this.body, margin);
     this.calculator.setElementsMargin(this.body, adjustedMarginToSize);
+  };
+
+  public activateTransition = (): void => {
+    this.body.style.transition = '';
   };
 
   private createHandle = (): void => {

@@ -14,10 +14,13 @@ class Label {
 
     this.calculator = calculator;
     this.createLabel();
+    this.body.style.transition = '0s';
 
     this.addContent = isCollection
       ? this.addContentByIsCollection
       : this.addContentByNotIsCollection;
+
+    this.body.style.transition = '0s';
   }
 
   public getBody = (): HTMLElement => this.body;
@@ -28,6 +31,10 @@ class Label {
     this.addContent({ value, collection });
     const adjustedMarginToSize = this.calculator.getAdjustedMarginToSize(this.body, margin);
     this.calculator.setElementsMargin(this.body, Math.round(adjustedMarginToSize));
+  };
+
+  public activateTransition = (): void => {
+    this.body.style.transition = '';
   };
 
   private createLabel(): void {
