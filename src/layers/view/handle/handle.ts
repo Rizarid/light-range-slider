@@ -42,12 +42,14 @@ class Handle {
   private createHandle = (): void => {
     this.body = document.createElement('div');
     this.body.className = 'light-range-slider__handle';
+    this.body.tabIndex = 0;
   };
 
   private addListeners = (): void => {
     this.body.addEventListener('pointerdown', this.handleHandlePointerDown);
     this.body.addEventListener('pointerup', this.handleHandlePointerUp);
     this.body.addEventListener('click', this.handleHandleClick);
+    this.body.addEventListener('keydown', this.handleHandleKeyDown);
   };
 
   private getCursorLocationInPercent = (event: PointerEvent): number => {
@@ -112,6 +114,32 @@ class Handle {
 
       this.isPointerMoveBlocked = true;
       setTimeout(() => { this.isPointerMoveBlocked = false; }, 100);
+    }
+  };
+
+  private handleHandleKeyDown = (event: KeyboardEvent): void => {
+    const { code } = event;
+
+    if ((code === 'ArrowRight') || (code === 'ArrowUp')) {
+      const eventObject = {
+        eventName: 'handleIncrement',
+        eventBody: { handlesIndex: this.index },
+      };
+
+      this.changeObserver.notify(eventObject);
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    if ((code === 'ArrowLeft') || (code === 'ArrowDown')) {
+      const eventObject = {
+        eventName: 'handleDecrement',
+        eventBody: { handlesIndex: this.index },
+      };
+
+      this.changeObserver.notify(eventObject);
+      event.preventDefault();
+      event.stopPropagation();
     }
   };
 

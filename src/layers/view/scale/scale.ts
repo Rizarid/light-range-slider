@@ -64,6 +64,7 @@ class Scale {
 
     const item = document.createElement('div');
     item.className = 'light-range-slider__scale-item';
+    item.tabIndex = 0;
 
     this.addContent({ target: item, value, collection });
     const marginInPercent = this.calcMarginOfScaleItem(value, minValue, maxValue);
@@ -93,6 +94,7 @@ class Scale {
   private addListeners = (): void => {
     this.items.map((item) => {
       item.addEventListener('click', this.handleScaleItemClick);
+      item.addEventListener('keydown', this.handleScaleItemKeyDown);
       return null;
     });
   };
@@ -107,6 +109,13 @@ class Scale {
     };
 
     this.changeObserver.notify(eventObject);
+  };
+
+  private handleScaleItemKeyDown = (event: KeyboardEvent): void => {
+    const { code, target } = event;
+    if (code === 'Enter') {
+      target.dispatchEvent(new Event('click'));
+    }
   };
 
   private addContentByIsCollection = (options: IScaleAddContent): void => {

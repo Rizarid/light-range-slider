@@ -122,6 +122,32 @@ class Controller {
       this.model.setCurrentValueBeIndex({ index: handlesIndex, newValue });
     }
 
+    if (eventName === 'handleIncrement') {
+      const { handlesIndex } = event.eventBody;
+
+      const value = this.model.getCurrentValues()[handlesIndex];
+      const step = this.model.getStep();
+      let newValue = value + step;
+
+      newValue = this.model.valueToPercent(newValue);
+      newValue = this.model.percentToValue(newValue);
+
+      this.model.setCurrentValueBeIndex({ index: handlesIndex, newValue });
+    }
+
+    if (eventName === 'handleDecrement') {
+      const { handlesIndex } = event.eventBody;
+
+      const value = this.model.getCurrentValues()[handlesIndex];
+      const step = this.model.getStep();
+      let newValue = value - step;
+
+      newValue = this.model.valueToPercent(newValue);
+      newValue = this.model.percentToValue(newValue);
+
+      this.model.setCurrentValueBeIndex({ index: handlesIndex, newValue });
+    }
+
     if (eventName === 'lineClick') {
       let { newValue } = event.eventBody;
       newValue = this.model.percentToValue(newValue);
