@@ -145,6 +145,7 @@ interface IChangeParameterObject {
     isInterval?: boolean,
     haveScale?: boolean,
     haveLabel?: boolean,
+    callbacks?: ((updateObject: IOutsideUpdate) => void)[],
     isCollection?: boolean,
     collection?: string[] | number[] | HTMLElement[]
   }

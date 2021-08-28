@@ -3,7 +3,7 @@
 import * as JQuery from 'jquery';
 
 import { Controller } from './layers/controller/controller';
-import { ISliderOptions } from './layers/interfaces/interfaces';
+import { ISliderOptions, IOutsideUpdate } from './layers/interfaces/interfaces';
 import './style.sass';
 
 JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
@@ -163,6 +163,16 @@ JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
     const eventObject = {
       eventName: 'haveScaleChanged',
       eventBody: { haveScale: newValue },
+    };
+    slider.changeParameter(eventObject);
+
+    return This;
+  };
+
+  This['changeCallbacks'] = (newValue: ((updateObject: IOutsideUpdate) => void)[]): JQuery => {
+    const eventObject = {
+      eventName: 'callbacksChanged',
+      eventBody: { callbacks: newValue },
     };
     slider.changeParameter(eventObject);
 

@@ -86,6 +86,11 @@ class Controller {
       this.model.setHaveScale(haveScale);
     }
 
+    if (eventName === 'callbacksChanged') {
+      const { callbacks } = eventObject.eventBody;
+      this.model.setCallbacks(callbacks);
+    }
+
     if (eventName === 'isCollectionChanged') {
       const { isCollection } = eventObject.eventBody;
       this.model.setIsCollection(isCollection);
