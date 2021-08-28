@@ -2,7 +2,7 @@
 JQuery плагин реализующий функционал бегунка.
 
 ## Архитектура проекта
-___
+
 Плагин реализует MVP архитектуру и содержит три основных слоя: Model, View and Presenter. 
 ### Model
 Слой отвечает за хнанение состояний слайдера и изменение их при запросе Presenter - а.
@@ -32,7 +32,7 @@ npm i
 mpm run test:single
 ```
 ## Начало работы
-___
+
 Подключите JQuery и плагин:
 
 ```html
@@ -71,7 +71,6 @@ slider.setCurrentValues([60])
 // Выведет в консоль: [60]
 ```
 ## Параметры
-___
 
 + `extremeValues: number[]` - массив содержащий минимальное и максимальное знаачения диапазона слайдера. Значение по умолчанию `[0, 100]`.
 + `currentValues: number[]` - массив текущих значений слайдера. Количество значений которое необходимо передать зависит от параметра `isInterval`. Если `isInterval = true`, то необходимо передать два значения, в противном случае одно. Значение по умолчанию `[50]`.
@@ -87,7 +86,6 @@ ___
 + `collection: number[] | string[] | HTMLElement[]` - массив значений между которыми переключается слайдер, в случе активации параметра `isCollection`.
 
 ## API
-___
 
 Для того, что-бы изменить параметры слайдера, не пересоздавая его, можно использовать следующие API методы:
 
@@ -112,77 +110,77 @@ ___
     slider.changeMinValue(350);
     // Параметр extremeValues будет равен [250, 350]
   ```
-+ changeCurrentValues(number[]): JQuery - изменяет текущие значения слайдера.
++ `changeCurrentValues(number[]): JQuery` - изменяет текущие значения слайдера.
   ```javascript
     const slider = $('.slider');
     slider.rangeSlider({ currentValues: [30, 70], isInterval: true });
     slider.changeCurrentValues([60, 80]);
     // Параметр currentValues будет равен [60, 80]
   ```
-+ changeMinCurrentValue(number): JQuery - изменяет меньшее из текущих значений слайдера.
++ `changeMinCurrentValue(number): JQuery` - изменяет меньшее из текущих значений слайдера.
   ```javascript
     const slider = $('.slider');
     slider.rangeSlider({ currentValues: [30, 70], isInterval: true  });
     slider.changeMinCurrentValue(50);
     // Параметр currentValues будет равен [50, 70]
   ```
-+ changeMaxCurrentValue(number): JQuery - изменяет большее из текущих значений слайдера. Если параметер isInterval = false, метод не сработает.
++ `changeMaxCurrentValue(number): JQuery` - изменяет большее из текущих значений слайдера. Если параметер `isInterval = false`, метод не сработает.
   ```javascript
     const slider = $('.slider');
     slider.rangeSlider({ currentValues: [30, 70], isInterval: true  });
     slider.changeMaxCurrentValue(50);
     // Параметр currentValues будет равен [30, 50]
   ```
-+ changeStep(number): JQuery - изменяет параметр step.
++ `changeStep(number): JQuery` - изменяет параметр `step`.
   ```javascript
     const slider = $('.slider');
     slider.rangeSlider({ step: 5});
     slider.changeStep(10);
     // Параметр step будет равен 10
   ```
-+ changeScaleStep(number): JQuery - изменяет параметр scaleStep.
++ `changeScaleStep(number): JQuery` - изменяет параметр `scaleStep`.
   ```javascript
     const slider = $('.slider');
     slider.rangeSlider({ scaleStep: 10});
     slider.changeScaleStep(20);
     // Параметр scaleStep будет равен 20
   ```
-+ changeIsVertical(boolean): JQuery - изменяет параметр isVertical.
++ `changeIsVertical(boolean): JQuery` - изменяет параметр `isVertical`.
   ```javascript
     const slider = $('.slider');
     slider.rangeSlider({ isVertical: false});
     slider.changeIsVertical(true);
     // Параметр isVertical будет равен true
   ```
-+ changeIsInterval(boolean): JQuery - изменяет параметр isInterval.
++ `changeIsInterval(boolean): JQuery` - изменяет параметр `isInterval`.
   ```javascript
     const slider = $('.slider');
     slider.rangeSlider({ isInterval: false});
     slider.changeIsInterval(true);
     // Параметр isInterval будет равен true
   ```
-+ changeHaveProgressBar(boolean): JQuery - изменяет параметр haveProgressBar.
++ `changeHaveProgressBar(boolean): JQuery` - изменяет параметр `haveProgressBar`.
   ```javascript
     const slider = $('.slider');
     slider.rangeSlider({ haveProgressBar: false});
     slider.changeHaveProgressBar(true);
     // Параметр haveProgressBar будет равен true
   ```
-+ changeHaveLabel(boolean): JQuery - изменяет параметр haveLabel.
++ `changeHaveLabel(boolean): JQuery` - изменяет параметр `haveLabel`.
   ```javascript
     const slider = $('.slider');
     slider.rangeSlider({ haveLabel: false});
     slider.changeHaveLabel(true);
     // Параметр haveLabel будет равен true
   ```
-+ changeHaveScale(boolean): JQuery - изменяет параметр haveScale.
++ `changeHaveScale(boolean): JQuery` - изменяет параметр `haveScale`.
   ```javascript
     const slider = $('.slider');
     slider.rangeSlider({ haveScale: false});
     slider.changeHaveScale(true);
     // Параметр haveScale будет равен true
   ```
-+ changeCallbacks(function[]): JQuery - изменяет параметр callbacks.
++ `changeCallbacks(function[]): JQuery` - изменяет параметр `callbacks`.
   ```javascript
     const callback = (event) => console.log(event.currentValues);
     const slider = $('.slider');
@@ -190,14 +188,14 @@ ___
     slider.changeCallbacks([callback]);
     // Параметр callbacks будет равен [callback]
   ```
-+ changeIsCollection(boolean): JQuery - изменяет параметр isCollection.
++ `changeIsCollection(boolean): JQuery` - изменяет параметр `isCollection`.
   ```javascript
     const slider = $('.slider');
     slider.rangeSlider({ isCollection: false});
     slider.changeIsCollection(true);
     // Параметр isCollection будет равен true
   ```
-+ changeCollection(boolean): JQuery - изменяет параметр collection.
++ `changeCollection(boolean): JQuery` - изменяет параметр collection.
   ```javascript
     const slider = $('.slider');
     slider.rangeSlider();
