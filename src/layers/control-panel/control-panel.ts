@@ -132,14 +132,14 @@ class ControlPanel {
   };
 
   private addListeners = (): void => {
-    this.min.addEventListener('input', this.handleMinInput);
-    this.max.addEventListener('input', this.handleMaxInput);
+    this.min.addEventListener('change', this.handleMinInput);
+    this.max.addEventListener('change', this.handleMaxInput);
 
-    this.currentMin.addEventListener('input', this.handleCurrentMinInput);
-    this.currentMax.addEventListener('input', this.handleCurrentMaxInput);
+    this.currentMin.addEventListener('change', this.handleCurrentMinInput);
+    this.currentMax.addEventListener('change', this.handleCurrentMaxInput);
 
-    this.step.addEventListener('input', this.handleStepInput);
-    this.scaleStep.addEventListener('input', this.handleScaleStepInput);
+    this.step.addEventListener('change', this.handleStepInput);
+    this.scaleStep.addEventListener('change', this.handleScaleStepInput);
     this.collection.addEventListener('change', this.handleCollectionChange);
 
     this.isVertical.addEventListener('change', this.handleIsVerticalChange);
