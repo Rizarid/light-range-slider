@@ -273,12 +273,28 @@ class Model {
     this.changeObserver.notify(eventObject);
   };
 
+  public getFullUpdate = (): IFullUpdate => ({
+    eventName: 'fullUpdate',
+    eventBody: {
+      extremeValues: this.extremeValues,
+      currentValues: this.currentValues,
+      margins: this.currentValues.map((item) => this.valueToPercent(item)),
+      scaleStep: this.scaleStep,
+      isVertical: this.isVertical,
+      haveProgressBar: this.haveProgressBar,
+      haveScale: this.haveScale,
+      haveLabel: this.haveLabel,
+      isCollection: this.isCollection,
+      collection: this.collection,
+    },
+  });
+
   private getNumberOfDecimalPlaces = (value: number): number => {
     const str = value.toString();
     return str.includes('.', 0) ? str.split('.').pop().length : 0;
   };
 
-  private getAdjustedRangeToStep = () => {
+  private getAdjustedRangeToStep = (): number => {
     const [minValue, maxValue] = this.extremeValues;
     const range = maxValue - minValue;
     return range / this.step;
@@ -339,22 +355,6 @@ class Model {
       extremeValues: this.extremeValues,
       scaleStep: this.scaleStep,
       haveScale: this.haveScale,
-      isCollection: this.isCollection,
-      collection: this.collection,
-    },
-  });
-
-  public getFullUpdate = (): IFullUpdate => ({
-    eventName: 'fullUpdate',
-    eventBody: {
-      extremeValues: this.extremeValues,
-      currentValues: this.currentValues,
-      margins: this.currentValues.map((item) => this.valueToPercent(item)),
-      scaleStep: this.scaleStep,
-      isVertical: this.isVertical,
-      haveProgressBar: this.haveProgressBar,
-      haveScale: this.haveScale,
-      haveLabel: this.haveLabel,
       isCollection: this.isCollection,
       collection: this.collection,
     },

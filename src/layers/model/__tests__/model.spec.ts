@@ -72,12 +72,30 @@ describe("Model", function (): void{
     expect(model.getCurrentValues()).to.deep.equal([340, 370]);
     model.setNearestValue(360)
     expect(model.getCurrentValues()).to.deep.equal([340, 360]);
+
+    model.setCurrentValues([360, 360])
+    model.setNearestValue(320)
+    expect(model.getCurrentValues()).to.deep.equal([320, 360]);
+
+    model.setCurrentValues([360, 360])
+    model.setNearestValue(370)
+    expect(model.getCurrentValues()).to.deep.equal([360, 370]);
+
+    model.setIsInterval(false);
+    model.setNearestValue(360)
+    expect(model.getCurrentValues()).to.deep.equal([360]);
   })
 
   it("Should set min current value" , function() {
     expect(model.getCurrentValues()).to.deep.equal([330, 370]);
     model.setMinCurrentValue(360)
     expect(model.getCurrentValues()).to.deep.equal([360, 370]);
+
+    model.setIsInterval(false);
+    model.setMinCurrentValue(320)
+    expect(model.getCurrentValues()).to.deep.equal([320]);
+
+
   })
 
   it("Should set min current value" , function() {
@@ -241,7 +259,7 @@ describe("Model", function (): void{
   })
 
   it("Should return scale update object" , function() {
-    const fullUpdate = {
+    const scaleUpdate = {
       eventName: 'scaleUpdate',
       eventBody: {
         extremeValues: [300, 400],
@@ -252,7 +270,7 @@ describe("Model", function (): void{
       },
     }
 
-    expect(model.getScaleUpdate()).to.deep.equal(fullUpdate);
+    expect(model.getScaleUpdate()).to.deep.equal(scaleUpdate);
   })
 
   it("Should return outside update object" , function() {
@@ -272,6 +290,58 @@ describe("Model", function (): void{
     }
 
     expect(model.getOutsideUpdate()).to.deep.equal(outsideUpdate);
+  })
+
+  it("Should send update" , function() {
+    const scaleUpdate = {
+      eventName: 'scaleUpdate',
+      eventBody: {
+        extremeValues: [300, 400],
+        scaleStep: 10,
+        haveScale: true,
+        isCollection: false,
+        collection: [],
+      },
+    }
+
+    
+    const fullUpdate = {
+      eventName: 'fullUpdate',
+      eventBody: {
+        extremeValues: [300, 400],
+        currentValues: [330, 370],
+        margins: [30, 70],
+        scaleStep: 10,
+        isVertical: false,
+        haveProgressBar: true,             
+        haveScale: true,     
+        haveLabel: true,
+        isCollection: false,
+        collection: []
+      }
+    }
+
+    const valuesUpdate = {
+      eventName: 'valuesUpdate',
+      eventBody: {
+        currentValues: [330, 370],
+        margins: [30, 70],
+        collection: []
+      }
+    }
+
+    let testValue;
+    const callback = (event) => testValue = event;
+    model.subscribe({ function: callback})
+
+    model.sendUpdate('scaleUpdate')
+    expect(testValue).to.deep.equal(scaleUpdate);
+
+    model.sendUpdate('valuesUpdate')
+    expect(testValue).to.deep.equal(valuesUpdate);
+
+    model.sendUpdate()
+    expect(testValue).to.deep.equal(fullUpdate);
   })
 
   it("Should return number of decimal places" , function() {

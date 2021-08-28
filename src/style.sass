@@ -62,11 +62,16 @@
       cursor: pointer
 
       &_active
-        transform: scale(1.05)
+        transform: scale(1.1)
         z-index: 5
 
       &_was-active
         z-index: 5
+
+      &:focus
+        transform: scale(1.1)
+        z-index: 5
+        outline: none
 
     & .light-range-slider__progress-bar
       position: absolute
@@ -107,3 +112,7 @@
 
       &:hover 
         color: #4eb7a8
+
+      &:focus 
+        color: #4eb7a8
+        outline: none

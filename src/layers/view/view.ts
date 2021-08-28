@@ -97,14 +97,14 @@ class View {
     }
   };
 
+  public setIsResizeBlocked = (newValue: boolean): void => {
+    this.line.setIsResizeBlocked(newValue);
+  };
+
   private createScale = (options: IScale): void => {
     this.scale = new Scale(options);
     this.body.appendChild(this.scale.getBody());
     this.scale.adjustMarginToSize();
-  };
-
-  public setIsResizeBlocked = (newValue: boolean): void => {
-    this.line.setIsResizeBlocked(newValue);
   };
 
   private modifySlidersClass(isVertical: boolean) :void {

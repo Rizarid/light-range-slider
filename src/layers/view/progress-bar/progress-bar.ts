@@ -5,8 +5,6 @@ import { VerticalCalculator } from '../orientation-calculator/vertical-calculato
 class ProgressBar {
   private body: HTMLElement;
 
-  private index: number;
-
   private calculator: HorizontalCalculator | VerticalCalculator;
 
   constructor(options: IProgressBar) {
