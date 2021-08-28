@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-
 interface IVerticalCalculator { getLineSize: () => number, getLineLocation: () => number }
 interface IEventObject { pageX: number, pageY: number }
 

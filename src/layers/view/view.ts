@@ -1,3 +1,7 @@
+import {
+  IView, ICreateElements, IViewUpdate, ICallback, IScaleUpdateBody, IScale, IEventObject,
+} from '../interfaces/interfaces';
+import { ChangeObserver } from '../observers/change-observer';
 import { Handle } from './handle/handle';
 import { Label } from './label/label';
 import { Line } from './line/line';
@@ -5,10 +9,6 @@ import { HorizontalCalculator } from './orientation-calculator/horizontal-calcul
 import { VerticalCalculator } from './orientation-calculator/vertical-calculator';
 import { ProgressBar } from './progress-bar/progress-bar';
 import { Scale } from './scale/scale';
-import {
-  IView, ICreateElements, IViewUpdate, ICallback, IScaleUpdateBody, IScale, IEventObject,
-} from '../interfaces/interfaces';
-import { ChangeObserver } from '../observers/change-observer';
 
 class View {
   private body: HTMLElement;
