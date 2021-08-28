@@ -37,8 +37,8 @@ mpm run test:single
 
 ```html
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="slider.a41d4c721744ffe21a39.css">
-<script src="slider.fd23a0c70e387912df66.js"></script>
+<link rel="stylesheet" type="text/css" href="light-range-slider.a41d4c721744ffe21a39.css">
+<script src="light-range-slider.a8613c5aea034fa44649.js"></script>
 ```
 Создайте контейнер для слайдера:
 
