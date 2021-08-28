@@ -44,7 +44,7 @@ const optimization = () => {
 module.exports = {
   mode: "development",
   entry: {
-    slider: ["@babel/polyfill", "./src/light-range-slider.ts"],
+    "light-range-slider": ["@babel/polyfill", "./src/light-range-slider.ts"],
     demo: ["@babel/polyfill", "./src/demo.ts"]
   },
     
@@ -68,7 +68,7 @@ module.exports = {
     new HTMLWebpackPlugin({
       template: 'src/index.html',
       inject: 'body',
-      chunks: ['demo', 'slider'],
+      chunks: ['demo', 'light-range-slider'],
       minify: {
           collapseWhitespace: isProd
       }

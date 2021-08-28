@@ -23,8 +23,8 @@ config.set({
     // репортеры необходимы для  наглядного отображения результатов
     reporters: ['mocha', 'coverage'],
     preprocessors: {
-        'src/**/*.spec.js': ['webpack', 'sourcemap'],
-        'src/**/*.spec.ts': ['webpack', 'sourcemap']
+        'src/**/*.spec.js': ['webpack', 'sourcemap', 'coverage'],
+        'src/**/*.spec.ts': ['webpack', 'sourcemap', 'coverage']
     },
     plugins: [
         'karma-jasmine', 'karma-mocha',

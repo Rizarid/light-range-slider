@@ -2,3 +2,8 @@ node_modules
 dist
 .vscode
 tmp
+mvp.drawio
+mvp.svg
+uml.drawio
+uml.png
+uml.svg
