@@ -29,7 +29,7 @@ npm i
 ```
 ## Запустить тесты
 ```
-mpm run test:single
+npm run test:single
 ```
 ## Начало работы
 
