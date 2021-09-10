@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import {
-  IModel, IUpdateCallback, IFullUpdate, IValuesUpdate, IScaleUpdate,
+  IModel, IUpdateCallback, IUpdate, IUpdateBody,
 } from '../interfaces/interfaces';
 import { ChangeObserver } from '../observers/change-observer';
 import { ValueChecker } from './value-checker/value-checker';
@@ -80,7 +80,6 @@ class Model {
         this.sendUpdate();
       }
     }
-    console.log(this.extremeValues)
   };
 
   public setMinValue = (newValue: number): void => {
@@ -269,16 +268,14 @@ class Model {
     return Math.round(value * accuracy) / accuracy;
   };
 
-  public sendOutsideUpdate = (): void => this.notifyCallbacks(this.getOutsideUpdate());
-
   public sendUpdate = (eventName?: string): void => {
-    let eventObject: IValuesUpdate | IFullUpdate | IScaleUpdate;
+    let eventObject: IUpdate;
 
-    if (eventName === 'valuesUpdate') eventObject = this.getValuesUpdate();
-    else if (eventName === 'scaleUpdate') eventObject = this.getScaleUpdate();
-    else eventObject = this.getFullUpdate();
+    if (eventName === 'valuesUpdate') eventObject = this.getUpdate('valuesUpdate');
+    else if (eventName === 'scaleUpdate') eventObject = this.getUpdate('scaleUpdate');
+    else eventObject = this.getUpdate('fullUpdate');
 
-    this.sendOutsideUpdate();
+    this.notifyCallbacks(eventObject.eventBody);
     this.changeObserver.notify(eventObject);
   };
 
@@ -333,34 +330,16 @@ class Model {
     }
   }
 
-  private getValuesUpdate = (): IValuesUpdate => ({
-    eventName: 'valuesUpdate',
-    eventBody: {
-      currentValues: this.currentValues,
-      margins: this.currentValues.map((item) => this.valueToPercent(item)),
-      collection: this.collection,
-    },
-  });
-
-  private getScaleUpdate = (): IScaleUpdate => ({
-    eventName: 'scaleUpdate',
-    eventBody: {
-      extremeValues: this.extremeValues,
-      scaleStep: this.scaleStep,
-      haveScale: this.haveScale,
-      isCollection: this.isCollection,
-      collection: this.collection,
-    },
-  });
-
-  public getFullUpdate = (): IFullUpdate => ({
-    eventName: 'fullUpdate',
+  public getUpdate = (eventName = ''): IUpdate => ({
+    eventName,
     eventBody: {
       extremeValues: this.extremeValues,
       currentValues: this.currentValues,
       margins: this.currentValues.map((item) => this.valueToPercent(item)),
+      step: this.step,
       scaleStep: this.scaleStep,
       isVertical: this.isVertical,
+      isInterval: this.isInterval,
       haveProgressBar: this.haveProgressBar,
       haveScale: this.haveScale,
       haveLabel: this.haveLabel,
@@ -369,19 +348,7 @@ class Model {
     },
   });
 
-  private getOutsideUpdate = (): IModel => {
-    const {
-      extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveProgressBar,
-      haveLabel, haveScale, callbacks, collection, isCollection,
-    } = this;
-
-    return {
-      extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveProgressBar,
-      haveLabel, haveScale, callbacks, collection, isCollection,
-    };
-  } ;
-
-  private notifyCallbacks = (updateObject: IModel): void => {
+  private notifyCallbacks = (updateObject: IUpdateBody): void => {
     try {
       if (this.callbacks.length) this.callbacks.map((item) => item(updateObject));
     } catch (error) {

@@ -1,5 +1,5 @@
 import {
-  IEventObject, IFullUpdate, IViewEvent, IController, IChangeParameterObject,
+  IEventObject, IUpdate, IViewEvent, IController, IChangeParameterObject,
 } from '../interfaces/interfaces';
 import { Model } from '../model/model';
 import { View } from '../view/view';
@@ -12,7 +12,7 @@ class Controller {
   constructor(options: IController) {
     const { slider } = options;
     this.createModel(options);
-    this.createView(slider, this.model.getFullUpdate());
+    this.createView(slider, this.model.getUpdate());
     this.model.subscribe({ function: this.handleModelEvents });
     this.view.subscribe({ function: this.handleViewEvents });
     this.view.setIsResizeBlocked(false);
@@ -186,7 +186,7 @@ class Controller {
     });
   }
 
-  private createView(slider: HTMLElement, eventObject: IFullUpdate): void {
+  private createView(slider: HTMLElement, eventObject: IUpdate): void {
     const {
       extremeValues, currentValues, scaleStep, isVertical, haveScale, haveLabel,
       collection, isCollection, margins, haveProgressBar,

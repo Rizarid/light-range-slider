@@ -17,22 +17,26 @@ interface IModel {
   isCollection: boolean,
 }
 
-interface IUpdateCallback { function: (eventObject: IFullUpdate) => void }
+interface IUpdateCallback { function: (eventObject: IUpdateBody) => void }
 
-interface IFullUpdate {
+interface IUpdate {
   eventName: string,
-  eventBody: {
-    extremeValues: number[],
-    currentValues: number[],
-    margins: number[],
-    scaleStep: number,
-    isVertical: boolean,
-    haveProgressBar: boolean,
-    haveScale: boolean,
-    haveLabel: boolean,
-    collection: string[] | number[] | HTMLElement[],
-    isCollection: boolean
-  }
+  eventBody: IUpdateBody,
+}
+
+interface IUpdateBody {
+  extremeValues: number[],
+  currentValues: number[],
+  margins: number[],
+  step: number,
+  scaleStep: number,
+  isVertical: boolean,
+  isInterval: boolean,
+  haveProgressBar: boolean,
+  haveScale: boolean,
+  haveLabel: boolean,
+  collection: string[] | number[] | HTMLElement[],
+  isCollection: boolean,
 }
 
 interface IValuesUpdate {
@@ -210,7 +214,7 @@ interface IScaleUpdate {
 }
 
 export {
-  IModel, IUpdateCallback, IFullUpdate, IValuesUpdate, IEventObject, IViewEvent, IOutsideUpdate,
+  IModel, IUpdateCallback, IUpdate, IUpdateBody, IEventObject, IViewEvent, IOutsideUpdate,
   IHandle, ICallback, ILabel, ILabelAddContent, ILabelUpdate, IScale, ICreateScaleItems,
   IScaleAddContent, IGetScaleItem, IClickEventObject, IProgressBar, IController,
   IChangeParameterObject, ISliderOptions, IView, ICreateElements, IViewUpdate, IScaleUpdate,
