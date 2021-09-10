@@ -16,6 +16,11 @@ class ValueChecker {
         return null;
       });
 
+      newValue.map((item) => {
+        if (Number.isNaN(item)) throw new Error('Expected array of number, passed array contain NaN');
+        return null;
+      });
+
       if (newValue[0] >= newValue[1]) throw new Error('The maximum must be greater than the minimum');
 
       return true;
@@ -42,6 +47,11 @@ class ValueChecker {
         return null;
       });
 
+      newValue.map((item) => {
+        if (Number.isNaN(item)) throw new Error('Expected array of number, passed array contain NaN');
+        return null;
+      });
+
       if (newValue.length === 2) {
         if (newValue[0] > newValue[1]) {
           throw new Error('The maximum must be greater or equal than the minimum');
@@ -65,6 +75,8 @@ class ValueChecker {
       if (typeof newValue !== 'number') {
         throw new Error(`Expected number type, passed ${typeof newValue} type`);
       }
+
+      if (Number.isNaN(newValue)) throw new Error('Expected number type, passed NaN');
 
       if (newValue <= 0) { throw new Error('Step must by greater than zero'); }
 

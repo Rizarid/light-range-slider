@@ -80,18 +80,17 @@ class Model {
         this.sendUpdate();
       }
     }
+    console.log(this.extremeValues)
   };
 
   public setMinValue = (newValue: number): void => {
-    const { extremeValues } = this;
-    extremeValues[0] = newValue;
-    this.setExtremeValues(extremeValues);
+    const [minValue, maxValue] = this.extremeValues;
+    this.setExtremeValues([newValue, maxValue]);
   };
 
   public setMaxValue = (newValue: number): void => {
-    const { extremeValues } = this;
-    extremeValues[1] = newValue;
-    this.setExtremeValues(extremeValues);
+    const [minValue] = this.extremeValues;
+    this.setExtremeValues([minValue, newValue]);
   };
 
   public getCurrentValues = (): number[] => this.currentValues;
@@ -109,16 +108,13 @@ class Model {
   };
 
   public setCurrentValueBeIndex = (options: { index: number, newValue: number }): void => {
-    const { currentValues } = this;
-    const [minCurrentValue, maxCurrentValue] = currentValues;
+    let [minCurrentValue, maxCurrentValue] = this.currentValues;
     const { index, newValue } = options;
 
-    if (index === 0) {
-      currentValues[0] = (newValue > maxCurrentValue) ? maxCurrentValue : newValue;
-    } else {
-      currentValues[1] = (newValue < minCurrentValue) ? minCurrentValue : newValue;
-    }
+    if (index === 0) minCurrentValue = (newValue > maxCurrentValue) ? maxCurrentValue : newValue;
+    else maxCurrentValue = (newValue < minCurrentValue) ? minCurrentValue : newValue;
 
+    const currentValues = this.isInterval ? [minCurrentValue, maxCurrentValue] : [minCurrentValue];
     this.setCurrentValues(currentValues);
   };
 
@@ -136,10 +132,14 @@ class Model {
   }
 
   public setMinCurrentValue = (newValue: number): void => {
-    const { currentValues } = this;
-    if (!this.isInterval) currentValues[0] = newValue;
+    const [minCurrentValue, maxCurrentValue] = this.currentValues;
+    let currentValues: number[];
+
+    if (!this.isInterval) currentValues = [newValue];
     else {
-      currentValues[0] = (newValue > currentValues[1]) ? currentValues[1] : newValue;
+      currentValues = ((newValue > maxCurrentValue)
+        ? [maxCurrentValue, maxCurrentValue] : [newValue, maxCurrentValue]
+      );
     }
 
     this.setCurrentValues(currentValues);
@@ -147,8 +147,14 @@ class Model {
 
   public setMaxCurrentValue = (newValue: number): void => {
     if (this.isInterval) {
-      const { currentValues } = this;
-      currentValues[1] = (newValue < currentValues[0]) ? currentValues[0] : newValue;
+      const [minCurrentValue, maxCurrentValue] = this.currentValues;
+      let currentValues: number[];
+
+      // eslint-disable-next-line prefer-const
+      currentValues = ((newValue < minCurrentValue)
+        ? [minCurrentValue, minCurrentValue] : [minCurrentValue, newValue]
+      );
+
       this.setCurrentValues(currentValues);
     }
   };
