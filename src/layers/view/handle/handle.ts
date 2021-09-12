@@ -114,33 +114,26 @@ class Handle {
 
       this.isPointerMoveBlocked = true;
       setTimeout(() => { this.isPointerMoveBlocked = false; }, 100);
-    }
+    };
   };
 
   private handleHandleKeyDown = (event: KeyboardEvent): void => {
     const { code } = event;
+    let eventName: string;
 
-    if ((code === 'ArrowRight') || (code === 'ArrowUp')) {
+    if (['ArrowRight', 'ArrowUp', 'ArrowLeft', 'ArrowDown'].includes(code, 0)) {
+      const isIncrement = (['ArrowRight', 'ArrowUp'].includes(code, 0));
+      eventName = isIncrement ? 'handleIncrement' : 'handleDecrement';
+
       const eventObject = {
-        eventName: 'handleIncrement',
+        eventName,
         eventBody: { handlesIndex: this.index },
       };
 
       this.changeObserver.notify(eventObject);
       event.preventDefault();
       event.stopPropagation();
-    }
-
-    if ((code === 'ArrowLeft') || (code === 'ArrowDown')) {
-      const eventObject = {
-        eventName: 'handleDecrement',
-        eventBody: { handlesIndex: this.index },
-      };
-
-      this.changeObserver.notify(eventObject);
-      event.preventDefault();
-      event.stopPropagation();
-    }
+    };
   };
 
   private handleHandleClick = (event: MouseEvent): void => {
