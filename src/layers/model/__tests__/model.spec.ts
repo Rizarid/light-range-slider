@@ -56,36 +56,6 @@ describe("Model", function (): void{
     expect(model.getCurrentValues()).to.deep.equal([310, 360]);
   })
 
-  it("Should set parameter currentValues by index" , function() {
-    expect(model.getCurrentValues()).to.deep.equal([330, 370]);
-
-    model.setCurrentValueBeIndex({ index: 0, newValue: 320 })
-    expect(model.getCurrentValues()).to.deep.equal([320, 370]);
-
-    model.setCurrentValueBeIndex({ index: 1, newValue: 350 })
-    expect(model.getCurrentValues()).to.deep.equal([320, 350]);
-  })
-
-  it("Should set the current value near to the new value" , function() {
-    expect(model.getCurrentValues()).to.deep.equal([330, 370]);
-    model.setNearestValue(340)
-    expect(model.getCurrentValues()).to.deep.equal([340, 370]);
-    model.setNearestValue(360)
-    expect(model.getCurrentValues()).to.deep.equal([340, 360]);
-  })
-
-  it("Should set min current value" , function() {
-    expect(model.getCurrentValues()).to.deep.equal([330, 370]);
-    model.setMinCurrentValue(360)
-    expect(model.getCurrentValues()).to.deep.equal([360, 370]);
-  })
-
-  it("Should set min current value" , function() {
-    expect(model.getCurrentValues()).to.deep.equal([330, 370]);
-    model.setMaxCurrentValue(340)
-    expect(model.getCurrentValues()).to.deep.equal([330, 340]);
-  })
-
   it("Should return and set parameter step" , function() {
     expect(model.getStep()).to.equal(1);
     model.setStep(5)
@@ -160,15 +130,20 @@ describe("Model", function (): void{
     expect(model.getExtremeValues()).to.deep.equal([0, 2]);
   })
 
-
-
-
   it("Should send updates after change parameters" , function() {
     const valuesUpdate = {
       eventName: 'valuesUpdate',
       eventBody: {
+        extremeValues: [300, 400],
         currentValues: [320, 370],
-        margins: [20, 70],
+        step: 1,
+        scaleStep: 10,
+        isVertical: false,
+        isInterval: true,
+        haveProgressBar: true,             
+        haveScale: true,     
+        haveLabel: true,
+        isCollection: false,
         collection: []
       }
     }
@@ -178,9 +153,10 @@ describe("Model", function (): void{
       eventBody: {
         extremeValues: [300, 400],
         currentValues: [320],
-        margins: [20],
+        step: 1,
         scaleStep: 10,
         isVertical: false,
+        isInterval: false,
         haveProgressBar: true,             
         haveScale: true,     
         haveLabel: true,
@@ -200,72 +176,5 @@ describe("Model", function (): void{
     model.setIsInterval(false);
 
     expect(testValue).to.deep.equal(fullUpdate);
-  })
-
-  it("Should return values update object" , function() {
-    const valuesUpdate = {
-      eventName: 'valuesUpdate',
-      eventBody: {
-        currentValues: [330, 370],
-        margins: [30, 70],
-        collection: []
-      }
-    }
-
-    expect(model.getValuesUpdate()).to.deep.equal(valuesUpdate);
-  })
-
-  it("Should return full update object" , function() {
-    const fullUpdate = {
-      eventName: 'fullUpdate',
-      eventBody: {
-        extremeValues: [300, 400],
-        currentValues: [330, 370],
-        margins: [30, 70],
-        scaleStep: 10,
-        isVertical: false,
-        haveProgressBar: true,             
-        haveScale: true,     
-        haveLabel: true,
-        isCollection: false,
-        collection: []
-      }
-    }
-
-    expect(model.getFullUpdate()).to.deep.equal(fullUpdate);
-  })
-
-  it("Should return scale update object" , function() {
-    const fullUpdate = {
-      eventName: 'scaleUpdate',
-      eventBody: {
-        extremeValues: [300, 400],
-        scaleStep: 10,
-        haveScale: true,
-        isCollection: false,
-        collection: [],
-      },
-    }
-
-    expect(model.getScaleUpdate()).to.deep.equal(fullUpdate);
-  })
-
-  it("Should return outside update object" , function() {
-    const outsideUpdate = {
-      extremeValues: [300, 400], 
-      currentValues: [330, 370], 
-      step: 1, 
-      scaleStep: 10, 
-      isVertical: false, 
-      isInterval: true, 
-      haveProgressBar: true,
-      haveLabel: true, 
-      haveScale: true, 
-      callbacks: [], 
-      collection: [], 
-      isCollection: false,
-    }
-
-    expect(model.getOutsideUpdate()).to.deep.equal(outsideUpdate);
   })
 })
