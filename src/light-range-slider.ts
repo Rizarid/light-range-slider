@@ -41,7 +41,7 @@ JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
 
   This['changeExtremeValues'] = (newExtremeValues: [number, number]): JQuery => {
     const eventObject = {
-      eventName: 'extremeValuesChanged',
+      eventName: 'extremeValues',
       eventBody: { extremeValues: newExtremeValues },
     };
     slider.changeParameter(eventObject);
@@ -51,7 +51,7 @@ JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
 
   This['changeMinValue'] = (newValue: number): JQuery => {
     const eventObject = {
-      eventName: 'minChanged',
+      eventName: 'min',
       eventBody: { min: newValue },
     };
     slider.changeParameter(eventObject);
@@ -61,7 +61,7 @@ JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
 
   This['changeMaxValue'] = (newValue: number): JQuery => {
     const eventObject = {
-      eventName: 'maxChanged',
+      eventName: 'max',
       eventBody: { max: newValue },
     };
     slider.changeParameter(eventObject);
@@ -71,7 +71,7 @@ JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
 
   This['changeCurrentValues'] = (newValue: [number, number]): JQuery => {
     const eventObject = {
-      eventName: 'currentValuesChanged',
+      eventName: 'currentValues',
       eventBody: { currentValues: newValue },
     };
     slider.changeParameter(eventObject);
@@ -81,8 +81,8 @@ JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
 
   This['changeMinCurrentValue'] = (newValue: number): JQuery => {
     const eventObject = {
-      eventName: 'currentMinChanged',
-      eventBody: { currentMinValue: newValue },
+      eventName: 'currentMin',
+      eventBody: { currentMin: newValue },
     };
     slider.changeParameter(eventObject);
 
@@ -91,8 +91,8 @@ JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
 
   This['changeMaxCurrentValue'] = (newValue: number): JQuery => {
     const eventObject = {
-      eventName: 'currentMaxChanged',
-      eventBody: { currentMaxValue: newValue },
+      eventName: 'currentMax',
+      eventBody: { currentMax: newValue },
     };
     slider.changeParameter(eventObject);
 
@@ -101,7 +101,7 @@ JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
 
   This['changeStep'] = (newValue: number): JQuery => {
     const eventObject = {
-      eventName: 'stepChanged',
+      eventName: 'step',
       eventBody: { step: newValue },
     };
     slider.changeParameter(eventObject);
@@ -111,7 +111,7 @@ JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
 
   This['changeScaleStep'] = (newValue: number): JQuery => {
     const eventObject = {
-      eventName: 'scaleStepChanged',
+      eventName: 'scaleStep',
       eventBody: { scaleStep: newValue },
     };
     slider.changeParameter(eventObject);
@@ -121,7 +121,7 @@ JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
 
   This['changeIsVertical'] = (newValue: boolean): JQuery => {
     const eventObject = {
-      eventName: 'isVerticalChanged',
+      eventName: 'isVertical',
       eventBody: { isVertical: newValue },
     };
     slider.changeParameter(eventObject);
@@ -131,7 +131,7 @@ JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
 
   This['changeIsInterval'] = (newValue: boolean): JQuery => {
     const eventObject = {
-      eventName: 'isIntervalChanged',
+      eventName: 'isInterval',
       eventBody: { isInterval: newValue },
     };
     slider.changeParameter(eventObject);
@@ -141,7 +141,7 @@ JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
 
   This['changeHaveProgressBar'] = (newValue: boolean): JQuery => {
     const eventObject = {
-      eventName: 'haveProgressBarChanged',
+      eventName: 'haveProgressBar',
       eventBody: { haveProgressBar: newValue },
     };
     slider.changeParameter(eventObject);
@@ -151,7 +151,7 @@ JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
 
   This['changeHaveLabel'] = (newValue: boolean): JQuery => {
     const eventObject = {
-      eventName: 'haveLabelChanged',
+      eventName: 'haveLabel',
       eventBody: { haveLabel: newValue },
     };
     slider.changeParameter(eventObject);
@@ -161,7 +161,7 @@ JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
 
   This['changeHaveScale'] = (newValue: boolean): JQuery => {
     const eventObject = {
-      eventName: 'haveScaleChanged',
+      eventName: 'haveScale',
       eventBody: { haveScale: newValue },
     };
     slider.changeParameter(eventObject);
@@ -181,7 +181,7 @@ JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
 
   This['changeIsCollection'] = (newValue: boolean): JQuery => {
     const eventObject = {
-      eventName: 'isCollectionChanged',
+      eventName: 'isCollection',
       eventBody: { isCollection: newValue },
     };
     slider.changeParameter(eventObject);
@@ -191,7 +191,7 @@ JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
 
   This['changeCollection'] = (newValue: number[] | string[] | HTMLElement[]): JQuery => {
     const eventObject = {
-      eventName: 'collectionChanged',
+      eventName: 'collection',
       eventBody: { collection: newValue },
     };
     slider.changeParameter(eventObject);

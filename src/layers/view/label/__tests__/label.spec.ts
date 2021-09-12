@@ -28,14 +28,14 @@ describe("Label", function(): void {
 
   it('Should update label by isCollection = false', function() {
     label.update({ margin: 60, value: 60, collection: []});
-    expect(state.margin).to.equal(55);
+    expect(Math.round(state.margin)).to.equal(55);
     expect(label.getBody().innerText).to.equal('60');
   })
 
   it('Should update label by isCollection = true', function() {
     label = new Label({ calculator: (calculator as HorizontalCalculator), isCollection: true})
     label.update({ margin: 50, value: 1, collection: ['one', 'two', 'three']});
-    expect(state.margin).to.equal(45);
+    expect(Math.round(state.margin)).to.equal(45);
     expect(label.getBody().innerText).to.equal('two');
   })
 

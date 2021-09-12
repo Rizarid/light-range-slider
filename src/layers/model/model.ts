@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import {
-  IModel, IUpdateCallback, IFullUpdate, IValuesUpdate, IScaleUpdate,
+  IModel, IUpdateCallback, IUpdate, IUpdateBody,
 } from '../interfaces/interfaces';
 import { ChangeObserver } from '../observers/change-observer';
 import { ValueChecker } from './value-checker/value-checker';
@@ -69,7 +69,10 @@ class Model {
     this.changeObserver.subscribe(callback);
   }
 
-  public getExtremeValues = (): number[] => this.extremeValues;
+  public getExtremeValues = (): number[] => {
+    const [min, max] = this.extremeValues
+    return [min, max];
+  };
 
   public setExtremeValues = (newValue: number[]): void => {
     if (this.valueChecker.checkExtremeValues(newValue)) {
@@ -80,20 +83,12 @@ class Model {
         this.sendUpdate();
       }
     }
-    console.log(this.extremeValues)
   };
 
-  public setMinValue = (newValue: number): void => {
-    const [minValue, maxValue] = this.extremeValues;
-    this.setExtremeValues([newValue, maxValue]);
+  public getCurrentValues = (): number[] => {
+    const [min, max] = this.currentValues;
+    return this.isInterval ? [min, max] : [min];
   };
-
-  public setMaxValue = (newValue: number): void => {
-    const [minValue] = this.extremeValues;
-    this.setExtremeValues([minValue, newValue]);
-  };
-
-  public getCurrentValues = (): number[] => this.currentValues;
 
   public setCurrentValues = (newValue: number[]): void => {
     if (this.valueChecker.checkCurrentValues(newValue)) {
@@ -104,61 +99,6 @@ class Model {
         this.adjustQuantityOfCurrentValues();
         this.sendUpdate('valuesUpdate');
       }
-    }
-  };
-
-  public setCurrentValueBeIndex = (options: { index: number, newValue: number }): void => {
-    let [minCurrentValue, maxCurrentValue] = this.currentValues;
-    const { index, newValue } = options;
-
-    if (index === 0) {
-      minCurrentValue = (newValue > maxCurrentValue) ? maxCurrentValue : newValue;
-    } else {
-      maxCurrentValue = (newValue < minCurrentValue) ? minCurrentValue : newValue;
-    }
-
-    const currentValues = this.isInterval ? [minCurrentValue, maxCurrentValue] : [minCurrentValue];
-    this.setCurrentValues(currentValues);
-  };
-
-  public setNearestValue(newValue: number): void {
-    if (!this.isInterval) this.setCurrentValueBeIndex({ index: 0, newValue });
-    else {
-      const distances = this.currentValues.map((item) => Math.abs(item - newValue));
-
-      if (distances[0] < distances[1]) this.setCurrentValueBeIndex({ index: 0, newValue });
-      else if (distances[0] > distances[1]) this.setCurrentValueBeIndex({ index: 1, newValue });
-      else if (newValue < this.currentValues[0]) {
-        this.setCurrentValueBeIndex({ index: 0, newValue });
-      } else this.setCurrentValueBeIndex({ index: 1, newValue });
-    }
-  }
-
-  public setMinCurrentValue = (newValue: number): void => {
-    let currentValues: number[];
-    const [minCurrentValue, maxCurrentValue] = this.currentValues;
-
-    if (!this.isInterval) currentValues = [newValue];
-    else {
-      currentValues = ((newValue > maxCurrentValue)
-        ? [maxCurrentValue, maxCurrentValue] : [newValue, maxCurrentValue]
-      );
-    }
-
-    this.setCurrentValues(currentValues);
-  };
-
-  public setMaxCurrentValue = (newValue: number): void => {
-    if (this.isInterval) {
-      let currentValues: number[];
-      const [minCurrentValue] = this.currentValues;
-
-      // eslint-disable-next-line prefer-const
-      currentValues = ((newValue < minCurrentValue)
-        ? [minCurrentValue, minCurrentValue] : [newValue, minCurrentValue]
-      );
-
-      this.setCurrentValues(currentValues);
     }
   };
 
@@ -256,81 +196,15 @@ class Model {
     }
   };
 
-  public valueToPercent = (value: number): number => {
-    const [minValue, maxValue] = this.extremeValues;
-    const range = maxValue - minValue;
-    const valueInRange = value - minValue;
-    return (valueInRange / range) * 100;
-  };
-
-  public percentToValue = (percentValue: number): number => {
-    const valueInAdjustedRange = this.percentToAdjustedRangeToStep(percentValue);
-    const value = this.valueInAdjustedRangeToValue(valueInAdjustedRange);
-
-    const accuracy = 10 ** this.getNumberOfDecimalPlaces(this.step);
-
-    return Math.round(value * accuracy) / accuracy;
-  };
-
-  public sendOutsideUpdate = (): void => this.notifyCallbacks(this.getOutsideUpdate());
-
   public sendUpdate = (eventName?: string): void => {
-    let eventObject: IValuesUpdate | IFullUpdate | IScaleUpdate;
+    let eventObject: IUpdate;
 
-    if (eventName === 'valuesUpdate') eventObject = this.getValuesUpdate();
-    else if (eventName === 'scaleUpdate') eventObject = this.getScaleUpdate();
-    else eventObject = this.getFullUpdate();
+    if (eventName === 'valuesUpdate') eventObject = this.getUpdate('valuesUpdate');
+    else if (eventName === 'scaleUpdate') eventObject = this.getUpdate('scaleUpdate');
+    else eventObject = this.getUpdate('fullUpdate');
 
-    this.sendOutsideUpdate();
+    this.notifyCallbacks(eventObject.eventBody);
     this.changeObserver.notify(eventObject);
-  };
-
-  public getFullUpdate = (): IFullUpdate => ({
-    eventName: 'fullUpdate',
-    eventBody: {
-      extremeValues: this.extremeValues,
-      currentValues: this.currentValues,
-      margins: this.currentValues.map((item) => this.valueToPercent(item)),
-      scaleStep: this.scaleStep,
-      isVertical: this.isVertical,
-      haveProgressBar: this.haveProgressBar,
-      haveScale: this.haveScale,
-      haveLabel: this.haveLabel,
-      isCollection: this.isCollection,
-      collection: this.collection,
-    },
-  });
-
-  private getNumberOfDecimalPlaces = (value: number): number => {
-    const str = value.toString();
-    return str.includes('.', 0) ? str.split('.').pop().length : 0;
-  };
-
-  private getAdjustedRangeToStep = (): number => {
-    const [minValue, maxValue] = this.extremeValues;
-    const range = maxValue - minValue;
-    return range / this.step;
-  };
-
-  private percentToAdjustedRangeToStep = (percentValue: number): number => {
-    const adjustedRange = this.getAdjustedRangeToStep();
-    return adjustedRange * (percentValue / 100);
-  };
-
-  private checkForExceedingTheLastStep = (valueInAdjustedRange: number): boolean => {
-    const adjustedRange = this.getAdjustedRangeToStep();
-    return (Math.round(valueInAdjustedRange * 10) / 10 > Math.round(adjustedRange));
-  };
-
-  private valueInAdjustedRangeToValue = (valueInAdjustedRange: number): number => {
-    const [minValue] = this.extremeValues;
-    const adjustedRange = this.getAdjustedRangeToStep();
-
-    const valueInRange = this.checkForExceedingTheLastStep(valueInAdjustedRange)
-      ? adjustedRange * this.step
-      : Math.round(valueInAdjustedRange) * this.step;
-
-    return valueInRange + minValue;
   };
 
   private correctCurrentValueToInterval = (): void => {
@@ -352,39 +226,24 @@ class Model {
     }
   }
 
-  private getValuesUpdate = (): IValuesUpdate => ({
-    eventName: 'valuesUpdate',
-    eventBody: {
-      currentValues: this.currentValues,
-      margins: this.currentValues.map((item) => this.valueToPercent(item)),
-      collection: this.collection,
-    },
-  });
-
-  private getScaleUpdate = (): IScaleUpdate => ({
-    eventName: 'scaleUpdate',
+  public getUpdate = (eventName: string): IUpdate => ({
+    eventName,
     eventBody: {
       extremeValues: this.extremeValues,
+      currentValues: this.currentValues,
+      step: this.step,
       scaleStep: this.scaleStep,
+      isVertical: this.isVertical,
+      isInterval: this.isInterval,
+      haveProgressBar: this.haveProgressBar,
       haveScale: this.haveScale,
+      haveLabel: this.haveLabel,
       isCollection: this.isCollection,
       collection: this.collection,
     },
   });
 
-  private getOutsideUpdate = (): IModel => {
-    const {
-      extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveProgressBar,
-      haveLabel, haveScale, callbacks, collection, isCollection,
-    } = this;
-
-    return {
-      extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveProgressBar,
-      haveLabel, haveScale, callbacks, collection, isCollection,
-    };
-  } ;
-
-  private notifyCallbacks = (updateObject: IModel): void => {
+  private notifyCallbacks = (updateObject: IUpdateBody): void => {
     try {
       if (this.callbacks.length) this.callbacks.map((item) => item(updateObject));
     } catch (error) {

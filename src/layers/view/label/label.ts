@@ -30,7 +30,7 @@ class Label {
 
     this.addContent({ value, collection });
     const adjustedMarginToSize = this.calculator.getAdjustedMarginToSize(this.body, margin);
-    this.calculator.setElementsMargin(this.body, Math.round(adjustedMarginToSize));
+    this.calculator.setElementsMargin(this.body, adjustedMarginToSize);
   };
 
   public activateTransition = (): void => {
