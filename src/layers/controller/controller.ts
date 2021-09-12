@@ -1,18 +1,26 @@
 import {
-  IEventObject, IUpdate, IViewEvent, IController, IChangeParameterObject,
+  IUpdate, IViewEvent, IController, IChangeParameterObject, IUpdateBody,
 } from '../interfaces/interfaces';
 import { Model } from '../model/model';
 import { View } from '../view/view';
+import { Calculator } from './calculator/calculator';
+import { Transformer } from './transformer/transformer';
 
 class Controller {
   private model: Model;
 
   private view: View;
 
+  private transformer: Transformer;
+
+  private calculator: Calculator;
+
   constructor(options: IController) {
-    const { slider } = options;
-    this.createModel(options);
-    this.createView(slider, this.model.getUpdate());
+    const { slider, ...modelOptions } = options;
+    this.model = new Model(modelOptions);
+    this.calculator = new Calculator(this.model);
+    this.transformer = new Transformer(this.model);
+    this.createView(slider, this.model.getUpdate('').eventBody);
     this.model.subscribe({ function: this.handleModelEvents });
     this.view.subscribe({ function: this.handleViewEvents });
     this.view.setIsResizeBlocked(false);
@@ -28,12 +36,14 @@ class Controller {
 
     if (eventName === 'minChanged') {
       const { min } = eventObject.eventBody;
-      this.model.setMinValue(min);
+      const newValue = this.transformer.minValueToExtremeValues(min);
+      this.model.setExtremeValues(newValue);
     }
 
     if (eventName === 'maxChanged') {
       const { max } = eventObject.eventBody;
-      this.model.setMaxValue(max);
+      const newValue = this.transformer.maxValueToExtremeValues(max);
+      this.model.setExtremeValues(newValue);
     }
 
     if (eventName === 'currentValuesChanged') {
@@ -43,12 +53,14 @@ class Controller {
 
     if (eventName === 'currentMinChanged') {
       const { currentMinValue } = eventObject.eventBody;
-      this.model.setMinCurrentValue(currentMinValue);
+      const newValue = this.transformer.newMinCurrentValueToCurrentValues(currentMinValue);
+      this.model.setCurrentValues(newValue);
     }
 
     if (eventName === 'currentMaxChanged') {
       const { currentMaxValue } = eventObject.eventBody;
-      this.model.setMaxCurrentValue(currentMaxValue);
+      const newValue = this.transformer.newMaxCurrentValueToCurrentValues(currentMaxValue);
+      this.model.setCurrentValues(newValue);
     }
 
     if (eventName === 'stepChanged') {
@@ -97,105 +109,112 @@ class Controller {
     }
   }
 
-  private handleModelEvents = (event: IEventObject): void => {
-    const { eventName } = event;
+  private handleModelEvents = (event: IUpdate): void => {
+    const { eventName, eventBody } = event;
+    eventBody.margins = eventBody.currentValues.map(
+      (item) => this.calculator.valueToPercent(item)
+    );
 
     if (eventName === 'fullUpdate') {
       const slider = this.view.getBody();
       slider.innerHTML = '';
-      this.createView(slider, event);
+      this.createView(slider, eventBody);
       this.view.subscribe({ function: this.handleViewEvents });
     }
 
-    if (eventName === 'valuesUpdate') this.view.update(event.eventBody);
+    if (eventName === 'valuesUpdate') this.view.update(eventBody);
 
-    if (eventName === 'scaleUpdate') this.view.scaleUpdate(event.eventBody);
+    if (eventName === 'scaleUpdate') this.view.scaleUpdate(eventBody);
   };
 
   private handleViewEvents = (event: IViewEvent): void => {
     const { eventName } = event;
 
-    if (eventName === 'handleMove') {
-      const { newValue: newValueInPercent, handlesIndex } = event.eventBody;
-
-      const newValue = this.model.percentToValue(newValueInPercent);
-      this.model.setCurrentValueBeIndex({ index: handlesIndex, newValue });
-    }
-
-    if (eventName === 'handleIncrement') {
-      const { handlesIndex } = event.eventBody;
-
-      const value = this.model.getCurrentValues()[handlesIndex];
-      const step = this.model.getStep();
-      let newValue = value + step;
-
-      newValue = this.model.valueToPercent(newValue);
-      newValue = this.model.percentToValue(newValue);
-
-      this.model.setCurrentValueBeIndex({ index: handlesIndex, newValue });
-    }
-
-    if (eventName === 'handleDecrement') {
-      const { handlesIndex } = event.eventBody;
-
-      const value = this.model.getCurrentValues()[handlesIndex];
-      const step = this.model.getStep();
-      let newValue = value - step;
-
-      newValue = this.model.valueToPercent(newValue);
-      newValue = this.model.percentToValue(newValue);
-
-      this.model.setCurrentValueBeIndex({ index: handlesIndex, newValue });
-    }
-
-    if (eventName === 'lineClick') {
-      let { newValue } = event.eventBody;
-      newValue = this.model.percentToValue(newValue);
-      this.model.setNearestValue(newValue);
-    }
-
-    if (eventName === 'scaleItemClick') {
-      let { newValue } = event.eventBody;
-      const isCollection = this.model.getIsCollection();
-
-      if (isCollection) {
-        // eslint-disable-next-line
-        newValue = this.model.getCollection().findIndex((item) => item == newValue);
-      } else {
-        newValue = this.model.valueToPercent(Number(newValue));
-        newValue = this.model.percentToValue(newValue);
-      }
-
-      this.model.setNearestValue(newValue);
-    }
-
-    if (eventName === 'lineResize') {
-      this.model.sendUpdate('scaleUpdate');
-    }
+    if (eventName === 'handleMove') this.handleHandleMove(event);
+    if (eventName === 'handleIncrement') this.handleHandleIncrement(event);
+    if (eventName === 'handleDecrement') this.handleHandleDecrement(event);
+    if (eventName === 'lineClick') this.handleLineClick(event);
+    if (eventName === 'scaleItemClick') this.handleScaleItemClick(event); 
+    if (eventName === 'lineResize') this.model.sendUpdate('scaleUpdate');
   };
 
-  private createModel(options: IController): void {
-    const {
-      extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveScale,
-      haveProgressBar, haveLabel, callbacks, collection, isCollection,
-    } = options;
-
-    this.model = new Model({
-      extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveProgressBar,
-      haveScale, haveLabel, callbacks, collection, isCollection,
-    });
+  private createView = (slider: HTMLElement, eventBody: IUpdateBody): void => {
+    const margins = eventBody.currentValues.map((item) => this.calculator.valueToPercent(item)); 
+    this.view = new View({ slider, ...eventBody, margins });
   }
 
-  private createView(slider: HTMLElement, eventObject: IUpdate): void {
-    const {
-      extremeValues, currentValues, scaleStep, isVertical, haveScale, haveLabel,
-      collection, isCollection, margins, haveProgressBar,
-    } = eventObject.eventBody;
+  private handleHandleMove = (event: IViewEvent): void => {
+    const { newValue: newValueInPercent, handlesIndex: index } = event.eventBody;
+    const newValue = this.calculator.percentToValue(newValueInPercent);
+    const valueAdjustedByStep = this.calculator.adjustByStep(newValue);
+    const valueAdjustedByAccuracy = this.calculator.adjustByAccuracy(valueAdjustedByStep);
 
-    this.view = new View({
-      slider, extremeValues, currentValues, margins, scaleStep, isVertical, haveProgressBar,
-      haveScale, haveLabel, isCollection, collection,
-    });
+    const newCurrentValues = this.transformer.currentValueWithIndexToCurrentValues(
+      index, valueAdjustedByAccuracy,
+    );
+
+    this.model.setCurrentValues(newCurrentValues);
+  }
+
+  private handleHandleIncrement = (event: IViewEvent): void => {
+    const { handlesIndex: index } = event.eventBody;
+    const value = this.model.getCurrentValues()[index];
+    const step = this.model.getStep();
+    const newValue = value + step;
+
+    const valueAdjustedByStep = this.calculator.adjustByStep(newValue);
+    const valueAdjustedByAccuracy = this.calculator.adjustByAccuracy(valueAdjustedByStep);
+
+    const newCurrentValues = this.transformer.currentValueWithIndexToCurrentValues(
+      index, valueAdjustedByAccuracy
+    );
+
+    this.model.setCurrentValues(newCurrentValues);
+  }
+
+  private handleHandleDecrement = (event: IViewEvent): void => {
+    const { handlesIndex: index } = event.eventBody;
+    const value = this.model.getCurrentValues()[index];
+    const step = this.model.getStep();
+    const newValue = value - step;
+
+    const valueAdjustedByStep = this.calculator.adjustByStep(newValue);
+    const valueAdjustedByAccuracy = this.calculator.adjustByAccuracy(valueAdjustedByStep);
+
+    const newCurrentValues = this.transformer.currentValueWithIndexToCurrentValues(
+      index, valueAdjustedByAccuracy
+    );
+
+    this.model.setCurrentValues(newCurrentValues);
+  }
+
+  private handleLineClick = (event: IViewEvent): void => {
+    let { newValue } = event.eventBody;
+
+    newValue = this.calculator.percentToValue(newValue);
+    const valueAdjustedByStep = this.calculator.adjustByStep(newValue);
+    const valueAdjustedByAccuracy = this.calculator.adjustByAccuracy(valueAdjustedByStep);
+
+    const newCurrentValues = this.transformer.currentValueWithoutIndexToCurrentValues(
+      valueAdjustedByAccuracy,
+    );
+
+    this.model.setCurrentValues(newCurrentValues);
+  }
+
+  private handleScaleItemClick = (event: IViewEvent): void => {
+    let { newValue } = event.eventBody;
+    const isCollection = this.model.getIsCollection();
+
+    if (isCollection) {
+      newValue = this.model.getCollection().findIndex((item) => item === newValue);
+    } else {
+      newValue = this.calculator.adjustByStep(Number(newValue));
+      newValue = this.calculator.adjustByAccuracy(newValue);
+    }
+
+    const newCurrentValues = this.transformer.currentValueWithoutIndexToCurrentValues(newValue);
+    this.model.setCurrentValues(newCurrentValues);
   }
 }
 
