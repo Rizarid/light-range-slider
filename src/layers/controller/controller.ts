@@ -27,87 +27,48 @@ class Controller {
   }
 
   public changeParameter(eventObject: IChangeParameterObject): void {
-    const { eventName } = eventObject;
-
-    if (eventName === 'extremeValuesChanged') {
-      const { extremeValues } = eventObject.eventBody;
-      this.model.setExtremeValues(extremeValues);
+    const { eventName, eventBody } = eventObject;
+    const parameterHandlers = {
+      extremeValues: this.model.setExtremeValues,
+      min: this.handleMinLiteral,
+      max: this.handleMaxLiteral,
+      currentValues: this.model.setCurrentValues,
+      currentMin: this.handleCurrentMimLiteral,
+      currentMax: this.handleCurrentMaxLiteral,
+      step: this.model.setStep,
+      scaleStep: this.model.setScaleStep,
+      isVertical: this.model.setIsVertical,
+      isInterval: this.model.setIsInterval,
+      haveProgressBar: this.model.setHaveProgressBar,
+      haveLabel: this.model.setHaveLabel,
+      haveScale: this.model.setHaveScale,
+      isCollection: this.model.setIsCollection,
+      collection: this.model.setCollection
     }
 
-    if (eventName === 'minChanged') {
-      const { min } = eventObject.eventBody;
-      const newValue = this.transformer.minValueToExtremeValues(min);
-      this.model.setExtremeValues(newValue);
-    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    parameterHandlers[eventName](eventBody[eventName]);
+  };
 
-    if (eventName === 'maxChanged') {
-      const { max } = eventObject.eventBody;
-      const newValue = this.transformer.maxValueToExtremeValues(max);
-      this.model.setExtremeValues(newValue);
-    }
+  private handleMinLiteral = (min: number): void => {
+    const newValue = this.transformer.minValueToExtremeValues(min);
+    this.model.setExtremeValues(newValue);
+  };
 
-    if (eventName === 'currentValuesChanged') {
-      const { currentValues } = eventObject.eventBody;
-      this.model.setCurrentValues(currentValues);
-    }
+  private handleMaxLiteral = (max: number): void => {
+    const newValue = this.transformer.maxValueToExtremeValues(max);
+    this.model.setExtremeValues(newValue);
+  };
 
-    if (eventName === 'currentMinChanged') {
-      const { currentMinValue } = eventObject.eventBody;
-      const newValue = this.transformer.newMinCurrentValueToCurrentValues(currentMinValue);
-      this.model.setCurrentValues(newValue);
-    }
+  private handleCurrentMimLiteral = (currentMin: number): void => {
+    const newValue = this.transformer.newMinCurrentValueToCurrentValues(currentMin);
+    this.model.setCurrentValues(newValue);
+  };
 
-    if (eventName === 'currentMaxChanged') {
-      const { currentMaxValue } = eventObject.eventBody;
-      const newValue = this.transformer.newMaxCurrentValueToCurrentValues(currentMaxValue);
-      this.model.setCurrentValues(newValue);
-    }
-
-    if (eventName === 'stepChanged') {
-      const { step } = eventObject.eventBody;
-      this.model.setStep(step);
-    }
-
-    if (eventName === 'scaleStepChanged') {
-      const { scaleStep } = eventObject.eventBody;
-      this.model.setScaleStep(scaleStep);
-    }
-
-    if (eventName === 'isVerticalChanged') {
-      const { isVertical } = eventObject.eventBody;
-      this.model.setIsVertical(isVertical);
-    }
-
-    if (eventName === 'isIntervalChanged') {
-      const { isInterval } = eventObject.eventBody;
-      this.model.setIsInterval(isInterval);
-    }
-
-    if (eventName === 'haveProgressBarChanged') {
-      const { haveProgressBar } = eventObject.eventBody;
-      this.model.setHaveProgressBar(haveProgressBar);
-    }
-
-    if (eventName === 'haveLabelChanged') {
-      const { haveLabel } = eventObject.eventBody;
-      this.model.setHaveLabel(haveLabel);
-    }
-
-    if (eventName === 'haveScaleChanged') {
-      const { haveScale } = eventObject.eventBody;
-      this.model.setHaveScale(haveScale);
-    }
-
-    if (eventName === 'isCollectionChanged') {
-      const { isCollection } = eventObject.eventBody;
-      this.model.setIsCollection(isCollection);
-    }
-
-    if (eventName === 'collectionChanged') {
-      const { collection } = eventObject.eventBody;
-      this.model.setCollection(collection);
-    }
-  }
+  private handleCurrentMaxLiteral = (currentMax: number): void => {
+    const newValue = this.transformer.newMaxCurrentValueToCurrentValues(currentMax);
+    this.model.setCurrentValues(newValue);
+  };
 
   private handleModelEvents = (event: IUpdate): void => {
     const { eventName, eventBody } = event;
@@ -115,17 +76,17 @@ class Controller {
       (item) => this.calculator.valueToPercent(item)
     );
 
-    if (eventName === 'fullUpdate') {
-      const slider = this.view.getBody();
-      slider.innerHTML = '';
-      this.createView(slider, eventBody);
-      this.view.subscribe({ function: this.handleViewEvents });
-    }
-
+    if (eventName === 'fullUpdate') this.handleFullUpdateEvent(eventBody);
     if (eventName === 'valuesUpdate') this.view.update(eventBody);
-
     if (eventName === 'scaleUpdate') this.view.scaleUpdate(eventBody);
   };
+
+  private handleFullUpdateEvent = (eventBody: IUpdateBody) => {
+    const slider = this.view.getBody();
+    slider.innerHTML = '';
+    this.createView(slider, eventBody);
+    this.view.subscribe({ function: this.handleViewEvents });
+  }
 
   private handleViewEvents = (event: IViewEvent): void => {
     const { eventName } = event;
@@ -216,6 +177,7 @@ class Controller {
     const newCurrentValues = this.transformer.currentValueWithoutIndexToCurrentValues(newValue);
     this.model.setCurrentValues(newCurrentValues);
   }
+
 }
 
 export { Controller };
