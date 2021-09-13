@@ -187,11 +187,8 @@ interface IView {
 
 interface ICreateElements {
   margins: number[],
-  extremeValues: number[],
   currentValues: number[],
-  scaleStep: number,
   haveProgressBar: boolean,
-  haveScale: boolean,
   haveLabel: boolean,
   isCollection: boolean
 }

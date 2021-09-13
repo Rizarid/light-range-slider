@@ -28,6 +28,7 @@ class View {
   private changeObserver: ChangeObserver = new ChangeObserver();
 
   constructor(options: IView) {
+    const { calculator, changeObserver } = this;
     const {
       slider, extremeValues, currentValues, margins, scaleStep, isVertical, haveScale,
       haveLabel, collection, isCollection, haveProgressBar,
@@ -36,16 +37,12 @@ class View {
     this.body = slider;
     this.modifySlidersClass(isVertical);
     this.switchCalculator(isVertical);
-    const { calculator } = this;
+    
 
-    this.createElements({
-      margins, extremeValues, currentValues, scaleStep, haveScale, haveLabel, isCollection,
-      haveProgressBar,
-    });
+    this.createElements({ margins, currentValues, haveLabel, isCollection, haveProgressBar });
     this.appendElements(haveLabel, haveProgressBar);
 
     if (haveScale) {
-      const { changeObserver } = this;
       this.createScale({
         scaleStep, extremeValues, calculator, isCollection, collection, changeObserver,
       });
@@ -53,7 +50,6 @@ class View {
 
     this.update({ margins, currentValues, collection });
     this.changeObserver.subscribe({ function: this.handleHandleEvents });
-
     this.activateTransitions();
   }
 
@@ -86,13 +82,13 @@ class View {
   };
 
   public scaleUpdate = (options: IScaleUpdateBody): void => {
-    const { scaleStep, extremeValues, isCollection, collection, haveScale } = options;
+    const { haveScale, ...scaleOptions } = options;
     const { calculator, changeObserver } = this;
 
     if (haveScale) {
       this.scale.remove();
       this.createScale({
-        scaleStep, extremeValues, calculator, isCollection, collection, changeObserver,
+        calculator, changeObserver, ...scaleOptions,
       });
     }
   };
@@ -124,7 +120,9 @@ class View {
     ));
 
     if (haveProgressBar) this.progressBar = new ProgressBar({ calculator });
-    if (haveLabel) this.createLabels(currentValues, isCollection);
+    if (haveLabel) {
+      this.labels = currentValues.map((item) => new Label({ calculator, isCollection }));
+    };
   }
 
   private appendElements(haveLabel: boolean, haveProgressBar: boolean): void {
@@ -136,14 +134,7 @@ class View {
     }
 
     this.body.appendChild(this.line.getBody());
-  }
-
-  private createLabels(currentValues: number[], isCollection: boolean): void {
-    this.labels = currentValues.map((item, index) => new Label({
-      calculator: this.calculator,
-      isCollection,
-    }));
-  }
+  };
 
   private switchCalculator(isVertical: boolean): void {
     const { getLineSize, getLineLocation } = this;
@@ -158,17 +149,39 @@ class View {
     const { index } = (event.eventBody as { index: number });
 
     if (eventName === 'handlePointerDown') {
-      this.handles.map((item) => item.getBody().classList.remove('light-range-slider__handle_was-active'));
-      if (this.labels) this.labels.map((item) => item.getBody().classList.remove('light-range-slider__label_was-active'));
+      this.handles.map((item) => (
+        item.getBody().classList.remove('light-range-slider__handle_was-active')
+      ));
+
+      if (this.labels) {
+        this.labels.map((item) => (
+          item.getBody().classList.remove('light-range-slider__label_was-active')
+        ));
+      };
+
       this.handles[index].getBody().classList.add('light-range-slider__handle_active');
-      if (this.labels) this.labels[index].getBody().classList.add('light-range-slider__label_active');
+
+      if (this.labels) {
+        this.labels[index].getBody().classList.add('light-range-slider__label_active');
+      }
     }
 
     if (eventName === 'handlePointerUp') {
-      this.handles.map((item) => item.getBody().classList.remove('light-range-slider__handle_active'));
-      if (this.labels) this.labels.map((item) => item.getBody().classList.remove('light-range-slider__label_active'));
+      this.handles.map((item) => (
+        item.getBody().classList.remove('light-range-slider__handle_active')
+      ));
+
+      if (this.labels) {
+        this.labels.map((item) => (
+          item.getBody().classList.remove('light-range-slider__label_active')
+        ));
+      };
+
       this.handles[index].getBody().classList.add('light-range-slider__handle_was-active');
-      if (this.labels) this.labels[index].getBody().classList.add('light-range-slider__label_was-active');
+
+      if (this.labels) {
+        this.labels[index].getBody().classList.add('light-range-slider__label_was-active');
+      }
     }
   };
 
