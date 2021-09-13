@@ -28,21 +28,21 @@ class View {
   private changeObserver: ChangeObserver = new ChangeObserver();
 
   constructor(options: IView) {
-    const { calculator, changeObserver } = this;
     const {
       slider, extremeValues, currentValues, margins, scaleStep, isVertical, haveScale,
       haveLabel, collection, isCollection, haveProgressBar,
     } = options;
+    const { changeObserver } = this;
 
     this.body = slider;
     this.modifySlidersClass(isVertical);
     this.switchCalculator(isVertical);
-    
 
     this.createElements({ margins, currentValues, haveLabel, isCollection, haveProgressBar });
     this.appendElements(haveLabel, haveProgressBar);
 
     if (haveScale) {
+      const { calculator } = this;
       this.createScale({
         scaleStep, extremeValues, calculator, isCollection, collection, changeObserver,
       });
