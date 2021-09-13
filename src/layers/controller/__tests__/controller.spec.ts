@@ -1,6 +1,8 @@
 import { expect } from 'chai';
 import { Controller } from '../controller';
 import { View } from '../../view/view'
+import { Calculator } from '../calculator/calculator';
+import { Transformer } from '../transformer/transformer';
 
 describe('Controller', function() {
   let controller: Controller;
@@ -8,16 +10,24 @@ describe('Controller', function() {
   const FakeModel = function(){
     this.updatedValue = '';
     this.updateMethod = '';
+    this.extremeValues = [0, 100];
+    this.currentValues = [30, 70];
+    this.isInterval = true;
+    this.step = 1;
     this.isCollection = false;
     this.collection = ['one', 'two', 'three'];
+    this.getExtremeValues = () => this.extremeValues;
+    this.getCurrentValues = () => this.currentValues;
+    this.getStep = () => this.step;
+    this.getIsInterval = () => this.isInterval;
     this.getCollection = () => this.collection;
     this.getIsCollection = () => this.isCollection;
     this.setExtremeValues = (value) => { this.updatedValue = value; this.updateMethod = 'setExtremeValues' }
-    this.setMinValue = (value) => { this.updatedValue = value; this.updateMethod = 'setMinValue' }
-    this.setMaxValue = (value) => { this.updatedValue = value; this.updateMethod = 'setMaxValue' }
+    this.setMinValue = (value) => { this.updatedValue = value; this.updateMethod = 'setExtremeValues' }
+    this.setMaxValue = (value) => { this.updatedValue = value; this.updateMethod = 'setExtremeValues' }
     this.setCurrentValues = (value) => { this.updatedValue = value; this.updateMethod = 'setCurrentValues' }
-    this.setMinCurrentValue = (value) => { this.updatedValue = value; this.updateMethod = 'setMinCurrentValue' }
-    this.setMaxCurrentValue = (value) => { this.updatedValue = value; this.updateMethod = 'setMaxCurrentValue' }
+    this.setMinCurrentValue = (value) => { this.updatedValue = value; this.updateMethod = 'setCurrentValues' }
+    this.setMaxCurrentValue = (value) => { this.updatedValue = value; this.updateMethod = 'setCurrentValues' }
     this.setStep = (value) => { this.updatedValue = value; this.updateMethod = 'setStep' }
     this.setScaleStep = (value) => { this.updatedValue = value; this.updateMethod = 'setScaleStep' }
     this.setIsVertical = (value) => { this.updatedValue = value; this.updateMethod = 'setIsVertical' }
@@ -30,8 +40,8 @@ describe('Controller', function() {
     
     this.valueToPercent = (value) => value * 100
     this.percentToValue = (value) => value / 100;
-    this.setCurrentValueBeIndex = (value) => { this.updatedValue = value; this.updateMethod = 'setCurrentValueBeIndex' }
-    this.setNearestValue = (value) => { this.updatedValue = value; this.updateMethod = 'setNearestValue' }
+    this.setCurrentValueBeIndex = (value) => { this.updatedValue = value; this.updateMethod = 'setCurrentValues' }
+    this.setNearestValue = (value) => { this.updatedValue = value; this.updateMethod = 'setCurrentValues' }
     this.sendUpdate = (value) => { this.updatedValue = value; this.updateMethod = 'sendUpdate' }
   }
 
@@ -47,11 +57,11 @@ describe('Controller', function() {
     controller = new Controller({
       slider: document.createElement('div'),
       extremeValues: [0, 100],
-      currentValues: [50],
+      currentValues: [30, 70],
       step: 1,
       scaleStep: 10,
       isVertical: false,
-      isInterval: false,
+      isInterval: true,
       haveProgressBar: true,
       haveScale: true,
       haveLabel: true,
@@ -61,13 +71,16 @@ describe('Controller', function() {
     })
 
     controller.model = new FakeModel();
+    controller.calculator = new Calculator(controller.model);
+    controller.transformer = new Transformer(controller.model);
     controller.view = new FakeView();
+
 
   })
 
   it('should call method setExtremeValues from model', function() {
     const eventObject = {
-      eventName: 'extremeValuesChanged',
+      eventName: 'extremeValues',
       eventBody: { extremeValues: [500, 600] },
     };
 
@@ -77,69 +90,69 @@ describe('Controller', function() {
     expect(controller.model.updateMethod).to.equal('setExtremeValues');
   })
 
-  it('should call method setMinValue from model', function() {
+  it('should calculate value call method extremeValues from model', function() {
     const eventObject = {
-      eventName: 'minChanged',
-      eventBody: { min: 500 },
+      eventName: 'min',
+      eventBody: { min: 50 },
     };
 
     controller.changeParameter(eventObject);
 
-    expect(controller.model.updatedValue).to.equal(500);
-    expect(controller.model.updateMethod).to.equal('setMinValue');
+    expect(controller.model.updatedValue).to.deep.equal([50, 100]);
+    expect(controller.model.updateMethod).to.equal('setExtremeValues');
   })
 
-  it('should call method setMaxValue from model', function() {
+  it('should calculate value call method extremeValues from model', function() {
     const eventObject = {
-      eventName: 'maxChanged',
+      eventName: 'max',
       eventBody: { max: 500 },
     };
 
     controller.changeParameter(eventObject);
 
-    expect(controller.model.updatedValue).to.equal(500);
-    expect(controller.model.updateMethod).to.equal('setMaxValue');
+    expect(controller.model.updatedValue).to.deep.equal([0, 500]);
+    expect(controller.model.updateMethod).to.equal('setExtremeValues');
   })
 
   it('should call method setCurrentValues from model', function() {
     const eventObject = {
-      eventName: 'currentValuesChanged',
-      eventBody: { currentValues: [400, 600] },
+      eventName: 'currentValues',
+      eventBody: { currentValues: [40, 60] },
     };
 
     controller.changeParameter(eventObject);
 
-    expect(controller.model.updatedValue).to.deep.equal([400, 600]);
+    expect(controller.model.updatedValue).to.deep.equal([40, 60]);
     expect(controller.model.updateMethod).to.equal('setCurrentValues');
   })
 
-  it('should call method setMinCurrentValue from model', function() {
+  it('should calculate value call method setCurrentValues from model', function() {
     const eventObject = {
-      eventName: 'currentMinChanged',
-      eventBody: { currentMinValue: 500 },
+      eventName: 'currentMin',
+      eventBody: { currentMin: 50 },
     };
 
     controller.changeParameter(eventObject);
 
-    expect(controller.model.updatedValue).to.equal(500);
-    expect(controller.model.updateMethod).to.equal('setMinCurrentValue');
+    expect(controller.model.updatedValue).to.deep.equal([50, 70]);
+    expect(controller.model.updateMethod).to.equal('setCurrentValues');
   })
 
-  it('should call method setMaxCurrentValue from model', function() {
+  it('should calculate value call method setCurrentValues from model', function() {
     const eventObject = {
-      eventName: 'currentMaxChanged',
-      eventBody: { currentMaxValue: 500 },
+      eventName: 'currentMax',
+      eventBody: { currentMax: 50 },
     };
 
     controller.changeParameter(eventObject);
 
-    expect(controller.model.updatedValue).to.equal(500);
-    expect(controller.model.updateMethod).to.equal('setMaxCurrentValue');
+    expect(controller.model.updatedValue).to.deep.equal([30, 50]);
+    expect(controller.model.updateMethod).to.equal('setCurrentValues');
   })
 
   it('should call method setStep from model', function() {
     const eventObject = {
-      eventName: 'stepChanged',
+      eventName: 'step',
       eventBody: { step: 5 },
     };
 
@@ -151,7 +164,7 @@ describe('Controller', function() {
 
   it('should call method setScaleStep from model', function() {
     const eventObject = {
-      eventName: 'scaleStepChanged',
+      eventName: 'scaleStep',
       eventBody: { scaleStep: 10 },
     };
 
@@ -163,7 +176,7 @@ describe('Controller', function() {
 
   it('should call method setIsVertical from model', function() {
     const eventObject = {
-      eventName: 'isVerticalChanged',
+      eventName: 'isVertical',
       eventBody: { isVertical: false },
     };
 
@@ -175,7 +188,7 @@ describe('Controller', function() {
 
   it('should call method setIsInterval from model', function() {
     const eventObject = {
-      eventName: 'isIntervalChanged',
+      eventName: 'isInterval',
       eventBody: { isInterval: false },
     };
 
@@ -187,7 +200,7 @@ describe('Controller', function() {
 
   it('should call method setHaveProgressBar from model', function() {
     const eventObject = {
-      eventName: 'haveProgressBarChanged',
+      eventName: 'haveProgressBar',
       eventBody: { haveProgressBar: true },
     };
 
@@ -199,7 +212,7 @@ describe('Controller', function() {
 
   it('should call method setHaveLabel from model', function() {
     const eventObject = {
-      eventName: 'haveLabelChanged',
+      eventName: 'haveLabel',
       eventBody: { haveLabel: true },
     };
 
@@ -211,7 +224,7 @@ describe('Controller', function() {
 
   it('should call method setHaveScale from model', function() {
     const eventObject = {
-      eventName: 'haveScaleChanged',
+      eventName: 'haveScale',
       eventBody: { haveScale: true },
     };
 
@@ -223,7 +236,7 @@ describe('Controller', function() {
 
   it('should call method setIsCollection from model', function() {
     const eventObject = {
-      eventName: 'isCollectionChanged',
+      eventName: 'isCollection',
       eventBody: { isCollection: false },
     };
 
@@ -235,7 +248,7 @@ describe('Controller', function() {
 
   it('should call method setCollection from model', function() {
     const eventObject = {
-      eventName: 'collectionChanged',
+      eventName: 'collection',
       eventBody: { collection: ['one', 'two', 'three'] },
     };
 
@@ -245,7 +258,7 @@ describe('Controller', function() {
     expect(controller.model.updateMethod).to.equal('setCollection');
   })
 
-  it('should calculate value and call method setCurrentValueBeIndex from model', function() {
+  it('should calculate value and call method setCurrentValues from model', function() {
     const eventObject = {
       eventName: 'handleMove',
       eventBody: { newValue: 60, handlesIndex: 0 },
@@ -253,11 +266,11 @@ describe('Controller', function() {
 
     controller.handleViewEvents(eventObject);
 
-    expect(controller.model.updatedValue).to.deep.equal({ newValue: 0.6, index: 0 });
-    expect(controller.model.updateMethod).to.equal('setCurrentValueBeIndex');
+    expect(controller.model.updatedValue).to.deep.equal([60, 70]);
+    expect(controller.model.updateMethod).to.equal('setCurrentValues');
   })
 
-  it('should calculate value and call method setNearestValue from model', function() {
+  it('should calculate value and call method setCurrentValues from model', function() {
     const eventObject = {
       eventName: 'lineClick',
       eventBody: { newValue: 60 },
@@ -265,20 +278,20 @@ describe('Controller', function() {
 
     controller.handleViewEvents(eventObject);
 
-    expect(controller.model.updatedValue).to.equal(0.6);
-    expect(controller.model.updateMethod).to.equal('setNearestValue');
+    expect(controller.model.updatedValue).to.deep.equal([30, 60]);
+    expect(controller.model.updateMethod).to.equal('setCurrentValues');
   })
 
-  it('should calculate value and call method setNearestValue from model', function() {
+  it('should calculate value and call method setCurrentValues from model', function() {
     const eventObject = {
       eventName: 'scaleItemClick',
-      eventBody: { newValue: '0.6' },
+      eventBody: { newValue: '60' },
     };
 
     controller.handleViewEvents(eventObject);
 
-    expect(controller.model.updatedValue).to.equal(0.6);
-    expect(controller.model.updateMethod).to.equal('setNearestValue');
+    expect(controller.model.updatedValue).to.deep.equal([30, 60]);
+    expect(controller.model.updateMethod).to.equal('setCurrentValues');
   })
 
   it('should calculate value and call method setNearestValue from model by isCollection = true', function() {
@@ -291,8 +304,8 @@ describe('Controller', function() {
 
     controller.handleViewEvents(eventObject);
 
-    expect(controller.model.updatedValue).to.equal(1);
-    expect(controller.model.updateMethod).to.equal('setNearestValue');
+    expect(controller.model.updatedValue).to.deep.equal([1, 70]);
+    expect(controller.model.updateMethod).to.equal('setCurrentValues');
   })
 
   it('should calculate value and call method setNearestValue from model', function() {
@@ -311,15 +324,16 @@ describe('Controller', function() {
     const eventObject = {
       eventName: 'fullUpdate',
       eventBody: {
-        extremeValues: [300, 400],
-        currentValues: [330, 370],
-        margins: [30, 70],
-        scaleStep: 5,
-        isVertical: 10,
-        haveProgressBar: true,
+        extremeValues: [0, 100],
+        currentValues: [30, 70],
+        step: 1,
+        scaleStep: 10,
+        isVertical:false,
         haveScale: true,
-        haveLabel: true,
         isCollection: false,
+        isInterval: false,
+        haveProgressBar: true,
+        haveLabel: true,
         collection: [],
       },
     };
@@ -329,19 +343,37 @@ describe('Controller', function() {
 
   })
 
-  it('should update viev', function() {
+  it('should update view', function() {
     const eventObject = {
       eventName: 'valuesUpdate',
       eventBody: {
-        currentValues: [330, 370],
+        extremeValues: [0, 100],
+        currentValues: [30, 70],
         margins: [30, 70],
+        step: 1,
+        scaleStep: 10,
+        isVertical:false,
+        haveScale: true,
+        isCollection: false,
+        isInterval: true,
+        haveProgressBar: true,
+        haveLabel: true,
         collection: [],
       },
     };
 
     const eventBody = {
-      currentValues: [330, 370],
+      extremeValues: [0, 100],
+      currentValues: [30, 70],
       margins: [30, 70],
+      step: 1,
+      scaleStep: 10,
+      isVertical:false,
+      haveScale: true,
+      isCollection: false,
+      isInterval: true,
+      haveProgressBar: true,
+      haveLabel: true,
       collection: [],
     };
 
@@ -354,19 +386,33 @@ describe('Controller', function() {
     const eventObject = {
       eventName: 'scaleUpdate',
     eventBody: {
-      extremeValues: [300, 400],
+      extremeValues: [0, 100],
+      currentValues: [30, 70],
+      margins: [30, 70],
+      step: 1,
       scaleStep: 10,
+      isVertical:false,
       haveScale: true,
       isCollection: false,
+      isInterval: true,
+      haveProgressBar: true,
+      haveLabel: true,
       collection: [],
     },
     };
 
     const eventBody = {
-      extremeValues: [300, 400],
+      extremeValues: [0, 100],
+      currentValues: [30, 70],
+      margins: [30, 70],
+      step: 1,
       scaleStep: 10,
+      isVertical:false,
       haveScale: true,
       isCollection: false,
+      isInterval: true,
+      haveProgressBar: true,
+      haveLabel: true,
       collection: [],
     };
 
