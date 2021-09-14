@@ -43,11 +43,34 @@ class Controller {
       haveLabel: this.model.setHaveLabel,
       haveScale: this.model.setHaveScale,
       isCollection: this.model.setIsCollection,
-      collection: this.model.setCollection
+      collection: this.model.setCollection,
+      callbacks: this.model.setCallbacks
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     parameterHandlers[eventName](eventBody[eventName]);
+  };
+
+  public handleModelEvents = (event: IUpdate): void => {
+    const { eventName, eventBody } = event;
+    eventBody.margins = eventBody.currentValues.map(
+      (item) => this.calculator.valueToPercent(item)
+    );
+
+    if (eventName === 'fullUpdate') this.handleFullUpdateEvent(eventBody);
+    if (eventName === 'valuesUpdate') this.view.update(eventBody);
+    if (eventName === 'scaleUpdate') this.view.scaleUpdate(eventBody);
+  };
+
+  public handleViewEvents = (event: IViewEvent): void => {
+    const { eventName } = event;
+
+    if (eventName === 'handleMove') this.handleHandleMove(event);
+    if (eventName === 'handleIncrement') this.handleHandleIncrement(event);
+    if (eventName === 'handleDecrement') this.handleHandleDecrement(event);
+    if (eventName === 'lineClick') this.handleLineClick(event);
+    if (eventName === 'scaleItemClick') this.handleScaleItemClick(event); 
+    if (eventName === 'lineResize') this.model.sendUpdate('scaleUpdate');
   };
 
   private handleMinLiteral = (min: number): void => {
@@ -70,34 +93,12 @@ class Controller {
     this.model.setCurrentValues(newValue);
   };
 
-  private handleModelEvents = (event: IUpdate): void => {
-    const { eventName, eventBody } = event;
-    eventBody.margins = eventBody.currentValues.map(
-      (item) => this.calculator.valueToPercent(item)
-    );
-
-    if (eventName === 'fullUpdate') this.handleFullUpdateEvent(eventBody);
-    if (eventName === 'valuesUpdate') this.view.update(eventBody);
-    if (eventName === 'scaleUpdate') this.view.scaleUpdate(eventBody);
-  };
-
   private handleFullUpdateEvent = (eventBody: IUpdateBody) => {
     const slider = this.view.getBody();
     slider.innerHTML = '';
     this.createView(slider, eventBody);
     this.view.subscribe({ function: this.handleViewEvents });
   }
-
-  private handleViewEvents = (event: IViewEvent): void => {
-    const { eventName } = event;
-
-    if (eventName === 'handleMove') this.handleHandleMove(event);
-    if (eventName === 'handleIncrement') this.handleHandleIncrement(event);
-    if (eventName === 'handleDecrement') this.handleHandleDecrement(event);
-    if (eventName === 'lineClick') this.handleLineClick(event);
-    if (eventName === 'scaleItemClick') this.handleScaleItemClick(event); 
-    if (eventName === 'lineResize') this.model.sendUpdate('scaleUpdate');
-  };
 
   private createView = (slider: HTMLElement, eventBody: IUpdateBody): void => {
     const margins = eventBody.currentValues.map((item) => this.calculator.valueToPercent(item)); 
@@ -106,6 +107,7 @@ class Controller {
 
   private handleHandleMove = (event: IViewEvent): void => {
     const { newValue: newValueInPercent, handlesIndex: index } = event.eventBody;
+
     const newValue = this.calculator.percentToValue(newValueInPercent);
     const valueAdjustedByStep = this.calculator.adjustByStep(newValue);
     const valueAdjustedByAccuracy = this.calculator.adjustByAccuracy(valueAdjustedByStep);

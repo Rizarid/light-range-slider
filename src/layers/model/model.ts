@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import {
-  IModel, IUpdateCallback, IUpdate, IUpdateBody,
+  IModel, IUpdate, IUpdateBody, ICallback
 } from '../interfaces/interfaces';
 import { ChangeObserver } from '../observers/change-observer';
 import { ValueChecker } from './value-checker/value-checker';
@@ -61,11 +61,11 @@ class Model {
     this.isInit = false;
   }
 
-  public subscribe(callback: IUpdateCallback): void {
+  public subscribe(callback: ICallback): void {
     this.changeObserver.subscribe(callback);
   }
 
-  public unsubscribe(callback: IUpdateCallback): void {
+  public unsubscribe(callback: ICallback): void {
     this.changeObserver.subscribe(callback);
   }
 

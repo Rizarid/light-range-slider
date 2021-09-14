@@ -135,24 +135,26 @@ interface IController {
 
 interface IChangeParameterObject {
   eventName: string,
-  eventBody: {
-    extremeValues?: number[],
-    min?: number,
-    max?: number,
-    currentValues?: number[],
-    currentMin?: number,
-    currentMax?: number,
-    step?: number,
-    scaleStep?: number,
-    haveProgressBar?: boolean,
-    isVertical?: boolean,
-    isInterval?: boolean,
-    haveScale?: boolean,
-    haveLabel?: boolean,
-    callbacks?: ((updateObject: IOutsideUpdate) => void)[],
-    isCollection?: boolean,
-    collection?: string[] | number[] | HTMLElement[]
-  }
+  eventBody: IChangeParameterBody
+}
+
+interface IChangeParameterBody {
+  extremeValues?: number[],
+  min?: number,
+  max?: number,
+  currentValues?: number[],
+  currentMin?: number,
+  currentMax?: number,
+  step?: number,
+  scaleStep?: number,
+  haveProgressBar?: boolean,
+  isVertical?: boolean,
+  isInterval?: boolean,
+  haveScale?: boolean,
+  haveLabel?: boolean,
+  callbacks?: ((updateObject: IOutsideUpdate) => void)[],
+  isCollection?: boolean,
+  collection?: string[] | number[] | HTMLElement[]
 }
 
 interface ISliderOptions {
@@ -215,6 +217,6 @@ export {
   IModel, IUpdateCallback, IUpdate, IUpdateBody, IEventObject, IViewEvent, IOutsideUpdate,
   IHandle, ICallback, ILabel, ILabelAddContent, ILabelUpdate, IScale, ICreateScaleItems,
   IScaleAddContent, IGetScaleItem, IClickEventObject, IProgressBar, IController,
-  IChangeParameterObject, ISliderOptions, IView, ICreateElements, IViewUpdate, IScaleUpdate,
-  IScaleUpdateBody, ILine,
+  IChangeParameterObject, IChangeParameterBody, ISliderOptions, IView, ICreateElements, 
+  IViewUpdate, IScaleUpdate, IScaleUpdateBody, ILine,
 };
