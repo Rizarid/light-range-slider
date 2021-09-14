@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 
-import * as JQuery from 'jquery';
+import * as $ from 'jquery';
 
 import { Controller } from '../layers/controller/controller';
 import { ISliderOptions, IOutsideUpdate } from '../layers/interfaces/interfaces';
 import './lite-range-slider.sass';
 
-JQuery.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
+$.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
   const This = (this as JQuery);
   const parameters = {
     slider: This[0],

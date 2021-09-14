@@ -58,7 +58,7 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js', ".json"],
     alias: {
-      app: path.join(__dirname, 'app')
+      "@": path.resolve(__dirname, "src"),
     }
   },
 
@@ -136,7 +136,4 @@ module.exports = {
     port: 4200
   },
 
-  externals: {
-    jquery: 'jQuery'
-  }
 }

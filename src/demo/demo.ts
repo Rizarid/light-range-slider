@@ -1,8 +1,8 @@
 import { SlidersDemo } from './components/sliders-demo/sliders-demo';
 import './demo.sass';
+import '../lite-range-slider/lite-range-slider';
 
 const demos = document.querySelectorAll('.js-sliders-demo');
-console.log(demos)
 const firstDemo = new SlidersDemo((demos[0] as HTMLElement));
 const secondDemo = new SlidersDemo((demos[1] as HTMLElement), {
   extremeValues: [-5, 5],
