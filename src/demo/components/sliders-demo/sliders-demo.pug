@@ -1,0 +1,10 @@
+include ../control-panel/control-panel.pug
+
+mixin slidersDemo(modifier = '')
+  - const classes = modifier ? `sliders-demo js-sliders-demo sliders-demo_${modifier}` : 'sliders-demo js-sliders-demo'
+  
+  div(class != classes)
+    .demo-area.js-demo-area 
+      .slider.js-slider
+    
+    +controlPanel

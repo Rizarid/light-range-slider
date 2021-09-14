@@ -1,0 +1,18 @@
+include ../text-field/text-field.pug
+include ../toggle/toggle.pug
+
+mixin controlPanel
+  .control-panel.js-control-panel 
+    +textField({ title: 'min', className: 'min' })
+    +textField({ title: 'max', className: 'max' })
+    +textField({ title: 'from', className: 'current-min' })
+    +textField({ title: 'to', className: 'current-max' })
+    +textField({ title: 'step', className: 'step' })
+    +textField({ title: 'step-of-scale', className: 'scale-step' })
+    +textField({ title: 'collection', className: 'collection' })
+    +toggle({ text: 'vertical', className: 'vertical' })
+    +toggle({ text: 'interval', className: 'interval' })
+    +toggle({ text: 'collection', className: 'is-collection' })
+    +toggle({ text: 'progressBar', className: 'progress-bar' })
+    +toggle({ text: 'label', className: 'label' })
+    +toggle({ text: 'scale', className: 'scale' })
