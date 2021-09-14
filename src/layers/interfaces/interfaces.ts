@@ -27,7 +27,7 @@ interface IUpdate {
 interface IUpdateBody {
   extremeValues: number[],
   currentValues: number[],
-  margins: number[],
+  margins?: number[],
   step: number,
   scaleStep: number,
   isVertical: boolean,

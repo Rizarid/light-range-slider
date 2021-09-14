@@ -46,7 +46,7 @@ class Calculator {
     return (Math.round((valueInRange / step) * 10) / 10 > Math.round(range / step));
   };
 
-  private getRange = () => {
+  private getRange = (): number => {
     const [minValue, maxValue] = this.model.getExtremeValues();
     return maxValue - minValue;
   };

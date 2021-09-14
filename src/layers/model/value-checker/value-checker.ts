@@ -124,7 +124,7 @@ class ValueChecker {
     }
   };
 
-  private checkIsArray = (newValue: any[]) => {
+  private checkIsArray = (newValue: any[]): void => {
     if (!Array.isArray(newValue)) {
       throw new Error(`Expected array, but passed argument is ${typeof newValue}`);
     }
