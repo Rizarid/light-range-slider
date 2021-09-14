@@ -1,5 +1,5 @@
 import {
-  IUpdate, IViewEvent, IController, IChangeParameterObject, IUpdateBody,
+  IUpdate, IViewEvent, IController, IChangeParameterObject, IUpdateBody, IView,
 } from '../interfaces/interfaces';
 import { Model } from '../model/model';
 import { View } from '../view/view';
@@ -102,7 +102,7 @@ class Controller {
 
   private createView = (slider: HTMLElement, eventBody: IUpdateBody): void => {
     const margins = eventBody.currentValues.map((item) => this.calculator.valueToPercent(item));
-    this.view = new View({ slider, ...eventBody, margins });
+    this.view = new View(({ slider, ...eventBody, margins } as IView));
   };
 
   private handleHandleMove = (event: IViewEvent): void => {

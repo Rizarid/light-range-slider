@@ -1,5 +1,5 @@
 import {
-  IView, ICreateElements, IViewUpdate, ICallback, IScaleUpdateBody, IScale, IEventObject,
+  IView, ICreateElements, ICallback, IScaleUpdateBody, IScale, IEventObject, IUpdateBody,
 } from '../interfaces/interfaces';
 import { ChangeObserver } from '../observers/change-observer';
 import { Handle } from './handle/handle';
@@ -67,7 +67,7 @@ class View {
 
   public getLineLocation = (): number => this.line.getLocation();
 
-  public update = (options: IViewUpdate): void => {
+  public update = (options: IUpdateBody): void => {
     const { margins, currentValues, collection } = options;
     this.handles.map((item, index) => item.update(margins[index]));
     if (this.progressBar) this.progressBar.update(margins);
@@ -81,15 +81,13 @@ class View {
     }
   };
 
-  public scaleUpdate = (options: IScaleUpdateBody): void => {
+  public scaleUpdate = (options: IUpdateBody): void => {
     const { haveScale, ...scaleOptions } = options;
     const { calculator, changeObserver } = this;
 
     if (haveScale) {
       this.scale.remove();
-      this.createScale({
-        calculator, changeObserver, ...scaleOptions,
-      });
+      this.createScale(({ calculator, changeObserver, ...scaleOptions }) as IScale);
     }
   };
 

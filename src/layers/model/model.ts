@@ -10,7 +10,7 @@ class Model {
 
   private currentValues: number[];
 
-  private callbacks: ((updateObject: IModel) => void)[] = [];
+  private callbacks: ((updateObject: IUpdateBody) => void)[] = [];
 
   private collection: string[] | number[] | HTMLElement[] = [];
 

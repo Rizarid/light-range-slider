@@ -25,18 +25,18 @@ interface IUpdate {
 }
 
 interface IUpdateBody {
-  extremeValues: number[],
-  currentValues: number[],
+  extremeValues?: number[],
+  currentValues?: number[],
   margins?: number[],
-  step: number,
-  scaleStep: number,
-  isVertical: boolean,
-  isInterval: boolean,
-  haveProgressBar: boolean,
-  haveScale: boolean,
-  haveLabel: boolean,
-  collection: string[] | number[] | HTMLElement[],
-  isCollection: boolean,
+  step?: number,
+  scaleStep?: number,
+  isVertical?: boolean,
+  isInterval?: boolean,
+  haveProgressBar?: boolean,
+  haveScale?: boolean,
+  haveLabel?: boolean,
+  collection?: string[] | number[] | HTMLElement[],
+  isCollection?: boolean,
 }
 
 interface IValuesUpdate {

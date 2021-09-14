@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { IModel } from '../../interfaces/interfaces';
 
 class ValueChecker {
