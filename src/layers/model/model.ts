@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import {
-  IModel, IUpdate, IUpdateBody, ICallback
+  IModel, IUpdate, IUpdateBody, ICallback,
 } from '../interfaces/interfaces';
 import { ChangeObserver } from '../observers/change-observer';
 import { ValueChecker } from './value-checker/value-checker';
@@ -70,7 +70,7 @@ class Model {
   }
 
   public getExtremeValues = (): number[] => {
-    const [min, max] = this.extremeValues
+    const [min, max] = this.extremeValues;
     return [min, max];
   };
 

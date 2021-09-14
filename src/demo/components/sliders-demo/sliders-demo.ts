@@ -16,11 +16,11 @@ class SlidersDemo {
     this.body = target;
     this.createSlider(slidersOptions);
     this.createControlPanel();
-  } 
+  }
 
   private createSlider = (slidersOptions: ISliderOptions) => {
     this.$slider = $(this.body).find('.slider');
-    (this.$slider['rangeSlider'] as (slidersOptions: ISliderOptions) => JQuery)(slidersOptions); 
+    (this.$slider['rangeSlider'] as (slidersOptions: ISliderOptions) => JQuery)(slidersOptions);
   };
 
   private createControlPanel = () => {

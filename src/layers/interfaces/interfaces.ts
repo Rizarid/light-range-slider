@@ -217,6 +217,6 @@ export {
   IModel, IUpdateCallback, IUpdate, IUpdateBody, IEventObject, IViewEvent, IOutsideUpdate,
   IHandle, ICallback, ILabel, ILabelAddContent, ILabelUpdate, IScale, ICreateScaleItems,
   IScaleAddContent, IGetScaleItem, IClickEventObject, IProgressBar, IController,
-  IChangeParameterObject, IChangeParameterBody, ISliderOptions, IView, ICreateElements, 
+  IChangeParameterObject, IChangeParameterBody, ISliderOptions, IView, ICreateElements,
   IViewUpdate, IScaleUpdate, IScaleUpdateBody, ILine,
 };

@@ -65,7 +65,7 @@ class Transformer {
     if (distances[0] > distances[1]) return 1;
     if (newValue < currentValues[0]) return 0;
     return 1;
-  }
+  };
 }
 
 export { Transformer };

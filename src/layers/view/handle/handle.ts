@@ -114,7 +114,7 @@ class Handle {
 
       this.isPointerMoveBlocked = true;
       setTimeout(() => { this.isPointerMoveBlocked = false; }, 100);
-    };
+    }
   };
 
   private handleHandleKeyDown = (event: KeyboardEvent): void => {
@@ -133,7 +133,7 @@ class Handle {
       this.changeObserver.notify(eventObject);
       event.preventDefault();
       event.stopPropagation();
-    };
+    }
   };
 
   private handleHandleClick = (event: MouseEvent): void => {

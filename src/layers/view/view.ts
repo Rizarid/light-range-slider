@@ -122,7 +122,7 @@ class View {
     if (haveProgressBar) this.progressBar = new ProgressBar({ calculator });
     if (haveLabel) {
       this.labels = currentValues.map((item) => new Label({ calculator, isCollection }));
-    };
+    }
   }
 
   private appendElements(haveLabel: boolean, haveProgressBar: boolean): void {
@@ -134,7 +134,7 @@ class View {
     }
 
     this.body.appendChild(this.line.getBody());
-  };
+  }
 
   private switchCalculator(isVertical: boolean): void {
     const { getLineSize, getLineLocation } = this;
@@ -157,7 +157,7 @@ class View {
         this.labels.map((item) => (
           item.getBody().classList.remove('light-range-slider__label_was-active')
         ));
-      };
+      }
 
       this.handles[index].getBody().classList.add('light-range-slider__handle_active');
 
@@ -175,7 +175,7 @@ class View {
         this.labels.map((item) => (
           item.getBody().classList.remove('light-range-slider__label_active')
         ));
-      };
+      }
 
       this.handles[index].getBody().classList.add('light-range-slider__handle_was-active');
 

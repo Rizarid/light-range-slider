@@ -58,10 +58,10 @@ class ControlPanel {
   private createGroups = (): void => {
     this.fields = ['min', 'max', 'currentMin', 'currentMax', 'step', 'scaleStep', 'collection'];
     this.toggles = ['isVertical', 'isInterval', 'isCollection', 'haveProgressBar', 'haveLabel', 'haveScale'];
-  }
+  };
 
   private getFields = (): void => {
-    const fieldsClasses = ['min', 'max', 'current-min', 'current-max', 'step', 'scale-step', 'collection']
+    const fieldsClasses = ['min', 'max', 'current-min', 'current-max', 'step', 'scale-step', 'collection'];
     this.fields.map((item, index) => {
       (this[item] as HTMLElement) = this.body.querySelector(`.js-text-field.${fieldsClasses[index]} .text-field__field`);
       return null;
@@ -69,7 +69,7 @@ class ControlPanel {
   };
 
   private getToggles = (): void => {
-    const togglesClasses = ['vertical', 'interval', 'is-collection', 'progress-bar', 'label', 'scale']
+    const togglesClasses = ['vertical', 'interval', 'is-collection', 'progress-bar', 'label', 'scale'];
     this.toggles.map((item, index) => {
       this[item] = new Toggle(this.body.querySelector(`.js-toggle.${togglesClasses[index]}`));
       return null;
@@ -79,13 +79,13 @@ class ControlPanel {
   private createHandlersLists = () => {
     this.fieldsHandlers = [
       'handleMinInput', 'handleMaxInput', 'handleCurrentMinInput', 'handleCurrentMaxInput',
-      'handleStepInput', 'handleScaleStepInput', 'handleCollectionChange'
-    ]
+      'handleStepInput', 'handleScaleStepInput', 'handleCollectionChange',
+    ];
     this.togglesHandlers = [
       'handleIsVerticalChange', 'handleIsIntervalChange', 'handleIsCollectionChange',
-      'handleHaveProgressBarChange', 'handleHaveLabelChange', 'handleHaveScaleChange'
-    ]
-  }
+      'handleHaveProgressBarChange', 'handleHaveLabelChange', 'handleHaveScaleChange',
+    ];
+  };
 
   private addListeners = () => {
     this.fields.map((item, index) => (
@@ -161,7 +161,7 @@ class ControlPanel {
 
     const fieldsValues = [min, max, currentMin, currentMax, step, scaleStep];
     const togglesValues = [
-      isVertical, isInterval, isCollection, haveProgressBar, haveLabel, haveScale
+      isVertical, isInterval, isCollection, haveProgressBar, haveLabel, haveScale,
     ];
 
     fieldsValues.map((item, index) => {
@@ -174,7 +174,7 @@ class ControlPanel {
     togglesValues.map((item, index) => {
       if (item) (this[this.toggles[index]] as Toggle).changeChecked(item);
       return null;
-    })
+    });
   };
 }
 

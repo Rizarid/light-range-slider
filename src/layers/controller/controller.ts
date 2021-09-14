@@ -44,17 +44,17 @@ class Controller {
       haveScale: this.model.setHaveScale,
       isCollection: this.model.setIsCollection,
       collection: this.model.setCollection,
-      callbacks: this.model.setCallbacks
-    }
+      callbacks: this.model.setCallbacks,
+    };
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     parameterHandlers[eventName](eventBody[eventName]);
-  };
+  }
 
   public handleModelEvents = (event: IUpdate): void => {
     const { eventName, eventBody } = event;
     eventBody.margins = eventBody.currentValues.map(
-      (item) => this.calculator.valueToPercent(item)
+      (item) => this.calculator.valueToPercent(item),
     );
 
     if (eventName === 'fullUpdate') this.handleFullUpdateEvent(eventBody);
@@ -69,7 +69,7 @@ class Controller {
     if (eventName === 'handleIncrement') this.handleHandleIncrement(event);
     if (eventName === 'handleDecrement') this.handleHandleDecrement(event);
     if (eventName === 'lineClick') this.handleLineClick(event);
-    if (eventName === 'scaleItemClick') this.handleScaleItemClick(event); 
+    if (eventName === 'scaleItemClick') this.handleScaleItemClick(event);
     if (eventName === 'lineResize') this.model.sendUpdate('scaleUpdate');
   };
 
@@ -98,12 +98,12 @@ class Controller {
     slider.innerHTML = '';
     this.createView(slider, eventBody);
     this.view.subscribe({ function: this.handleViewEvents });
-  }
+  };
 
   private createView = (slider: HTMLElement, eventBody: IUpdateBody): void => {
-    const margins = eventBody.currentValues.map((item) => this.calculator.valueToPercent(item)); 
+    const margins = eventBody.currentValues.map((item) => this.calculator.valueToPercent(item));
     this.view = new View({ slider, ...eventBody, margins });
-  }
+  };
 
   private handleHandleMove = (event: IViewEvent): void => {
     const { newValue: newValueInPercent, handlesIndex: index } = event.eventBody;
@@ -117,7 +117,7 @@ class Controller {
     );
 
     this.model.setCurrentValues(newCurrentValues);
-  }
+  };
 
   private handleHandleIncrement = (event: IViewEvent): void => {
     const { handlesIndex: index } = event.eventBody;
@@ -129,11 +129,11 @@ class Controller {
     const valueAdjustedByAccuracy = this.calculator.adjustByAccuracy(valueAdjustedByStep);
 
     const newCurrentValues = this.transformer.currentValueWithIndexToCurrentValues(
-      index, valueAdjustedByAccuracy
+      index, valueAdjustedByAccuracy,
     );
 
     this.model.setCurrentValues(newCurrentValues);
-  }
+  };
 
   private handleHandleDecrement = (event: IViewEvent): void => {
     const { handlesIndex: index } = event.eventBody;
@@ -145,11 +145,11 @@ class Controller {
     const valueAdjustedByAccuracy = this.calculator.adjustByAccuracy(valueAdjustedByStep);
 
     const newCurrentValues = this.transformer.currentValueWithIndexToCurrentValues(
-      index, valueAdjustedByAccuracy
+      index, valueAdjustedByAccuracy,
     );
 
     this.model.setCurrentValues(newCurrentValues);
-  }
+  };
 
   private handleLineClick = (event: IViewEvent): void => {
     let { newValue } = event.eventBody;
@@ -163,7 +163,7 @@ class Controller {
     );
 
     this.model.setCurrentValues(newCurrentValues);
-  }
+  };
 
   private handleScaleItemClick = (event: IViewEvent): void => {
     let { newValue } = event.eventBody;
@@ -178,8 +178,7 @@ class Controller {
 
     const newCurrentValues = this.transformer.currentValueWithoutIndexToCurrentValues(newValue);
     this.model.setCurrentValues(newCurrentValues);
-  }
-
+  };
 }
 
 export { Controller };

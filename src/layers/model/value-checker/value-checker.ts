@@ -68,7 +68,6 @@ class ValueChecker {
     try {
       this.checkType(newValue, 'boolean');
       return true;
-
     } catch (error) {
       console.error(error);
       return false;
@@ -142,5 +141,3 @@ class ValueChecker {
 }
 
 export { ValueChecker };
-
-

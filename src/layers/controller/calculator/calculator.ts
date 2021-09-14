@@ -42,7 +42,7 @@ class Calculator {
 
   private checkForExceedingTheLastStep = (valueInRange: number): boolean => {
     const range = this.getRange();
-    const step = this.model.getStep(); 
+    const step = this.model.getStep();
     return (Math.round((valueInRange / step) * 10) / 10 > Math.round(range / step));
   };
 

@@ -17,7 +17,7 @@ class Toggle {
     if (checked) this.body.classList.add('toggle_active');
     else this.body.classList.remove('toggle_active');
     this.checkbox.checked = checked;
-  }
+  };
 
   private createCheckbox = (): HTMLInputElement => this.body.querySelector('.js-toggle__checkbox');
 
