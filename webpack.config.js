@@ -27,7 +27,9 @@ const jsLoaders = () => {
 
 const optimization = () => {
   const config = {
-    splitChunks: false
+    splitChunks: {
+      chunks: "all" 
+  }
   }
 
   if(isProd){
@@ -44,8 +46,8 @@ const optimization = () => {
 module.exports = {
   mode: "development",
   entry: {
-    "light-range-slider": ["@babel/polyfill", "./src/light-range-slider.ts"],
-    demo: ["@babel/polyfill", "./src/demo.ts"]
+    "lite-range-slider": ["@babel/polyfill", "./src/lite-range-slider/lite-range-slider.ts"],
+    demo: ["@babel/polyfill", "./src/demo/demo.ts"]
   },
     
   output: {
@@ -66,9 +68,9 @@ module.exports = {
   plugins: [
     autoprefixer,
     new HTMLWebpackPlugin({
-      template: 'src/index.html',
+      template: 'src/demo/demo.pug',
       inject: 'body',
-      chunks: ['demo', 'light-range-slider'],
+      chunks: ['demo', 'lite-range-slider'],
       minify: {
           collapseWhitespace: isProd
       }
@@ -84,6 +86,11 @@ module.exports = {
       {
         test: /\.html$/,
         use: 'html-loader'
+      },
+      
+      {
+        test: /\.pug$/,
+        use: 'pug-loader'
       },
       
       {
