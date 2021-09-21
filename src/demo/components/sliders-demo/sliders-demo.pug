@@ -1,10 +1,37 @@
-include ../control-panel/control-panel.pug
+include ../text-field/text-field.pug 
+include ../toggle/toggle.pug
 
 mixin slidersDemo(modifier = '')
   - const classes = modifier ? `sliders-demo js-sliders-demo sliders-demo_${modifier}` : 'sliders-demo js-sliders-demo'
   
   div(class != classes)
-    .demo-area.js-demo-area 
-      .slider.js-slider
+    .sliders-demo__area.js-sliders-demo__area 
+      .sliders-demo__slider.js-sliders-demo__slider
     
-    +controlPanel
+    form.sliders-demo__control-panel.js-sliders-demo__control-panel
+      .sliders-demo__control-element
+        +textField({ title: 'min', name: 'min' })
+      .sliders-demo__control-element
+        +textField({ title: 'max', name: 'max' })
+      .sliders-demo__control-element  
+        +textField({ title: 'from', name: 'currentMin' })
+      .sliders-demo__control-element
+        +textField({ title: 'to', name: 'currentMax' })
+      .sliders-demo__control-element
+        +textField({ title: 'step', name: 'step' })
+      .sliders-demo__control-element
+        +textField({ title: 'step of scale', name: 'scaleStep' })
+      .sliders-demo__control-element
+        +textField({ title: 'collection', name: 'collection', modifier: 'collection' })
+      .sliders-demo__control-element
+        +toggle({ text: 'vertical', name: 'isVertical' })
+      .sliders-demo__control-element
+        +toggle({ text: 'interval', name: 'isInterval' })
+      .sliders-demo__control-element
+        +toggle({ text: 'collection', name: 'isCollection' })
+      .sliders-demo__control-element
+        +toggle({ text: 'progressBar', name: 'haveProgressBar' })
+      .sliders-demo__control-element
+        +toggle({ text: 'label', name: 'haveLabel' })
+      .sliders-demo__control-element
+        +toggle({ text: 'scale', name: 'haveScale' })
