@@ -3,8 +3,6 @@ import {
 } from '../interfaces/interfaces';
 import { Model } from '../model/model';
 import { View } from '../view/view';
-import { Calculator } from './calculator/calculator';
-import { Transformer } from './transformer/transformer';
 
 class Controller {
   private model: Model;
@@ -13,49 +11,42 @@ class Controller {
 
   private transformer: Transformer;
 
-  private calculator: Calculator;
-
   constructor(options: IController) {
     const { slider, ...modelOptions } = options;
     this.model = new Model(modelOptions);
-    this.calculator = new Calculator(this.model);
-    this.transformer = new Transformer(this.model);
-    this.createView(slider, this.model.getUpdate('').eventBody);
+    this.createView(slider, this.model.parameters.getUpdate('').eventBody);
     this.model.subscribe({ function: this.handleModelEvents });
     this.view.subscribe({ function: this.handleViewEvents });
     this.view.setIsResizeBlocked(false);
   }
 
-  public changeParameter(eventObject: IChangeParameterObject): void {
-    const { eventName, eventBody } = eventObject;
+  public changeParameter = (eventObject: IChangeParameterObject): void => {
+    const { parameter, value } = eventObject;
     const parameterHandlers = {
-      extremeValues: this.model.setExtremeValues,
-      min: this.handleMinLiteral,
-      max: this.handleMaxLiteral,
-      currentValues: this.model.setCurrentValues,
+      extremeValues: this.model.parameters.setExtremeValues,
+      min: this.model.customSetters.setMinValue,
+      max: this.model.customSetters.setMaxValue,
+      currentValues: this.model.parameters.setCurrentValues,
       currentMin: this.handleCurrentMimLiteral,
       currentMax: this.handleCurrentMaxLiteral,
-      step: this.model.setStep,
-      scaleStep: this.model.setScaleStep,
-      isVertical: this.model.setIsVertical,
-      isInterval: this.model.setIsInterval,
-      haveProgressBar: this.model.setHaveProgressBar,
-      haveLabel: this.model.setHaveLabel,
-      haveScale: this.model.setHaveScale,
-      isCollection: this.model.setIsCollection,
-      collection: this.model.setCollection,
-      callbacks: this.model.setCallbacks,
+      step: this.model.parameters.setStep,
+      scaleStep: this.model.parameters.setScaleStep,
+      isVertical: this.model.parameters.setIsVertical,
+      isInterval: this.model.parameters.setIsInterval,
+      haveProgressBar: this.model.parameters.setHaveProgressBar,
+      haveLabel: this.model.parameters.setHaveLabel,
+      haveScale: this.model.parameters.setHaveScale,
+      isCollection: this.model.parameters.setIsCollection,
+      collection: this.model.parameters.setCollection,
+      callbacks: this.model.parameters.setCallbacks,
     };
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    parameterHandlers[eventName](eventBody[eventName]);
-  }
+    parameterHandlers[parameter](value);
+  };
 
   public handleModelEvents = (event: IUpdate): void => {
     const { eventName, eventBody } = event;
-    eventBody.margins = eventBody.currentValues.map(
-      (item) => this.calculator.valueToPercent(item),
-    );
 
     if (eventName === 'fullUpdate') this.handleFullUpdateEvent(eventBody);
     if (eventName === 'valuesUpdate') this.view.update(eventBody);
@@ -70,27 +61,19 @@ class Controller {
     if (eventName === 'handleDecrement') this.handleHandleDecrement(event);
     if (eventName === 'lineClick') this.handleLineClick(event);
     if (eventName === 'scaleItemClick') this.handleScaleItemClick(event);
-    if (eventName === 'lineResize') this.model.sendUpdate('scaleUpdate');
-  };
-
-  private handleMinLiteral = (min: number): void => {
-    const newValue = this.transformer.minValueToExtremeValues(min);
-    this.model.setExtremeValues(newValue);
-  };
-
-  private handleMaxLiteral = (max: number): void => {
-    const newValue = this.transformer.maxValueToExtremeValues(max);
-    this.model.setExtremeValues(newValue);
+    if (eventName === 'lineResize') this.model.parameters.sendUpdate('scaleUpdate');
   };
 
   private handleCurrentMimLiteral = (currentMin: number): void => {
-    const newValue = this.transformer.newMinCurrentValueToCurrentValues(currentMin);
-    this.model.setCurrentValues(newValue);
+    this.model.customSetters.setCurrentValueByIndex({
+      index: 0, newValue: currentMin, isPercent: false,
+    });
   };
 
   private handleCurrentMaxLiteral = (currentMax: number): void => {
-    const newValue = this.transformer.newMaxCurrentValueToCurrentValues(currentMax);
-    this.model.setCurrentValues(newValue);
+    this.model.customSetters.setCurrentValueByIndex({
+      index: 1, newValue: currentMax, isPercent: false,
+    });
   };
 
   private handleFullUpdateEvent = (eventBody: IUpdateBody) => {
@@ -101,83 +84,37 @@ class Controller {
   };
 
   private createView = (slider: HTMLElement, eventBody: IUpdateBody): void => {
-    const margins = eventBody.currentValues.map((item) => this.calculator.valueToPercent(item));
-    this.view = new View(({ slider, ...eventBody, margins } as IView));
+    this.view = new View(({ slider, ...eventBody } as IView));
   };
 
   private handleHandleMove = (event: IViewEvent): void => {
-    const { newValue: newValueInPercent, handlesIndex: index } = event.eventBody;
-
-    const newValue = this.calculator.percentToValue(newValueInPercent);
-    const valueAdjustedByStep = this.calculator.adjustByStep(newValue);
-    const valueAdjustedByAccuracy = this.calculator.adjustByAccuracy(valueAdjustedByStep);
-
-    const newCurrentValues = this.transformer.currentValueWithIndexToCurrentValues(
-      index, valueAdjustedByAccuracy,
-    );
-
-    this.model.setCurrentValues(newCurrentValues);
+    const { newValue, handlesIndex: index } = event.eventBody;
+    this.model.customSetters.setCurrentValueByIndex({ index, newValue });
   };
 
   private handleHandleIncrement = (event: IViewEvent): void => {
     const { handlesIndex: index } = event.eventBody;
-    const value = this.model.getCurrentValues()[index];
-    const step = this.model.getStep();
-    const newValue = value + step;
-
-    const valueAdjustedByStep = this.calculator.adjustByStep(newValue);
-    const valueAdjustedByAccuracy = this.calculator.adjustByAccuracy(valueAdjustedByStep);
-
-    const newCurrentValues = this.transformer.currentValueWithIndexToCurrentValues(
-      index, valueAdjustedByAccuracy,
-    );
-
-    this.model.setCurrentValues(newCurrentValues);
+    this.model.customSetters.incrementCurrentValueByIndex(index);
   };
 
   private handleHandleDecrement = (event: IViewEvent): void => {
     const { handlesIndex: index } = event.eventBody;
-    const value = this.model.getCurrentValues()[index];
-    const step = this.model.getStep();
-    const newValue = value - step;
-
-    const valueAdjustedByStep = this.calculator.adjustByStep(newValue);
-    const valueAdjustedByAccuracy = this.calculator.adjustByAccuracy(valueAdjustedByStep);
-
-    const newCurrentValues = this.transformer.currentValueWithIndexToCurrentValues(
-      index, valueAdjustedByAccuracy,
-    );
-
-    this.model.setCurrentValues(newCurrentValues);
+    this.model.customSetters.decrementCurrentValueByIndex(index);
   };
 
   private handleLineClick = (event: IViewEvent): void => {
-    let { newValue } = event.eventBody;
-
-    newValue = this.calculator.percentToValue(newValue);
-    const valueAdjustedByStep = this.calculator.adjustByStep(newValue);
-    const valueAdjustedByAccuracy = this.calculator.adjustByAccuracy(valueAdjustedByStep);
-
-    const newCurrentValues = this.transformer.currentValueWithoutIndexToCurrentValues(
-      valueAdjustedByAccuracy,
-    );
-
-    this.model.setCurrentValues(newCurrentValues);
+    const { newValue } = event.eventBody;
+    this.model.customSetters.setNearestCurrentValue(newValue);
   };
 
   private handleScaleItemClick = (event: IViewEvent): void => {
     let { newValue } = event.eventBody;
-    const isCollection = this.model.getIsCollection();
+    const isCollection = this.model.parameters.getIsCollection();
 
     if (isCollection) {
-      newValue = this.model.getCollection().findIndex((item) => item === newValue);
-    } else {
-      newValue = this.calculator.adjustByStep(Number(newValue));
-      newValue = this.calculator.adjustByAccuracy(newValue);
+      newValue = this.model.parameters.getCollection().findIndex((item) => item === newValue);
     }
-
-    const newCurrentValues = this.transformer.currentValueWithoutIndexToCurrentValues(newValue);
-    this.model.setCurrentValues(newCurrentValues);
+    this.model.customSetters.setNearestCurrentValue(Number(newValue), false);
   };
 }
 
