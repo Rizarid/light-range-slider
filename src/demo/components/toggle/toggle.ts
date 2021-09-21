@@ -5,25 +5,40 @@ class Toggle {
 
   private checkbox: HTMLInputElement;
 
+  private onChange: CustomEvent;
+
   constructor(target: HTMLElement) {
     this.body = target;
-    this.checkbox = this.createCheckbox();
+    this.checkbox = this.getCheckbox();
+    this.createEvent();
     this.addListener();
   }
 
-  public getCheckbox = (): HTMLInputElement => this.checkbox;
-
-  public changeChecked = (checked: boolean): void => {
+  private handleUpdate = (event: CustomEvent): void => {
+    const { value: checked } = (event.detail as { value: boolean });
     if (checked) this.body.classList.add('toggle_active');
     else this.body.classList.remove('toggle_active');
     this.checkbox.checked = checked;
   };
 
-  private createCheckbox = (): HTMLInputElement => this.body.querySelector('.js-toggle__checkbox');
+  private createEvent = () => {
+    this.onChange = new CustomEvent('parameterChanged', { bubbles: true, detail: { parameter: '', value: false } });
+  };
 
-  private addListener = (): void => { this.checkbox.addEventListener('change', this.handleToggleClick); };
+  private getCheckbox = (): HTMLInputElement => this.body.querySelector('.js-toggle__checkbox');
 
-  private handleToggleClick = (): void => { this.body.classList.toggle('toggle_active'); };
+  private addListener = (): void => {
+    this.checkbox.addEventListener('change', this.handleToggleChange);
+    this.checkbox.addEventListener('update', this.handleUpdate);
+  };
+
+  private handleToggleChange = (): void => {
+    const { detail } = (this.onChange as { detail: { parameter: string, value: boolean } });
+    this.body.classList.toggle('toggle_active');
+    detail.parameter = this.checkbox.name;
+    detail.value = this.checkbox.checked;
+    this.body.dispatchEvent(this.onChange);
+  };
 }
 
 export { Toggle };
