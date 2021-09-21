@@ -17,6 +17,22 @@ interface IModel {
   isCollection: boolean,
 }
 
+interface IParameters {
+  extremeValues: number[],
+  currentValues: number[],
+  callbacks: ((updateObject: IOutsideUpdate) => void)[],
+  collection: string[] | number[] | HTMLElement[]
+  step : number,
+  scaleStep: number,
+  isVertical: boolean,
+  isInterval: boolean,
+  haveProgressBar: boolean,
+  haveScale: boolean,
+  haveLabel: boolean,
+  isCollection: boolean,
+  changeObserver: ChangeObserver
+}
+
 interface IUpdateCallback { function: (eventObject: IUpdateBody) => void }
 
 interface IUpdate {
@@ -37,15 +53,6 @@ interface IUpdateBody {
   haveLabel?: boolean,
   collection?: string[] | number[] | HTMLElement[],
   isCollection?: boolean,
-}
-
-interface IValuesUpdate {
-  eventName: string,
-  eventBody: {
-    currentValues: number[],
-    margins: number[],
-    collection: string[] | number[] | HTMLElement[]
-  }
 }
 
 interface IEventObject { eventName: string, eventBody }
@@ -134,27 +141,9 @@ interface IController {
 }
 
 interface IChangeParameterObject {
-  eventName: string,
-  eventBody: IChangeParameterBody
-}
-
-interface IChangeParameterBody {
-  extremeValues?: number[],
-  min?: number,
-  max?: number,
-  currentValues?: number[],
-  currentMin?: number,
-  currentMax?: number,
-  step?: number,
-  scaleStep?: number,
-  haveProgressBar?: boolean,
-  isVertical?: boolean,
-  isInterval?: boolean,
-  haveScale?: boolean,
-  haveLabel?: boolean,
-  callbacks?: ((updateObject: IOutsideUpdate) => void)[],
-  isCollection?: boolean,
-  collection?: string[] | number[] | HTMLElement[]
+  parameter: string,
+  value: (number[] | number | boolean | string[] | HTMLElement[] |
+  ((updateObject: IOutsideUpdate) => void)[]),
 }
 
 interface ISliderOptions {
@@ -213,10 +202,17 @@ interface IScaleUpdate {
   eventBody: IScaleUpdateBody
 }
 
+interface ISetCurrentValueByIndex {
+  index: number,
+  newValue: number,
+  isPercent?: boolean,
+  isConverted?: boolean
+}
+
 export {
   IModel, IUpdateCallback, IUpdate, IUpdateBody, IEventObject, IViewEvent, IOutsideUpdate,
   IHandle, ICallback, ILabel, ILabelAddContent, ILabelUpdate, IScale, ICreateScaleItems,
   IScaleAddContent, IGetScaleItem, IClickEventObject, IProgressBar, IController,
-  IChangeParameterObject, IChangeParameterBody, ISliderOptions, IView, ICreateElements,
-  IViewUpdate, IScaleUpdate, IScaleUpdateBody, ILine,
+  IChangeParameterObject, ISliderOptions, IView, ICreateElements, ISetCurrentValueByIndex,
+  IViewUpdate, IScaleUpdate, IScaleUpdateBody, ILine, IParameters,
 };
