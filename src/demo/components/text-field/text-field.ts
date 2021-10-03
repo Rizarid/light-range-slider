@@ -9,13 +9,20 @@ class TextField {
 
   private isCollection: boolean;
 
-  constructor(target: HTMLElement) {
-    this.body = target;
-    this.isCollection = this.body.classList.contains('text-field_collection');
+  constructor(parent: HTMLElement) {
+    this.body = this.getBody(parent);
     this.field = (this.getField() as HTMLInputElement);
     this.createEvent();
     this.addListener();
   }
+
+  private getBody = (parent: HTMLElement): HTMLElement => parent.querySelector('.js-text-field');
+
+  public update = (value: number | string[]): void => {
+    if (Array.isArray(value)) {
+      this.field.value = value.join(', ');
+    } else if (value !== undefined) this.field.value = value.toString();
+  };
 
   private getField = () => this.body.querySelector('.js-text-field__field');
 
@@ -25,7 +32,6 @@ class TextField {
 
   private addListener = (): void => {
     this.field.addEventListener('change', this.handleTextFieldChange);
-    this.field.addEventListener('update', this.handleUpdate);
   };
 
   private handleTextFieldChange = (): void => {
@@ -37,13 +43,6 @@ class TextField {
     detail.value = this.isCollection ? this.field.value.split(', ') : Number(this.field.value);
     this.body.dispatchEvent(this.onChange);
   };
-
-  private handleUpdate = (event: CustomEvent): void => {
-    const { value } = (event.detail as { value: number | string[] });
-    if (this.isCollection) {
-      this.field.value = (value as string[]).join(', ');
-    } else if (value !== undefined) this.field.value = value.toString();
-  };
 }
 
-export { TextField };
+export default TextField;
