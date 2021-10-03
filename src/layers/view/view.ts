@@ -1,5 +1,5 @@
 import {
-  IView, ICreateElements, ICallback, IScaleUpdateBody, IScale, IEventObject, IUpdateBody,
+  IView, ICreateElements, ICallback, IScale, IEventObject, IUpdateBody,
 } from '../interfaces/interfaces';
 import { ChangeObserver } from '../observers/change-observer';
 import { Handle } from './handle/handle';
@@ -119,7 +119,7 @@ class View {
 
     if (haveProgressBar) this.progressBar = new ProgressBar({ calculator });
     if (haveLabel) {
-      this.labels = currentValues.map((item) => new Label({ calculator, isCollection }));
+      this.labels = currentValues.map(() => new Label({ calculator, isCollection }));
     }
   }
 
