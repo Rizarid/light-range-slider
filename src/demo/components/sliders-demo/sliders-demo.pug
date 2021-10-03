@@ -2,36 +2,37 @@ include ../text-field/text-field.pug
 include ../toggle/toggle.pug
 
 mixin slidersDemo(modifier = '')
+
   - const classes = modifier ? `sliders-demo js-sliders-demo sliders-demo_${modifier}` : 'sliders-demo js-sliders-demo'
   
-  div(class != classes)
+  div(class = classes)
     .sliders-demo__area.js-sliders-demo__area 
       .sliders-demo__slider.js-sliders-demo__slider
     
     form.sliders-demo__control-panel.js-sliders-demo__control-panel
-      .sliders-demo__control-element
+      .sliders-demo__min-container.js-sliders-demo__min-container
         +textField({ title: 'min', name: 'min' })
-      .sliders-demo__control-element
+      .sliders-demo__max-container.js-sliders-demo__max-container
         +textField({ title: 'max', name: 'max' })
-      .sliders-demo__control-element  
+      .sliders-demo__current-min-container.js-sliders-demo__current-min-container 
         +textField({ title: 'from', name: 'currentMin' })
-      .sliders-demo__control-element
+      .sliders-demo__current-max-container.js-sliders-demo__current-max-container
         +textField({ title: 'to', name: 'currentMax' })
-      .sliders-demo__control-element
+      .sliders-demo__step-container.js-sliders-demo__step-container
         +textField({ title: 'step', name: 'step' })
-      .sliders-demo__control-element
+      .sliders-demo__scale-step-container.js-sliders-demo__scale-step-container
         +textField({ title: 'step of scale', name: 'scaleStep' })
-      .sliders-demo__control-element
+      .sliders-demo__collection-container.js-sliders-demo__collection-container
         +textField({ title: 'collection', name: 'collection', modifier: 'collection' })
-      .sliders-demo__control-element
+      .sliders-demo__is-vertical-container.js-sliders-demo__is-vertical-container
         +toggle({ text: 'vertical', name: 'isVertical' })
-      .sliders-demo__control-element
+      .sliders-demo__is-interval-container.js-sliders-demo__is-interval-container
         +toggle({ text: 'interval', name: 'isInterval' })
-      .sliders-demo__control-element
+      .sliders-demo__is-collection-container.js-sliders-demo__is-collection-container
         +toggle({ text: 'collection', name: 'isCollection' })
-      .sliders-demo__control-element
+      .sliders-demo__have-progress-bar-container.js-sliders-demo__have-progress-bar-container
         +toggle({ text: 'progressBar', name: 'haveProgressBar' })
-      .sliders-demo__control-element
+      .sliders-demo__have-label-container.js-sliders-demo__have-label-container
         +toggle({ text: 'label', name: 'haveLabel' })
-      .sliders-demo__control-element
+      .sliders-demo__have-scale-container.js-sliders-demo__have-scale-container
         +toggle({ text: 'scale', name: 'haveScale' })
