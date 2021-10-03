@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const autoprefixer = require('autoprefixer');
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
 const isDev = process.env.NODE_ENV === "development";
 const isProd = !isDev;
@@ -47,7 +48,7 @@ module.exports = {
   mode: "development",
   entry: {
     "lite-range-slider": ["@babel/polyfill", "./src/lite-range-slider/lite-range-slider.ts"],
-    demo: ["@babel/polyfill", "./src/demo/demo.ts"]
+    demo: ["@babel/polyfill", "./src/demo/index.ts"]
   },
     
   output: {
@@ -69,11 +70,14 @@ module.exports = {
     autoprefixer,
     new HTMLWebpackPlugin({
       template: 'src/demo/demo.pug',
-      inject: 'body',
+      inject: 'head',
       chunks: ['demo', 'lite-range-slider'],
       minify: {
           collapseWhitespace: isProd
       }
+    }),
+    new ScriptExtHtmlWebpackPlugin({
+      defaultAttribute: 'defer',
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({

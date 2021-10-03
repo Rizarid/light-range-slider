@@ -11,6 +11,7 @@ module.exports = {
     "import/prefer-default-export": "off",
     "@typescript-eslint/no-unused-expressions": "off",
     "object-curly-newline": "off",
-    "object-property-newline": "off"
+    "object-property-newline": "off",
+    "no-new": "off"
   }
 }
