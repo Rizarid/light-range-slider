@@ -1,10 +1,9 @@
-mixin toggle(options = {})
-  -
-     const { className = '', name = 'toggle', value = 'on', text = 'toggle', checked = false } = options
-     const classes = checked ? `toggle js-toggle toggle_active ${className}` : `toggle js-toggle ${className}`
+mixin toggle({ className = '', name = 'toggle', value = 'on', text = 'toggle', checked = false })
 
-  label(class != classes)
-    input.toggle__checkbox.js-toggle__checkbox(type = "checkbox", name != name, value != value)
+  - const classes = checked ? `toggle js-toggle toggle_active ${className}` : `toggle js-toggle ${className}`
+
+  label(class = classes)
+    input.toggle__checkbox.js-toggle__checkbox(type = "checkbox", name = name, value = value)
     span.toggle__switch
       span.toggle__circle
     span.toggle__text #{text}

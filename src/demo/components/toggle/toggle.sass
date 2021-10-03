@@ -26,13 +26,13 @@
     transition: 0.5s
     cursor: pointer
 
-    & .toggle__circle
-      width: 12px
-      height: 12px
-      background: $dark-shade-25
-      border-radius: 10px
-      transition: 0.5s
-      margin-left: 0
+  &__circle
+    width: 12px
+    height: 12px
+    background: $dark-shade-25
+    border-radius: 10px
+    transition: 0.5s
+    margin-left: 0
 
   &__text
     font-weight: $normal
@@ -43,10 +43,8 @@
     margin-left: 10px
     cursor: pointer
 
-  &_active 
-    
-    & .toggle__switch
-      border-color: $purple
+  & input:checked ~ &__switch
+    border-color: $purple
     
     & .toggle__circle
       +gradient

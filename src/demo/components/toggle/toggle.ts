@@ -7,17 +7,16 @@ class Toggle {
 
   private onChange: CustomEvent;
 
-  constructor(target: HTMLElement) {
-    this.body = target;
+  constructor(parent: HTMLElement) {
+    this.body = this.getBody(parent);
     this.checkbox = this.getCheckbox();
     this.createEvent();
     this.addListener();
   }
 
-  private handleUpdate = (event: CustomEvent): void => {
-    const { value: checked } = (event.detail as { value: boolean });
-    if (checked) this.body.classList.add('toggle_active');
-    else this.body.classList.remove('toggle_active');
+  private getBody = (parent: HTMLElement): HTMLElement => parent.querySelector('.js-toggle');
+
+  public update = (checked: boolean): void => {
     this.checkbox.checked = checked;
   };
 
@@ -29,16 +28,14 @@ class Toggle {
 
   private addListener = (): void => {
     this.checkbox.addEventListener('change', this.handleToggleChange);
-    this.checkbox.addEventListener('update', this.handleUpdate);
   };
 
   private handleToggleChange = (): void => {
     const { detail } = (this.onChange as { detail: { parameter: string, value: boolean } });
-    this.body.classList.toggle('toggle_active');
     detail.parameter = this.checkbox.name;
     detail.value = this.checkbox.checked;
     this.body.dispatchEvent(this.onChange);
   };
 }
 
-export { Toggle };
+export default Toggle;
