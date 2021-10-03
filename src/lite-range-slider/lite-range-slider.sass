@@ -2,8 +2,86 @@
   width: 100%
   height: 50px
 
+  &__line
+    width: 100% 
+    height: 6px
+    position: relative
+    background-color: #d1d1d1
+    border-radius: 3px
+    cursor: pointer
+  
+  &__handle
+    width: 20px 
+    height: 20px
+    border-radius: 50%
+    border: 2px solid #fff
+    background-color: #4eb7a8
+    position: absolute
+    top: -8px
+    z-index: 3
+    transition: 0.2s
+    touch-action: none
+    cursor: pointer
 
-  &.light-range-slider_vertical
+    &_active
+      transform: scale(1.1)
+      z-index: 5
+
+    &_was-active
+      z-index: 5
+
+    &:focus
+      transform: scale(1.1)
+      z-index: 5
+      outline: none
+
+  &__progress-bar
+    position: absolute
+    background-color: #4eb7a8
+    height: 100%
+    border-radius: 3px
+    transition: 0.2s
+
+  &__label
+    width: fit-content
+    position: absolute
+    width: 50px
+    text-align: center
+    top: -40px
+    transition: 0.2s
+    box-sizing: border-box
+    padding: 3px 10px
+    color: #fff
+    background-color: #4eb7a8
+    border-radius: 3px
+
+    &_active
+      z-index: 5
+
+    &_was-active
+      z-index: 5
+
+  &__scale
+    width: 100%
+    height: 10px
+    position: relative
+    margin-top: 10px
+
+  &__scale-item
+    width: fit-content
+    position: absolute
+    color: #d1d1d1
+    cursor: pointer
+    transition: color 0.5s
+
+    &:hover 
+      color: #4eb7a8
+
+    &:focus 
+      color: #4eb7a8
+      outline: none
+
+  &_vertical
     height: 100%
     width: 50px
     display: flex
@@ -15,18 +93,18 @@
       position: relative
       background-color: #dad8d8
 
-      & .light-range-slider__handle
-        left: -8px
-        touch-action: none
+    & .light-range-slider__handle
+      left: -8px
+      touch-action: none
 
-      & .light-range-slider__progress-bar
-        width: 100%
+    & .light-range-slider__progress-bar
+      width: 100%
 
-      & .light-range-slider__label
-        width: fit-content
-        position: absolute
-        left: 20px
-        transition: 0.2s
+    & .light-range-slider__label
+      width: fit-content
+      position: absolute
+      left: 20px
+      transition: 0.2s
 
     & .light-range-slider__scale
       height: 100%
@@ -35,86 +113,7 @@
       margin-right: 20px
       margin-top: 0
 
-      & .light-range-slider__scale-item
-        width: fit-content
-        position: absolute
-        right: 0
-
-  & .light-range-slider__line
-    width: 100% 
-    height: 6px
-    position: relative
-    background-color: #d1d1d1
-    border-radius: 3px
-    cursor: pointer
-  
-    & .light-range-slider__handle
-      width: 20px 
-      height: 20px
-      border-radius: 50%
-      border: 2px solid #fff
-      background-color: #4eb7a8
-      position: absolute
-      top: -8px
-      z-index: 3
-      transition: 0.2s
-      touch-action: none
-      cursor: pointer
-
-      &_active
-        transform: scale(1.1)
-        z-index: 5
-
-      &_was-active
-        z-index: 5
-
-      &:focus
-        transform: scale(1.1)
-        z-index: 5
-        outline: none
-
-    & .light-range-slider__progress-bar
-      position: absolute
-      background-color: #4eb7a8
-      height: 100%
-      border-radius: 3px
-      transition: 0.2s
-
-    & .light-range-slider__label
-      width: fit-content
-      position: absolute
-      width: 50px
-      text-align: center
-      top: -40px
-      transition: 0.2s
-      box-sizing: border-box
-      padding: 3px 10px
-      color: #fff
-      background-color: #4eb7a8
-      border-radius: 3px
-
-      &_active
-        z-index: 5
-
-      &_was-active
-        z-index: 5
-
-  & .light-range-slider__scale
-    width: 100%
-    height: 10px
-    position: relative
-    margin-top: 10px
-
     & .light-range-slider__scale-item
       width: fit-content
       position: absolute
-      color: #d1d1d1
-      cursor: pointer
-      transition: color 0.5s
-
-      &:hover 
-        color: #4eb7a8
-
-      &:focus 
-        color: #4eb7a8
-        outline: none
+      right: 0
