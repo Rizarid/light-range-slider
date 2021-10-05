@@ -1,5 +1,5 @@
 # Light range slider
-JQuery плагин реализующий функционал бегунка.
+JQuery плагин реализующий функционал бегунка. Примеры использвания представлены на [demo](https://rizarid.github.io/light-range-slider/) странице.
 
 ## Архитектура проекта
 
@@ -126,3 +126,15 @@ slider.setCurrentValues([60])
     slider.changeParameter('currentMax', 50);
     // Параметр currentValues будет равен [30, 50]
   ```
+
+
+  ## npm команды
+
+  + `npm run test:single` - запускает тесты unit тесты с модом `--single-run`.
+  + `npm run test:watch` - запускает тесты unit тесты с модом `--browsers`.
+  + `npm run dev` - собирает проект с модом `development`.
+  + `npm run build` - собирает проект с модом `production` 
+  + `npm run start` - собирает проект с модом `development` и запускает на локальном сервере.
+  + `npm run lint` - запуск проверки проекта при помощи eslint.
+  + `npm run lint-fix` - исправляет eslint ошибки которые можно исправить автоматически.
+  + `npm run deploy` - собирает проект с модом `production` и публикует на gh-pages.
