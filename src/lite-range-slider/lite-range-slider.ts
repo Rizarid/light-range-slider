@@ -8,7 +8,7 @@ import './lite-range-slider.sass';
 
 $.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
   const This = (this as JQuery);
-  const parameters = {
+  const defaults = {
     slider: This[0],
     extremeValues: [0, 100],
     currentValues: [50],
@@ -24,20 +24,20 @@ $.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
     collection: [],
   };
 
-  if (options.extremeValues) parameters.extremeValues = options.extremeValues;
-  if (options.currentValues) parameters.currentValues = options.currentValues;
-  if (options.step) parameters.step = options.step;
-  if (options.scaleStep) parameters.scaleStep = options.scaleStep;
-  if (options.isVertical) parameters.isVertical = options.isVertical;
-  if (options.isInterval) parameters.isInterval = options.isInterval;
-  if (options.haveProgressBar) parameters.haveProgressBar = options.haveProgressBar;
-  if (options.haveScale) parameters.haveScale = options.haveScale;
-  if (options.haveScale) parameters.haveScale = options.haveScale;
-  if (options.callbacks) parameters.callbacks = options.callbacks;
-  if (options.collection) parameters.collection = options.collection;
-  if (options.isCollection) parameters.isCollection = options.isCollection;
+  if (options.extremeValues) defaults.extremeValues = options.extremeValues;
+  if (options.currentValues) defaults.currentValues = options.currentValues;
+  if (options.step) defaults.step = options.step;
+  if (options.scaleStep) defaults.scaleStep = options.scaleStep;
+  if (options.isVertical) defaults.isVertical = options.isVertical;
+  if (options.isInterval) defaults.isInterval = options.isInterval;
+  if (options.haveProgressBar) defaults.haveProgressBar = options.haveProgressBar;
+  if (options.haveScale) defaults.haveScale = options.haveScale;
+  if (options.haveScale) defaults.haveScale = options.haveScale;
+  if (options.callbacks) defaults.callbacks = options.callbacks;
+  if (options.collection) defaults.collection = options.collection;
+  if (options.isCollection) defaults.isCollection = options.isCollection;
 
-  const slider = new Presenter(parameters);
+  const slider = new Presenter(defaults);
 
   This['changeParameter'] = (
     parameter: string,

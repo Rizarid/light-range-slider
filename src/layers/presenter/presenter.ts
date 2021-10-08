@@ -27,8 +27,8 @@ class Presenter {
       min: this.model.customSetters.setMinValue,
       max: this.model.customSetters.setMaxValue,
       currentValues: this.model.parameters.setCurrentValues,
-      currentMin: this.handleCurrentMimLiteral,
-      currentMax: this.handleCurrentMaxLiteral,
+      currentMin: this.handleCurrentMim,
+      currentMax: this.handleCurrentMax,
       step: this.model.parameters.setStep,
       scaleStep: this.model.parameters.setScaleStep,
       isVertical: this.model.parameters.setIsVertical,
@@ -64,13 +64,13 @@ class Presenter {
     if (eventName === 'lineResize') this.model.parameters.sendUpdate('scaleUpdate');
   };
 
-  private handleCurrentMimLiteral = (currentMin: number): void => {
+  private handleCurrentMim = (currentMin: number): void => {
     this.model.customSetters.setCurrentValueByIndex({
       index: 0, newValue: currentMin, isPercent: false,
     });
   };
 
-  private handleCurrentMaxLiteral = (currentMax: number): void => {
+  private handleCurrentMax = (currentMax: number): void => {
     this.model.customSetters.setCurrentValueByIndex({
       index: 1, newValue: currentMax, isPercent: false,
     });
