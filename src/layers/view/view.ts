@@ -1,7 +1,7 @@
 import {
   IView, ICreateElements, ICallback, IScale, IEventObject, IUpdateBody,
 } from '../interfaces/interfaces';
-import { ChangeObserver } from '../observers/change-observer';
+import { ChangeObserver } from '../observer/change-observer';
 import { Handle } from './handle/handle';
 import { Label } from './label/label';
 import { Line } from './line/line';

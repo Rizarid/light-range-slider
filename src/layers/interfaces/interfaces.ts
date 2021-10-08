@@ -1,4 +1,4 @@
-import { ChangeObserver } from '../observers/change-observer';
+import { ChangeObserver } from '../observer/change-observer';
 import { HorizontalCalculator } from '../view/orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../view/orientation-calculator/vertical-calculator';
 

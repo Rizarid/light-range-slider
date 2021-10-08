@@ -2,7 +2,7 @@
 import {
   IModel, ICallback,
 } from '../interfaces/interfaces';
-import { ChangeObserver } from '../observers/change-observer';
+import { ChangeObserver } from '../observer/change-observer';
 import { Calculator } from './calculator/calculator';
 import { CustomSetters } from './custom-setters/custom-setters';
 import { Parameters } from './parameters/parameters';

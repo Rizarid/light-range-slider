@@ -1,4 +1,4 @@
-import { ChangeObserver } from '../../observers/change-observer';
+import { ChangeObserver } from '../../observer/change-observer';
 import {
   IScale, ICreateScaleItems, IScaleAddContent, IGetScaleItem,
 } from '../../interfaces/interfaces';

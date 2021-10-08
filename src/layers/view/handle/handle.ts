@@ -1,5 +1,5 @@
 import { IHandle } from '../../interfaces/interfaces';
-import { ChangeObserver } from '../../observers/change-observer';
+import { ChangeObserver } from '../../observer/change-observer';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
 

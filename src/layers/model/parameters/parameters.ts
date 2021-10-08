@@ -1,7 +1,7 @@
 import {
   IParameters, ICallback, IUpdateBody, IUpdate,
 } from '../../interfaces/interfaces';
-import { ChangeObserver } from '../../observers/change-observer';
+import { ChangeObserver } from '../../observer/change-observer';
 import { ValueChecker } from '../value-checker/value-checker';
 
 class Parameters {
