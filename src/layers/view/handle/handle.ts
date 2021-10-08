@@ -76,13 +76,6 @@ class Handle {
     );
 
     target.addEventListener('pointermove', this.handleHandlePointerMove);
-
-    const eventObject = {
-      eventName: 'handlePointerDown',
-      eventBody: { index: this.index },
-    };
-
-    this.changeObserver.notify(eventObject);
   };
 
   private handleHandlePointerUp = (event: PointerEvent): void => {
@@ -91,13 +84,6 @@ class Handle {
 
     ((target as HTMLElement).releasePointerCapture as (pointerId: number) => void)(pointerId);
     this.cursorOffsetRelativeHandleAtStartDragging = 0;
-
-    const eventObject = {
-      eventName: 'handlePointerUp',
-      eventBody: { index: this.index },
-    };
-
-    this.changeObserver.notify(eventObject);
   };
 
   private handleHandlePointerMove = (event: PointerEvent): void => {
