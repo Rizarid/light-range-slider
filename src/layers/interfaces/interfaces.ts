@@ -124,7 +124,7 @@ interface IClickEventObject { pageX: number, pageY: number }
 
 interface IProgressBar { calculator: HorizontalCalculator | VerticalCalculator }
 
-interface IController {
+interface IPresenter {
   slider: HTMLElement,
   extremeValues: number[],
   currentValues: number[],
@@ -212,7 +212,7 @@ interface ISetCurrentValueByIndex {
 export {
   IModel, IUpdateCallback, IUpdate, IUpdateBody, IEventObject, IViewEvent, IOutsideUpdate,
   IHandle, ICallback, ILabel, ILabelAddContent, ILabelUpdate, IScale, ICreateScaleItems,
-  IScaleAddContent, IGetScaleItem, IClickEventObject, IProgressBar, IController,
+  IScaleAddContent, IGetScaleItem, IClickEventObject, IProgressBar, IPresenter,
   IChangeParameterObject, ISliderOptions, IView, ICreateElements, ISetCurrentValueByIndex,
   IViewUpdate, IScaleUpdate, IScaleUpdateBody, ILine, IParameters,
 };

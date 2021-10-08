@@ -1,9 +1,9 @@
 import { expect } from 'chai';
-import { Controller } from '../controller';
+import { Presenter } from '../presenter';
 import { View } from '../../view/view'
 
-describe('Controller', function() {
-  let controller: Controller;
+describe('Presenter', function() {
+  let controller: Presenter;
 
   const Parameters = function(){
     this.updateMethod = '';
@@ -54,7 +54,7 @@ describe('Controller', function() {
   }
 
   beforeEach(function(){
-    controller = new Controller({
+    controller = new Presenter({
       slider: document.createElement('div'),
       extremeValues: [0, 100],
       currentValues: [30, 70],

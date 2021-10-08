@@ -1,17 +1,17 @@
 import {
-  IUpdate, IViewEvent, IController, IChangeParameterObject, IUpdateBody, IView,
+  IUpdate, IViewEvent, IPresenter, IChangeParameterObject, IUpdateBody, IView,
 } from '../interfaces/interfaces';
 import { Model } from '../model/model';
 import { View } from '../view/view';
 
-class Controller {
+class Presenter {
   private model: Model;
 
   private view: View;
 
   private transformer: Transformer;
 
-  constructor(options: IController) {
+  constructor(options: IPresenter) {
     const { slider, ...modelOptions } = options;
     this.model = new Model(modelOptions);
     this.createView(slider, this.model.parameters.getUpdate('').eventBody);
@@ -118,4 +118,4 @@ class Controller {
   };
 }
 
-export { Controller };
+export { Presenter };

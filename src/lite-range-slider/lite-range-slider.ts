@@ -2,7 +2,7 @@
 
 import * as $ from 'jquery';
 
-import { Controller } from '../layers/controller/controller';
+import { Presenter } from '../layers/presenter/presenter';
 import { ISliderOptions, IOutsideUpdate } from '../layers/interfaces/interfaces';
 import './lite-range-slider.sass';
 
@@ -37,7 +37,7 @@ $.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
   if (options.collection) parameters.collection = options.collection;
   if (options.isCollection) parameters.isCollection = options.isCollection;
 
-  const slider = new Controller(parameters);
+  const slider = new Presenter(parameters);
 
   This['changeParameter'] = (
     parameter: string,
