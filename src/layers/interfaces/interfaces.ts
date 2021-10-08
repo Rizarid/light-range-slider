@@ -60,7 +60,7 @@ interface IEventObject { eventName: string, eventBody }
 interface IViewEvent {
   eventName: string,
   eventBody: {
-    handlesIndex: number,
+    index: number,
     newValue: number
   }
 }

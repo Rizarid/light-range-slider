@@ -107,7 +107,7 @@ class Handle {
 
       const eventObject = {
         eventName: 'handleMove',
-        eventBody: { handlesIndex: this.index, newValue },
+        eventBody: { index: this.index, newValue },
       };
 
       this.changeObserver.notify(eventObject);
@@ -127,7 +127,7 @@ class Handle {
 
       const eventObject = {
         eventName,
-        eventBody: { handlesIndex: this.index },
+        eventBody: { index: this.index },
       };
 
       this.changeObserver.notify(eventObject);

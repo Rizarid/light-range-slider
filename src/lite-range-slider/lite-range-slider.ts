@@ -24,20 +24,7 @@ $.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
     collection: [],
   };
 
-  if (options.extremeValues) defaults.extremeValues = options.extremeValues;
-  if (options.currentValues) defaults.currentValues = options.currentValues;
-  if (options.step) defaults.step = options.step;
-  if (options.scaleStep) defaults.scaleStep = options.scaleStep;
-  if (options.isVertical) defaults.isVertical = options.isVertical;
-  if (options.isInterval) defaults.isInterval = options.isInterval;
-  if (options.haveProgressBar) defaults.haveProgressBar = options.haveProgressBar;
-  if (options.haveScale) defaults.haveScale = options.haveScale;
-  if (options.haveScale) defaults.haveScale = options.haveScale;
-  if (options.callbacks) defaults.callbacks = options.callbacks;
-  if (options.collection) defaults.collection = options.collection;
-  if (options.isCollection) defaults.isCollection = options.isCollection;
-
-  const slider = new Presenter(defaults);
+  const slider = new Presenter($.extend(defaults, options));
 
   This['changeParameter'] = (
     parameter: string,

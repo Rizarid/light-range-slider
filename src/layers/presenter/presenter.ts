@@ -9,8 +9,6 @@ class Presenter {
 
   private view: View;
 
-  private transformer: Transformer;
-
   constructor(options: IPresenter) {
     const { slider, ...modelOptions } = options;
     this.model = new Model(modelOptions);
@@ -88,17 +86,17 @@ class Presenter {
   };
 
   private handleHandleMove = (event: IViewEvent): void => {
-    const { newValue, handlesIndex: index } = event.eventBody;
+    const { newValue, index } = event.eventBody;
     this.model.customSetters.setCurrentValueByIndex({ index, newValue });
   };
 
   private handleHandleIncrement = (event: IViewEvent): void => {
-    const { handlesIndex: index } = event.eventBody;
+    const { index } = event.eventBody;
     this.model.customSetters.incrementCurrentValueByIndex(index);
   };
 
   private handleHandleDecrement = (event: IViewEvent): void => {
-    const { handlesIndex: index } = event.eventBody;
+    const { index } = event.eventBody;
     this.model.customSetters.decrementCurrentValueByIndex(index);
   };
 
