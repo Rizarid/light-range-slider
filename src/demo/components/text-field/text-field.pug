@@ -1,6 +1,6 @@
 mixin textField({ title = '', className = '', name = 'text-field', type = 'text', placeholder = '', modifier = '' })
 
-  - const classes = (className) ? `${className} text-field js-text-field` : 'text-field js-text-field text-field'
+  - const classes = (className) ? `${className} text-field js-text-field text-field_${modifier}` : `text-field js-text-field text-field_${modifier}`
 
   div(class = classes)
     if title

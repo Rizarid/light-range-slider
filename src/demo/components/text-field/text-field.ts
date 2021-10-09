@@ -14,6 +14,7 @@ class TextField {
     this.field = (this.getField() as HTMLInputElement);
     this.createEvent();
     this.addListener();
+    this.isCollection = this.body.classList.contains('text-field_collection');
   }
 
   private getBody = (parent: HTMLElement): HTMLElement => parent.querySelector('.js-text-field');
@@ -41,6 +42,7 @@ class TextField {
     } });
     detail.parameter = this.field.name;
     detail.value = this.isCollection ? this.field.value.split(', ') : Number(this.field.value);
+    console.log(this.isCollection)
     this.body.dispatchEvent(this.onChange);
   };
 }
