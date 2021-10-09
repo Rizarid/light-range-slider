@@ -15,7 +15,7 @@ class Presenter {
     this.createView(slider, this.model.parameters.getUpdate('').eventBody);
     this.subscribeToModel();
     this.subscribeToView();
-    this.view.setIsResizeBlocked(false);
+    setTimeout(() => { this.view.setIsResizeBlocked(false); }, 1);
   }
 
   public changeParameter = (eventObject: IChangeParameterObject): void => {
@@ -75,6 +75,7 @@ class Presenter {
     slider.innerHTML = '';
     this.createView(slider, eventBody);
     this.subscribeToView();
+    setTimeout(() => { this.view.setIsResizeBlocked(false); }, 1);
   };
 
   private handleUpdate = (eventBody: IUpdateBody) => {
@@ -120,7 +121,7 @@ class Presenter {
   };
 
   private handleLineResize = () => {
-    this.model.parameters.sendUpdate('scaleUpdate');
+    this.model.parameters.sendUpdate();
   };
 }
 
