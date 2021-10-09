@@ -37,6 +37,14 @@ class Label {
     this.body.style.transition = '';
   };
 
+  public addWasActive = (): void => this.body.classList.add('light-range-slider__label_was-active');
+
+  public removeWasActive = (): void => this.body.classList.remove('light-range-slider__label_was-active');
+
+  public activate = ():void => this.body.classList.add('light-range-slider__label_active');
+
+  public deactivate = ():void => this.body.classList.remove('light-range-slider__label_active');
+
   private createLabel(): void {
     this.body = document.createElement('div');
     this.body.className = 'light-range-slider__label';
