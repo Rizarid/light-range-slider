@@ -42,7 +42,6 @@ class TextField {
     } });
     detail.parameter = this.field.name;
     detail.value = this.isCollection ? this.field.value.split(', ') : Number(this.field.value);
-    console.log(this.isCollection)
     this.body.dispatchEvent(this.onChange);
   };
 }

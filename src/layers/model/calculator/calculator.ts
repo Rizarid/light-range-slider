@@ -21,7 +21,9 @@ class Calculator {
   public adjustByStep = (value: number): number => {
     const step = this.parameters.getStep();
     let valueInRange = this.valueToValueInRange(value);
-    if (this.checkForExceedingTheLastStep(valueInRange)) return this.getRange();
+    if (this.checkForExceedingTheLastStep(valueInRange)) {
+      return this.valueInRangeToValue(this.getRange());
+    }
     valueInRange = Math.round(valueInRange / step) * step;
     return this.valueInRangeToValue(valueInRange);
   };
