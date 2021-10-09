@@ -1,5 +1,5 @@
 import {
-  IUpdate, IViewEvent, IPresenter, IChangeParameterObject, IUpdateBody, IView,
+  IPresenter, IChangeParameterObject, IUpdateBody, IView,
 } from '../interfaces/interfaces';
 import { Model } from '../model/model';
 import { View } from '../view/view';
@@ -13,8 +13,8 @@ class Presenter {
     const { slider, ...modelOptions } = options;
     this.model = new Model(modelOptions);
     this.createView(slider, this.model.parameters.getUpdate('').eventBody);
-    this.model.subscribe({ function: this.handleModelEvents });
-    this.view.subscribe({ function: this.handleViewEvents });
+    this.subscribeToModel();
+    this.subscribeToView();
     this.view.setIsResizeBlocked(false);
   }
 
@@ -43,23 +43,19 @@ class Presenter {
     parameterHandlers[parameter](value);
   };
 
-  public handleModelEvents = (event: IUpdate): void => {
-    const { eventName, eventBody } = event;
-
-    if (eventName === 'fullUpdate') this.handleFullUpdateEvent(eventBody);
-    if (eventName === 'valuesUpdate') this.view.update(eventBody);
-    if (eventName === 'scaleUpdate') this.view.scaleUpdate(eventBody);
+  private subscribeToModel = () => {
+    this.model.subscribe({ eventName: 'fullUpdate', function: this.handleFullUpdateEvent });
+    this.model.subscribe({ eventName: 'valuesUpdate', function: this.handleUpdate });
+    this.model.subscribe({ eventName: 'scaleUpdate', function: this.handleScaleUpdate });
   };
 
-  public handleViewEvents = (event: IViewEvent): void => {
-    const { eventName } = event;
-
-    if (eventName === 'handleMove') this.handleHandleMove(event);
-    if (eventName === 'handleIncrement') this.handleHandleIncrement(event);
-    if (eventName === 'handleDecrement') this.handleHandleDecrement(event);
-    if (eventName === 'lineClick') this.handleLineClick(event);
-    if (eventName === 'scaleItemClick') this.handleScaleItemClick(event);
-    if (eventName === 'lineResize') this.model.parameters.sendUpdate('scaleUpdate');
+  private subscribeToView = () => {
+    this.view.subscribe({ eventName: 'handleMove', function: this.handleHandleMove });
+    this.view.subscribe({ eventName: 'handleIncrement', function: this.handleHandleIncrement });
+    this.view.subscribe({ eventName: 'handleDecrement', function: this.handleHandleDecrement });
+    this.view.subscribe({ eventName: 'lineClick', function: this.handleLineClick });
+    this.view.subscribe({ eventName: 'scaleItemClick', function: this.handleScaleItemClick });
+    this.view.subscribe({ eventName: 'lineResize', function: this.handleLineResize });
   };
 
   private handleCurrentMim = (currentMin: number): void => {
@@ -78,41 +74,53 @@ class Presenter {
     const slider = this.view.getBody();
     slider.innerHTML = '';
     this.createView(slider, eventBody);
-    this.view.subscribe({ function: this.handleViewEvents });
+    this.subscribeToView();
+  };
+
+  private handleUpdate = (eventBody: IUpdateBody) => {
+    this.view.update(eventBody);
+  };
+
+  private handleScaleUpdate = (eventBody: IUpdateBody) => {
+    this.view.scaleUpdate(eventBody);
   };
 
   private createView = (slider: HTMLElement, eventBody: IUpdateBody): void => {
     this.view = new View(({ slider, ...eventBody } as IView));
   };
 
-  private handleHandleMove = (event: IViewEvent): void => {
-    const { newValue, index } = event.eventBody;
+  private handleHandleMove = (eventBody: { index: number, newValue: number }): void => {
+    const { newValue, index } = eventBody;
     this.model.customSetters.setCurrentValueByIndex({ index, newValue });
   };
 
-  private handleHandleIncrement = (event: IViewEvent): void => {
-    const { index } = event.eventBody;
+  private handleHandleIncrement = (eventBody: { index: number }): void => {
+    const { index } = eventBody;
     this.model.customSetters.incrementCurrentValueByIndex(index);
   };
 
-  private handleHandleDecrement = (event: IViewEvent): void => {
-    const { index } = event.eventBody;
+  private handleHandleDecrement = (eventBody: { index: number }): void => {
+    const { index } = eventBody;
     this.model.customSetters.decrementCurrentValueByIndex(index);
   };
 
-  private handleLineClick = (event: IViewEvent): void => {
-    const { newValue } = event.eventBody;
+  private handleLineClick = (eventBody: { newValue: number }): void => {
+    const { newValue } = eventBody;
     this.model.customSetters.setNearestCurrentValue(newValue);
   };
 
-  private handleScaleItemClick = (event: IViewEvent): void => {
-    let { newValue } = event.eventBody;
+  private handleScaleItemClick = (eventBody: { newValue: number }): void => {
+    let { newValue } = eventBody;
     const isCollection = this.model.parameters.getIsCollection();
 
     if (isCollection) {
       newValue = this.model.parameters.getCollection().findIndex((item) => item === newValue);
     }
     this.model.customSetters.setNearestCurrentValue(Number(newValue), false);
+  };
+
+  private handleLineResize = () => {
+    this.model.parameters.sendUpdate('scaleUpdate');
   };
 }
 

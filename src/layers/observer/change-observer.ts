@@ -1,5 +1,8 @@
-interface IEventObject { eventName: string, eventBody }
-interface ICallback { function: (eventObject: { eventName: string, eventBody }) => void }
+interface IEventObject { eventName: string, eventBody: any }
+interface ICallback {
+  eventName: string,
+  function: (eventBody: any) => void
+}
 
 class ChangeObserver {
   private subscribers: ICallback[] = [];
@@ -24,7 +27,12 @@ class ChangeObserver {
   }
 
   public notify = (eventObject: IEventObject): void => {
-    this.subscribers.map((item) => item.function(eventObject));
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const { eventName, eventBody } = eventObject;
+    this.subscribers.map((item) => {
+      if (item.eventName === eventName) item.function(eventBody);
+      return null;
+    });
   };
 }
 

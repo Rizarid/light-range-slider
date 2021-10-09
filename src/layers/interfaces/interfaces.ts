@@ -78,7 +78,10 @@ interface IHandle {
   changeObserver: ChangeObserver,
 }
 
-interface ICallback { function: (eventObject: { eventName: string, eventBody }) => void }
+interface ICallback {
+  eventName: string,
+  function: (eventBody: any) => void
+}
 
 interface ILabel {
   calculator: HorizontalCalculator | VerticalCalculator,
