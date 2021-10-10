@@ -178,6 +178,7 @@ class Parameters {
 
   public setCallbacks = (newValue: ((updateObject: IUpdateBody) => void)[]): void => {
     if (this.valueChecker.checkCallbacks(newValue)) this.callbacks = newValue;
+    this.sendUpdate();
   };
 
   public getCollection = (): string[] | number[] | HTMLElement[] => this.collection;
