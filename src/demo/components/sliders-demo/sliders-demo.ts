@@ -107,6 +107,7 @@ class SlidersDemo {
     this.max.update(max);
     this.currentMin.update(currentMin);
     this.currentMax.update(currentMax);
+    this.currentMax.disable(!isInterval);
     this.step.update(step);
     this.scaleStep.update(scaleStep);
     this.collection.update((collection as string[]));

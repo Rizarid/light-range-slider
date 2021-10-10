@@ -11,7 +11,7 @@ class TextField {
 
   constructor(parent: HTMLElement) {
     this.body = this.getBody(parent);
-    this.field = (this.getField() as HTMLInputElement);
+    this.field = this.getField();
     this.createEvent();
     this.addListener();
     this.isCollection = this.body.classList.contains('text-field_collection');
@@ -23,9 +23,15 @@ class TextField {
     if (Array.isArray(value)) {
       this.field.value = value.join(', ');
     } else if (value !== undefined) this.field.value = value.toString();
+    else this.field.value = '';
   };
 
-  private getField = () => this.body.querySelector('.js-text-field__field');
+  public disable = (isDisabled: boolean): void => {
+    this.field.disabled = isDisabled;
+    this.field.readOnly = isDisabled;
+  };
+
+  private getField = (): HTMLInputElement => this.body.querySelector('.js-text-field__field');
 
   private createEvent = () => {
     this.onChange = new CustomEvent('parameterChanged', { bubbles: true, detail: { parameter: '', value: false } });
