@@ -2,7 +2,7 @@
 import {
   IModel, ICallback,
 } from '../interfaces/interfaces';
-import { ChangeObserver } from '../observer/change-observer';
+import { Observer } from '../observer/observer';
 import { Calculator } from './calculator/calculator';
 import { CustomSetters } from './custom-setters/custom-setters';
 import { Parameters } from './parameters/parameters';
@@ -14,21 +14,21 @@ class Model {
 
   private calculator: Calculator;
 
-  private changeObserver: ChangeObserver = new ChangeObserver();
+  private observer: Observer = new Observer();
 
   constructor(options: IModel) {
-    const { changeObserver } = this;
-    this.parameters = new Parameters({ ...options, changeObserver });
+    const { observer } = this;
+    this.parameters = new Parameters({ ...options, observer });
     this.calculator = new Calculator(this.parameters);
     this.customSetters = new CustomSetters(this.parameters, this.calculator);
   }
 
   public subscribe(callback: ICallback): void {
-    this.changeObserver.subscribe(callback);
+    this.observer.subscribe(callback);
   }
 
   public unsubscribe(callback: ICallback): void {
-    this.changeObserver.subscribe(callback);
+    this.observer.subscribe(callback);
   }
 }
 

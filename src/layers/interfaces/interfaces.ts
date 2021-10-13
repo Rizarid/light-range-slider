@@ -1,11 +1,11 @@
-import { ChangeObserver } from '../observer/change-observer';
+import { Observer } from '../observer/observer';
 import { HorizontalCalculator } from '../view/orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../view/orientation-calculator/vertical-calculator';
 
 interface IModel {
   extremeValues: number[],
   currentValues: number[],
-  callbacks: ((updateObject: IOutsideUpdate) => void)[],
+  callbacks: ((updateObject: IUpdateBody) => void)[],
   collection: string[] | number[] | HTMLElement[]
   step : number,
   scaleStep: number,
@@ -30,7 +30,7 @@ interface IParameters {
   haveScale: boolean,
   haveLabel: boolean,
   isCollection: boolean,
-  changeObserver: ChangeObserver
+  observer: Observer
 }
 
 interface IUpdateCallback { function: (eventObject: IUpdateBody) => void }
@@ -70,13 +70,13 @@ interface IOutsideUpdate { currentValues: number[] }
 
 interface ILine {
   calculator: HorizontalCalculator | VerticalCalculator,
-  changeObserver: ChangeObserver,
+  observer: Observer,
 }
 
 interface IHandle {
   index: number,
   calculator: HorizontalCalculator | VerticalCalculator,
-  changeObserver: ChangeObserver,
+  observer: Observer,
 }
 
 interface ICallback {
@@ -103,7 +103,7 @@ interface IScale {
   calculator: HorizontalCalculator | VerticalCalculator,
   isCollection: boolean,
   collection: string[] | number[] | HTMLElement[],
-  changeObserver: ChangeObserver,
+  observer: Observer,
 }
 
 interface ICreateScaleItems{
@@ -141,7 +141,7 @@ interface IPresenter {
   haveProgressBar: boolean,
   haveScale: boolean,
   haveLabel: boolean,
-  callbacks: ((updateObject: IOutsideUpdate) => void)[]
+  callbacks: ((updateObject: IUpdateBody) => void)[]
   collection: string[] | number[] | HTMLElement[],
   isCollection: boolean
 }

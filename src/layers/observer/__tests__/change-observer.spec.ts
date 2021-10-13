@@ -1,14 +1,14 @@
 import { expect } from "chai";
-import { ChangeObserver } from  "../change-observer";
+import { Observer } from  "../change-observer";
 
-describe("ChangeObserver", function (): void{
+describe("Observer", function (): void{
 
-  let observer: ChangeObserver;
+  let observer: Observer;
   let testCallback = function() { return 5}
 
   beforeEach(function() {
     
-    observer = new ChangeObserver;
+    observer = new Observer;
   })
 
   it("should added to list", function() {

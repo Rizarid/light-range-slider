@@ -1,7 +1,7 @@
 import {
   IParameters, ICallback, IUpdateBody, IUpdate,
 } from '../../interfaces/interfaces';
-import { ChangeObserver } from '../../observer/change-observer';
+import { Observer } from '../../observer/observer';
 import { ValueChecker } from '../value-checker/value-checker';
 
 class Parameters {
@@ -29,7 +29,7 @@ class Parameters {
 
   private isCollection: boolean;
 
-  private changeObserver: ChangeObserver;
+  private observer: Observer;
 
   private indexOfLastChangedHandle: number;
 
@@ -40,10 +40,10 @@ class Parameters {
   constructor(options: IParameters) {
     const {
       extremeValues, currentValues, step, scaleStep, isVertical, isInterval, haveProgressBar,
-      haveLabel, haveScale, callbacks, collection, isCollection, changeObserver,
+      haveLabel, haveScale, callbacks, collection, isCollection, observer,
     } = options;
 
-    this.changeObserver = changeObserver;
+    this.observer = observer;
 
     this.setExtremeValues(extremeValues);
     this.setCurrentValues(currentValues);
@@ -65,11 +65,11 @@ class Parameters {
   }
 
   public subscribe(callback: ICallback): void {
-    this.changeObserver.subscribe(callback);
+    this.observer.subscribe(callback);
   }
 
   public unsubscribe(callback: ICallback): void {
-    this.changeObserver.subscribe(callback);
+    this.observer.subscribe(callback);
   }
 
   public getExtremeValues = (): number[] => {
@@ -219,12 +219,12 @@ class Parameters {
   public sendUpdate = (eventName?: string): void => {
     let eventObject: IUpdate;
 
-    if (eventName === 'valuesUpdate') eventObject = this.getUpdate('valuesUpdate');
-    else if (eventName === 'scaleUpdate') eventObject = this.getUpdate('scaleUpdate');
-    else eventObject = this.getUpdate('fullUpdate');
+    if (eventName === 'valuesUpdate') eventObject = this.getUpdateObject('valuesUpdate');
+    else if (eventName === 'scaleUpdate') eventObject = this.getUpdateObject('scaleUpdate');
+    else eventObject = this.getUpdateObject('fullUpdate');
 
     this.notifyCallbacks(eventObject.eventBody);
-    this.changeObserver.notify(eventObject);
+    this.observer.notify(eventObject);
   };
 
   public setIndexOfLastChangedHandle = (newValue: number): void => {
@@ -273,7 +273,7 @@ class Parameters {
     }
   }
 
-  public getUpdate = (eventName: string): IUpdate => ({
+  public getUpdateObject = (eventName: string): IUpdate => ({
     eventName,
     eventBody: {
       extremeValues: this.extremeValues,

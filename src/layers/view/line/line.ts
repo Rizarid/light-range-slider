@@ -1,4 +1,4 @@
-import { ChangeObserver } from '../../observer/change-observer';
+import { Observer } from '../../observer/observer';
 import { ILine } from '../../interfaces/interfaces';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
@@ -10,7 +10,7 @@ class Line {
 
   private calculator: HorizontalCalculator | VerticalCalculator;
 
-  private changeObserver: ChangeObserver;
+  private observer: Observer;
 
   private resizeObserver: ResizeObserver = new ResizeObserver(() => {
     if (!this.isResizeBlocked) {
@@ -19,15 +19,15 @@ class Line {
         eventBody: {},
       };
 
-      this.changeObserver.notify(eventObject);
+      this.observer.notify(eventObject);
     }
   });
 
   constructor(options: ILine) {
-    const { calculator, changeObserver } = options;
+    const { calculator, observer } = options;
 
     this.calculator = calculator;
-    this.changeObserver = changeObserver;
+    this.observer = observer;
 
     this.createLine();
     this.addListeners();
@@ -63,7 +63,7 @@ class Line {
       eventBody: { newValue },
     };
 
-    this.changeObserver.notify(eventObject);
+    this.observer.notify(eventObject);
   };
 }
 

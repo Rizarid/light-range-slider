@@ -1,7 +1,7 @@
 import {
   IView, ICreateElements, ICallback, IScale, IEventObject, IUpdateBody,
 } from '../interfaces/interfaces';
-import { ChangeObserver } from '../observer/change-observer';
+import { Observer } from '../observer/observer';
 import { Handle } from './handle/handle';
 import { Label } from './label/label';
 import { Line } from './line/line';
@@ -25,14 +25,14 @@ class View {
 
   private calculator: HorizontalCalculator | VerticalCalculator;
 
-  private changeObserver: ChangeObserver = new ChangeObserver();
+  private observer: Observer = new Observer();
 
   constructor(options: IView) {
     const {
       slider, extremeValues, currentValues, margins, scaleStep, isVertical, haveScale,
       haveLabel, collection, isCollection, haveProgressBar, indexOfLastChangedHandle,
     } = options;
-    const { changeObserver } = this;
+    const { observer } = this;
 
     this.body = slider;
     this.modifySlidersClass(isVertical);
@@ -44,13 +44,13 @@ class View {
     if (haveScale) {
       const { calculator } = this;
       this.createScale({
-        scaleStep, extremeValues, calculator, isCollection, collection, changeObserver,
+        scaleStep, extremeValues, calculator, isCollection, collection, observer,
       });
     }
 
     this.update({ margins, currentValues, collection, indexOfLastChangedHandle });
-    this.changeObserver.subscribe({ eventName: 'handlePointerDown', function: this.handleHandlePointerDown });
-    this.changeObserver.subscribe({ eventName: 'handlePointerUp', function: this.handleHandlePointerUp });
+    this.observer.subscribe({ eventName: 'handlePointerDown', function: this.handleHandlePointerDown });
+    this.observer.subscribe({ eventName: 'handlePointerUp', function: this.handleHandlePointerUp });
     if (indexOfLastChangedHandle) {
       this.handleHandlePointerDown({ index: indexOfLastChangedHandle });
       this.handleHandlePointerUp({ index: indexOfLastChangedHandle });
@@ -59,11 +59,11 @@ class View {
   }
 
   public subscribe(callback: ICallback): void {
-    this.changeObserver.subscribe(callback);
+    this.observer.subscribe(callback);
   }
 
   public unsubscribe(callback: ICallback): void {
-    this.changeObserver.unsubscribe(callback);
+    this.observer.unsubscribe(callback);
   }
 
   public getBody = (): HTMLElement => this.body;
@@ -93,11 +93,11 @@ class View {
 
   public scaleUpdate = (options: IUpdateBody): void => {
     const { haveScale, ...scaleOptions } = options;
-    const { calculator, changeObserver } = this;
+    const { calculator, observer } = this;
 
     if (haveScale) {
       this.scale.remove();
-      this.createScale(({ calculator, changeObserver, ...scaleOptions }) as IScale);
+      this.createScale(({ calculator, observer, ...scaleOptions }) as IScale);
     }
   };
 
@@ -118,13 +118,13 @@ class View {
   }
 
   private createElements(options: ICreateElements): void {
-    const { calculator, changeObserver } = this;
+    const { calculator, observer } = this;
     const { margins, currentValues, haveLabel, isCollection, haveProgressBar } = options;
 
-    this.line = new Line({ calculator, changeObserver });
+    this.line = new Line({ calculator, observer });
 
     this.handles = margins.map((item, index) => (
-      new Handle({ index, calculator, changeObserver })
+      new Handle({ index, calculator, observer })
     ));
 
     if (haveProgressBar) this.progressBar = new ProgressBar({ calculator });

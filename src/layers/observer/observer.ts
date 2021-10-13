@@ -4,7 +4,7 @@ interface ICallback {
   function: (eventBody: any) => void
 }
 
-class ChangeObserver {
+class Observer {
   private subscribers: ICallback[] = [];
 
   public subscribe(callback: ICallback): void {
@@ -36,4 +36,4 @@ class ChangeObserver {
   };
 }
 
-export { ChangeObserver };
+export { Observer };

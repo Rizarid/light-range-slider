@@ -1,7 +1,7 @@
 import { expect } from "chai"
 import { Scale } from '../scale'
 import { HorizontalCalculator } from '../../orientation-calculator/horizontal-calculator'
-import { ChangeObserver } from "../../../observers/change-observer"
+import { Observer } from "../../../observers/change-observer"
 
 describe("Scale", function(): void {
   let scale: Scale
@@ -17,7 +17,7 @@ describe("Scale", function(): void {
     setElementsMargin: (target: HTMLElement, margin: number): void => { state.margin = margin }
   }
 
-  let changeObserver = {
+  let observer = {
     notify: (event): void => state.scaleEventObject = event,
   }
 
@@ -29,7 +29,7 @@ describe("Scale", function(): void {
       scaleStep: 10, 
       extremeValues: [200, 300], 
       calculator: (calculator as HorizontalCalculator),
-      changeObserver: (changeObserver as ChangeObserver),
+      observer: (observer as Observer),
       isCollection: false,
       collection: []
     })
@@ -65,7 +65,7 @@ describe("Scale", function(): void {
       scaleStep: 1, 
       extremeValues: [0, 2], 
       calculator: (calculator as HorizontalCalculator),
-      changeObserver: (changeObserver as ChangeObserver),
+      observer: (observer as Observer),
       isCollection: true,
       collection: ['one', 'two', 'free']
     })

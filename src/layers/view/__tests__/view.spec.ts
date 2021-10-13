@@ -86,7 +86,7 @@ describe("View", function(): void {
       eventBody: { index: 0 },
     };
 
-    view.changeObserver.notify(eventObject);
+    view.observer.notify(eventObject);
 
     expect(view.handles[0].getBody().className).to.equal('element light-range-slider__handle_active');
     expect(view.labels[0].getBody().className).to.equal('element light-range-slider__label_active');
@@ -96,7 +96,7 @@ describe("View", function(): void {
       eventBody: { index: 0 },
     };
 
-    view.changeObserver.notify(eventObject);
+    view.observer.notify(eventObject);
 
     expect(view.handles[0].getBody().className).to.equal('element light-range-slider__handle_was-active');
     expect(view.labels[0].getBody().className).to.equal('element light-range-slider__label_was-active');

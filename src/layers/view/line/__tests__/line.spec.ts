@@ -1,7 +1,7 @@
 import { expect } from "chai"
 import { Line } from '../line'
 import { HorizontalCalculator } from '../../orientation-calculator/horizontal-calculator'
-import { ChangeObserver } from "../../../observers/change-observer"
+import { Observer } from "../../../observers/change-observer"
 
 
 describe("Line", function(): void {
@@ -17,13 +17,13 @@ describe("Line", function(): void {
     pxToPercentages: (newValue: number): number => newValue / 500 * 100
   };
 
-  let changeObserver = {
+  let observer = {
     notify: (event): void => state.lineEventObject = event,
   }
 
   beforeEach(function(): void {
     state.lineEventObject = undefined;
-    line = new Line({ calculator: (calculator as HorizontalCalculator), changeObserver: (changeObserver as ChangeObserver) })
+    line = new Line({ calculator: (calculator as HorizontalCalculator), observer: (observer as Observer) })
   })
 
   afterEach( function (): void {

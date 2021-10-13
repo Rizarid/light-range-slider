@@ -12,7 +12,7 @@ class Presenter {
   constructor(options: IPresenter) {
     const { slider, ...modelOptions } = options;
     this.model = new Model(modelOptions);
-    this.createView(slider, this.model.parameters.getUpdate('').eventBody);
+    this.createView(slider, this.model.parameters.getUpdateObject('').eventBody);
     this.subscribeToModel();
     this.subscribeToView();
     setTimeout(() => { this.view.setIsResizeBlocked(false); }, 1);
@@ -25,7 +25,7 @@ class Presenter {
       min: this.model.customSetters.setMinValue,
       max: this.model.customSetters.setMaxValue,
       currentValues: this.model.parameters.setCurrentValues,
-      currentMin: this.handleCurrentMim,
+      currentMin: this.handleCurrentMin,
       currentMax: this.handleCurrentMax,
       step: this.model.parameters.setStep,
       scaleStep: this.model.parameters.setScaleStep,
@@ -58,7 +58,7 @@ class Presenter {
     this.view.subscribe({ eventName: 'lineResize', function: this.handleLineResize });
   };
 
-  private handleCurrentMim = (currentMin: number): void => {
+  private handleCurrentMin = (currentMin: number): void => {
     this.model.customSetters.setCurrentValueByIndex({
       index: 0, newValue: currentMin, isPercent: false,
     });

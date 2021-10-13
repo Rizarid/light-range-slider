@@ -1,7 +1,7 @@
 import { expect } from "chai"
 import { Handle } from '../handle'
 import { HorizontalCalculator } from '../../orientation-calculator/horizontal-calculator'
-import { ChangeObserver } from "../../../observers/change-observer"
+import { Observer } from "../../../observers/change-observer"
 
 describe("Handle", function(): void {
   let handle: Handle
@@ -19,7 +19,7 @@ describe("Handle", function(): void {
     setElementsMargin: (target: HTMLElement, margin: number): void => { state.margin = margin },    
   }
 
-  let changeObserver = {
+  let observer = {
     notify: (event): void => state.handleEventObject = event,
   }
 
@@ -30,7 +30,7 @@ describe("Handle", function(): void {
     handle = new Handle({ 
       index: 0, 
       calculator: (calculator as HorizontalCalculator),
-      changeObserver: (changeObserver as ChangeObserver)
+      observer: (observer as Observer)
     })
   })
 

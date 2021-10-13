@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { ChangeObserver } from "../../../observers/change-observer";
+import { Observer } from "../../../observers/change-observer";
 import { Parameters } from "../parameters";
 
 describe("Parameters", function (): void{
@@ -20,7 +20,7 @@ describe("Parameters", function (): void{
       callbacks: [],
       isCollection: false,
       collection: [],
-      changeObserver: new ChangeObserver()
+      observer: new Observer()
     });
 
   })

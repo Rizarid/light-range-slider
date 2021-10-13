@@ -1,4 +1,4 @@
-import { ChangeObserver } from '../../observer/change-observer';
+import { Observer } from '../../observer/observer';
 import {
   IScale, ICreateScaleItems, IScaleAddContent, IGetScaleItem,
 } from '../../interfaces/interfaces';
@@ -12,17 +12,17 @@ class Scale {
 
   private calculator: HorizontalCalculator | VerticalCalculator;
 
-  private changeObserver: ChangeObserver;
+  private observer: Observer;
 
   private addContent: (options: IScaleAddContent) => void;
 
   constructor(options: IScale) {
     const {
-      scaleStep, extremeValues, collection, calculator, isCollection, changeObserver,
+      scaleStep, extremeValues, collection, calculator, isCollection, observer,
     } = options;
 
     this.calculator = calculator;
-    this.changeObserver = changeObserver;
+    this.observer = observer;
 
     this.addContent = isCollection
       ? this.addContentByIsCollection
@@ -115,7 +115,7 @@ class Scale {
       eventBody: { newValue },
     };
 
-    this.changeObserver.notify(eventObject);
+    this.observer.notify(eventObject);
   };
 
   private handleScaleItemKeyDown = (event: KeyboardEvent): void => {

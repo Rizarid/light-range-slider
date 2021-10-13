@@ -1,5 +1,5 @@
 import { IHandle } from '../../interfaces/interfaces';
-import { ChangeObserver } from '../../observer/change-observer';
+import { Observer } from '../../observer/observer';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
 
@@ -12,13 +12,13 @@ class Handle {
 
   private calculator: HorizontalCalculator | VerticalCalculator;
 
-  private changeObserver: ChangeObserver;
+  private observer: Observer;
 
   constructor(options: IHandle) {
-    const { index, calculator, changeObserver } = options;
+    const { index, calculator, observer } = options;
 
     this.calculator = calculator;
-    this.changeObserver = changeObserver;
+    this.observer = observer;
     this.index = index;
 
     this.createHandle();
@@ -88,7 +88,7 @@ class Handle {
       eventBody: { index: this.index },
     };
 
-    this.changeObserver.notify(eventObject);
+    this.observer.notify(eventObject);
   };
 
   private handleHandlePointerUp = (event: PointerEvent): void => {
@@ -103,7 +103,7 @@ class Handle {
       eventBody: { index: this.index },
     };
 
-    this.changeObserver.notify(eventObject);
+    this.observer.notify(eventObject);
   };
 
   private handleHandlePointerMove = (event: PointerEvent): void => {
@@ -115,7 +115,7 @@ class Handle {
       eventBody: { index: this.index, newValue },
     };
 
-    this.changeObserver.notify(eventObject);
+    this.observer.notify(eventObject);
   };
 
   private handleHandleKeyDown = (event: KeyboardEvent): void => {
@@ -131,7 +131,7 @@ class Handle {
         eventBody: { index: this.index },
       };
 
-      this.changeObserver.notify(eventObject);
+      this.observer.notify(eventObject);
       event.preventDefault();
       event.stopPropagation();
     }
