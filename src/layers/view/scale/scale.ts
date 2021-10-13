@@ -59,14 +59,14 @@ class Scale {
   }
 
   private getScaleItem = (options: IGetScaleItem): HTMLElement => {
-    const { value, extremeValues, collection } = options;
+    const { value, extremeValues, collection, scaleStep } = options;
     const [minValue, maxValue] = extremeValues;
 
     const item = document.createElement('div');
     item.className = 'light-range-slider__scale-item';
     item.tabIndex = 0;
 
-    this.addContent({ target: item, value, collection });
+    this.addContent({ target: item, value, collection, scaleStep });
     const marginInPercent = this.calcMarginOfScaleItem(value, minValue, maxValue);
     this.calculator.setElementsMargin(item, marginInPercent);
 
@@ -79,16 +79,23 @@ class Scale {
     return (valueInRange / range) * 100;
   };
 
+  private getNumberOfDecimalPlaces = (value: number): number => {
+    const str = value.toString();
+    return str.includes('.', 0) ? str.split('.').pop().length : 0;
+  };
+
   private createScaleItems = (options: ICreateScaleItems): void => {
     const { extremeValues, scaleStep, collection } = options;
     this.items = [];
 
     let i = extremeValues[0];
     for (i; i < extremeValues[1]; i += scaleStep) {
-      this.items.push(this.getScaleItem({ value: i, extremeValues, collection }));
+      this.items.push(this.getScaleItem({ value: i, extremeValues, collection, scaleStep }));
     }
 
-    this.items.push(this.getScaleItem({ value: extremeValues[1], extremeValues, collection }));
+    this.items.push(this.getScaleItem({
+      value: extremeValues[1], extremeValues, collection, scaleStep,
+    }));
   };
 
   private addListeners = (): void => {
@@ -124,8 +131,9 @@ class Scale {
   };
 
   private addContentByNotIsCollection = (options: IScaleAddContent): void => {
-    const { target, value } = options;
-    target.innerHTML = value.toString();
+    const { target, value, scaleStep } = options;
+    const accuracy = 10 ** this.getNumberOfDecimalPlaces(scaleStep);
+    target.innerHTML = (Math.round(value * accuracy) / accuracy).toString();
   };
 }
 
