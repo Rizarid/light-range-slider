@@ -25,15 +25,29 @@ class CustomSetters {
   public setCurrentValueByIndex = (options: ISetCurrentValueByIndex): void => {
     const { index = 0, newValue = 0, isPercent = true, isConverted = false } = options;
     const value = isConverted ? newValue : this.convertValue(newValue, isPercent);
-    let [minCurrentValue, maxCurrentValue] = this.parameters.getCurrentValues();
+    const [minCurrentValue, maxCurrentValue] = this.parameters.getCurrentValues();
 
-    if (index === 0) minCurrentValue = (value > maxCurrentValue) ? maxCurrentValue : value;
-    else maxCurrentValue = (value < minCurrentValue) ? minCurrentValue : value;
+    if (index === 0) {
+      const newMinCurrentValue = (value > maxCurrentValue) ? maxCurrentValue : value;
+      const newMaxCurrentValue = maxCurrentValue;
 
-    this.parameters.setIndexOfLastChangedHandle(index);
-    this.parameters.setCurrentValues(
-      this.parameters.getIsInterval() ? [minCurrentValue, maxCurrentValue] : [minCurrentValue],
-    );
+      this.parameters.setIndexOfLastChangedHandle(index);
+      this.parameters.setCurrentValues(
+        this.parameters.getIsInterval()
+          ? [newMinCurrentValue, newMaxCurrentValue]
+          : [newMinCurrentValue],
+      );
+    } else {
+      const newMinCurrentValue = minCurrentValue;
+      const newMaxCurrentValue = (value < minCurrentValue) ? minCurrentValue : value;
+
+      this.parameters.setIndexOfLastChangedHandle(index);
+      this.parameters.setCurrentValues(
+        this.parameters.getIsInterval()
+          ? [newMinCurrentValue, newMaxCurrentValue]
+          : [newMinCurrentValue],
+      );
+    }
   };
 
   public setNearestCurrentValue = (newValue: number, isPercent = true): void => {

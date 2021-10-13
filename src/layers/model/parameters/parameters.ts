@@ -217,14 +217,15 @@ class Parameters {
   };
 
   public sendUpdate = (eventName?: string): void => {
-    let eventObject: IUpdate;
-
-    if (eventName === 'valuesUpdate') eventObject = this.getUpdateObject('valuesUpdate');
-    else if (eventName === 'scaleUpdate') eventObject = this.getUpdateObject('scaleUpdate');
-    else eventObject = this.getUpdateObject('fullUpdate');
-
+    const eventObject = this.getEventObject(eventName);
     this.notifyCallbacks(eventObject.eventBody);
     this.observer.notify(eventObject);
+  };
+
+  private getEventObject = (eventName?: string) => {
+    if (eventName === 'valuesUpdate') return this.getUpdateObject('valuesUpdate');
+    if (eventName === 'scaleUpdate') return this.getUpdateObject('scaleUpdate');
+    return this.getUpdateObject('fullUpdate');
   };
 
   public setIndexOfLastChangedHandle = (newValue: number): void => {

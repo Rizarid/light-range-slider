@@ -88,8 +88,7 @@ class Scale {
     const { extremeValues, scaleStep, collection } = options;
     this.items = [];
 
-    let i = extremeValues[0];
-    for (i; i < extremeValues[1]; i += scaleStep) {
+    for (let i = extremeValues[0]; i < extremeValues[1]; i += scaleStep) {
       this.items.push(this.getScaleItem({ value: i, extremeValues, collection, scaleStep }));
     }
 

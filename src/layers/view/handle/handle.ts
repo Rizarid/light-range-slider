@@ -120,11 +120,10 @@ class Handle {
 
   private handleKeyDown = (event: KeyboardEvent): void => {
     const { code } = event;
-    let eventName: string;
 
     if (['ArrowRight', 'ArrowUp', 'ArrowLeft', 'ArrowDown'].includes(code, 0)) {
       const isIncrement = (['ArrowRight', 'ArrowUp'].includes(code, 0));
-      eventName = isIncrement ? 'handleIncrement' : 'handleDecrement';
+      const eventName = isIncrement ? 'handleIncrement' : 'handleDecrement';
 
       const eventObject = {
         eventName,

@@ -55,12 +55,12 @@ class Line {
   }
 
   private handleLineClick = (event: MouseEvent): void => {
-    let newValue = this.calculator.getCursorLocation(event);
-    newValue = this.calculator.pxToPercentages(newValue);
+    const valueInPx = this.calculator.getCursorLocation(event);
+    const valueInPercentage = this.calculator.pxToPercentages(valueInPx);
 
     const eventObject = {
       eventName: 'lineClick',
-      eventBody: { newValue },
+      eventBody: { newValue: valueInPercentage },
     };
 
     this.observer.notify(eventObject);

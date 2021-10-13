@@ -111,13 +111,13 @@ class Presenter {
   };
 
   private handleScaleItemClick = (eventBody: { newValue: number }): void => {
-    let { newValue } = eventBody;
+    const { newValue } = eventBody;
     const isCollection = this.model.parameters.getIsCollection();
 
     if (isCollection) {
-      newValue = this.model.parameters.getCollection().findIndex((item) => item === newValue);
-    }
-    this.model.customSetters.setNearestCurrentValue(Number(newValue), false);
+      const index = this.model.parameters.getCollection().findIndex((item) => item === newValue);
+      this.model.customSetters.setNearestCurrentValue(Number(index), false);
+    } else this.model.customSetters.setNearestCurrentValue(Number(newValue), false);
   };
 
   private handleLineResize = () => {

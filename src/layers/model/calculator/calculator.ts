@@ -20,12 +20,12 @@ class Calculator {
 
   public adjustByStep = (value: number): number => {
     const step = this.parameters.getStep();
-    let valueInRange = this.valueToValueInRange(value);
+    const valueInRange = this.valueToValueInRange(value);
     if (this.checkForExceedingTheLastStep(valueInRange)) {
       return this.valueInRangeToValue(this.getRange());
     }
-    valueInRange = Math.round(valueInRange / step) * step;
-    return this.valueInRangeToValue(valueInRange);
+    const adjustedValueInRange = Math.round(valueInRange / step) * step;
+    return this.valueInRangeToValue(adjustedValueInRange);
   };
 
   public adjustByAccuracy = (value: number): number => {
