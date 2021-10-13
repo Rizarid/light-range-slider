@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { IModel } from '../../interfaces/interfaces';
+import { IUpdateBody } from '../../interfaces/interfaces';
 
 class ValueChecker {
   public checkExtremeValues = (newValue: number[]):boolean => {
@@ -83,7 +83,7 @@ class ValueChecker {
     }
   };
 
-  public checkCallbacks = (newValue: ((updateObject: IModel) => void)[]): boolean => {
+  public checkCallbacks = (newValue: ((updateObject: IUpdateBody) => void)[]): boolean => {
     try {
       this.checkIsArray(newValue);
       if (newValue.length) newValue.map((item) => this.checkType(item, 'function'));

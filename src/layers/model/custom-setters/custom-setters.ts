@@ -30,6 +30,7 @@ class CustomSetters {
     if (index === 0) minCurrentValue = (value > maxCurrentValue) ? maxCurrentValue : value;
     else maxCurrentValue = (value < minCurrentValue) ? minCurrentValue : value;
 
+    this.parameters.setIndexOfLastChangedHandle(index);
     this.parameters.setCurrentValues(
       this.parameters.getIsInterval() ? [minCurrentValue, maxCurrentValue] : [minCurrentValue],
     );

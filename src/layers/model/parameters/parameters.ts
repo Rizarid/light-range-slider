@@ -31,6 +31,8 @@ class Parameters {
 
   private changeObserver: ChangeObserver;
 
+  private indexOfLastChangedHandle: number;
+
   private isInit = true;
 
   private valueChecker: ValueChecker = new ValueChecker();
@@ -225,10 +227,27 @@ class Parameters {
     this.changeObserver.notify(eventObject);
   };
 
+  public setIndexOfLastChangedHandle = (newValue: number): void => {
+    this.indexOfLastChangedHandle = newValue;
+  };
+
   private correctCurrentValueToInterval = (): void => {
     const [minValue, maxValue] = this.extremeValues;
-    this.currentValues = this.currentValues.map((item) => ((item < minValue) ? minValue : item));
-    this.currentValues = this.currentValues.map((item) => ((item > maxValue) ? maxValue : item));
+
+    this.currentValues.map((item, index) => {
+      if (item <= minValue) {
+        this.indexOfLastChangedHandle = index;
+        this.currentValues[index] = minValue;
+      }
+      return null;
+    });
+
+    for (let index = 1; index >= 0; index -= 1) {
+      if (this.currentValues[index] >= maxValue) {
+        this.indexOfLastChangedHandle = index;
+        this.currentValues[index] = maxValue;
+      }
+    }
   };
 
   private correctStepToRange = (): void => {
@@ -269,6 +288,7 @@ class Parameters {
       haveLabel: this.haveLabel,
       isCollection: this.isCollection,
       collection: this.collection,
+      indexOfLastChangedHandle: this.indexOfLastChangedHandle,
     },
   });
 

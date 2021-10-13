@@ -20,7 +20,7 @@ interface IModel {
 interface IParameters {
   extremeValues: number[],
   currentValues: number[],
-  callbacks: ((updateObject: IOutsideUpdate) => void)[],
+  callbacks: ((updateObject: IUpdateBody) => void)[],
   collection: string[] | number[] | HTMLElement[]
   step : number,
   scaleStep: number,
@@ -53,6 +53,7 @@ interface IUpdateBody {
   haveLabel?: boolean,
   collection?: string[] | number[] | HTMLElement[],
   isCollection?: boolean,
+  indexOfLastChangedHandle: number,
 }
 
 interface IEventObject { eventName: string, eventBody }
@@ -178,7 +179,8 @@ interface IView {
   haveScale: boolean,
   haveLabel: boolean,
   collection: string[] | number[] | HTMLElement[],
-  isCollection: boolean
+  isCollection: boolean,
+  indexOfLastChangedHandle: number,
 }
 
 interface ICreateElements {

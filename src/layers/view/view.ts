@@ -30,7 +30,7 @@ class View {
   constructor(options: IView) {
     const {
       slider, extremeValues, currentValues, margins, scaleStep, isVertical, haveScale,
-      haveLabel, collection, isCollection, haveProgressBar,
+      haveLabel, collection, isCollection, haveProgressBar, indexOfLastChangedHandle,
     } = options;
     const { changeObserver } = this;
 
@@ -48,9 +48,13 @@ class View {
       });
     }
 
-    this.update({ margins, currentValues, collection });
+    this.update({ margins, currentValues, collection, indexOfLastChangedHandle });
     this.changeObserver.subscribe({ eventName: 'handlePointerDown', function: this.handleHandlePointerDown });
     this.changeObserver.subscribe({ eventName: 'handlePointerUp', function: this.handleHandlePointerUp });
+    if (indexOfLastChangedHandle) {
+      this.handleHandlePointerDown({ index: indexOfLastChangedHandle });
+      this.handleHandlePointerUp({ index: indexOfLastChangedHandle });
+    }
     this.activateTransitions();
   }
 
@@ -69,7 +73,7 @@ class View {
   public getLineLocation = (): number => this.line.getLocation();
 
   public update = (options: IUpdateBody): void => {
-    const { margins, currentValues, collection } = options;
+    const { margins, currentValues, collection, indexOfLastChangedHandle } = options;
     this.handles.map((item, index) => item.update(margins[index]));
     if (this.progressBar) this.progressBar.update(margins);
 
@@ -79,6 +83,11 @@ class View {
         value: currentValues[index],
         collection,
       }));
+    }
+
+    if (indexOfLastChangedHandle !== undefined) {
+      this.handleHandlePointerDown({ index: indexOfLastChangedHandle });
+      this.handleHandlePointerUp({ index: indexOfLastChangedHandle });
     }
   };
 
