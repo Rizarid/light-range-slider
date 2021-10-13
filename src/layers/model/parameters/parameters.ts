@@ -78,7 +78,11 @@ class Parameters {
   public setExtremeValues = (newValue: number[]): void => {
     if (this.valueChecker.checkExtremeValues(newValue)) {
       this.extremeValues = newValue;
-      if (!this.isInit) this.correctCurrentValueToInterval();
+      if (!this.isInit) {
+        this.correctCurrentValueToInterval();
+        this.correctStepToRange();
+        this.correctScaleStepToRange();
+      }
     }
 
     if (!this.isInit) this.sendUpdate();
@@ -107,6 +111,7 @@ class Parameters {
   public setStep = (newValue: number): void => {
     if (this.valueChecker.checkStepAndScaleStep(newValue, this.extremeValues, this.isCollection)) {
       this.step = newValue;
+      this.correctStepToRange();
     }
 
     if (!this.isInit) this.sendUpdate();
@@ -117,6 +122,7 @@ class Parameters {
   public setScaleStep = (newValue: number): void => {
     if (this.valueChecker.checkStepAndScaleStep(newValue, this.extremeValues, this.isCollection)) {
       this.scaleStep = newValue;
+      this.correctScaleStepToRange();
     }
 
     if (!this.isInit) this.sendUpdate();
@@ -225,6 +231,16 @@ class Parameters {
     this.currentValues = this.currentValues.map((item) => ((item > maxValue) ? maxValue : item));
   };
 
+  private correctStepToRange = (): void => {
+    const range = this.getRange();
+    this.step = (range < this.step) ? range : this.step;
+  };
+
+  private correctScaleStepToRange = (): void => {
+    const range = this.getRange();
+    this.scaleStep = (range < this.scaleStep) ? range : this.scaleStep;
+  };
+
   private adjustQuantityOfCurrentValues(): void {
     const [minCurrentValue] = this.currentValues;
     const maxValue = this.extremeValues[1];
@@ -270,6 +286,11 @@ class Parameters {
     const range = max - min;
     const valueInRange = value - min;
     return (valueInRange / range) * 100;
+  };
+
+  private getRange = (): number => {
+    const [min, max] = this.extremeValues;
+    return max - min;
   };
 }
 

@@ -46,16 +46,10 @@ class ValueChecker {
     newValue: number, extremeValues: number[], isCollection: boolean,
   ): boolean => {
     try {
-      const [minValue, maxValue] = extremeValues;
-      const halfOfInterval = (maxValue - minValue) / 2;
-
       this.checkType(newValue, 'number');
       this.checkIsNaN(newValue);
 
       if (newValue <= 0) { throw new Error('Step must by greater than zero'); }
-      if (newValue > halfOfInterval) {
-        throw new Error('Step must by less than half of the interval of slider');
-      }
       if (isCollection) throw new Error('You cannot change the step if the flag is activated');
 
       return true;

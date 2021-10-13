@@ -117,7 +117,6 @@ interface IScaleAddContent {
   collection: string[] | number[] | HTMLElement[],
   scaleStep: number,
 }
-}
 
 interface IGetScaleItem {
   value: number,
