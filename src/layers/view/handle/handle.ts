@@ -52,10 +52,10 @@ class Handle {
   };
 
   private addListeners = (): void => {
-    this.body.addEventListener('pointerdown', this.handleHandlePointerDown);
-    this.body.addEventListener('pointerup', this.handleHandlePointerUp);
-    this.body.addEventListener('click', this.handleHandleClick);
-    this.body.addEventListener('keydown', this.handleHandleKeyDown);
+    this.body.addEventListener('pointerdown', this.handlePointerDown);
+    this.body.addEventListener('pointerup', this.handlePointerUp);
+    this.body.addEventListener('click', this.handleClick);
+    this.body.addEventListener('keydown', this.handleKeyDown);
   };
 
   private getCursorLocationInPercent = (event: PointerEvent): number => {
@@ -69,7 +69,7 @@ class Handle {
     return this.calculator.getNotAdjustedMarginToSize(this.body, handlesMarginInPercent);
   };
 
-  private handleHandlePointerDown = (event: PointerEvent): void => {
+  private handlePointerDown = (event: PointerEvent): void => {
     const { target, pointerId } = event;
     ((target as HTMLElement).setPointerCapture as (pointerId: number) => void)(pointerId);
     this.body.classList.add('light-range-slider__handle_active');
@@ -81,7 +81,7 @@ class Handle {
       cursorLocationInPercent - adjustedHandlesMarginToSize
     );
 
-    target.addEventListener('pointermove', this.handleHandlePointerMove);
+    target.addEventListener('pointermove', this.handlePointerMove);
 
     const eventObject = {
       eventName: 'handlePointerDown',
@@ -91,9 +91,9 @@ class Handle {
     this.observer.notify(eventObject);
   };
 
-  private handleHandlePointerUp = (event: PointerEvent): void => {
+  private handlePointerUp = (event: PointerEvent): void => {
     const { target, pointerId } = event;
-    target.removeEventListener('pointermove', this.handleHandlePointerMove);
+    target.removeEventListener('pointermove', this.handlePointerMove);
 
     ((target as HTMLElement).releasePointerCapture as (pointerId: number) => void)(pointerId);
     this.cursorOffsetRelativeHandleAtStartDragging = 0;
@@ -106,7 +106,7 @@ class Handle {
     this.observer.notify(eventObject);
   };
 
-  private handleHandlePointerMove = (event: PointerEvent): void => {
+  private handlePointerMove = (event: PointerEvent): void => {
     const cursorLocationInPercent = this.getCursorLocationInPercent(event);
     const newValue = cursorLocationInPercent - this.cursorOffsetRelativeHandleAtStartDragging;
 
@@ -118,7 +118,7 @@ class Handle {
     this.observer.notify(eventObject);
   };
 
-  private handleHandleKeyDown = (event: KeyboardEvent): void => {
+  private handleKeyDown = (event: KeyboardEvent): void => {
     const { code } = event;
     let eventName: string;
 
@@ -137,7 +137,7 @@ class Handle {
     }
   };
 
-  private handleHandleClick = (event: MouseEvent): void => {
+  private handleClick = (event: MouseEvent): void => {
     event.stopPropagation();
   };
 }

@@ -49,11 +49,11 @@ class View {
     }
 
     this.update({ margins, currentValues, collection, indexOfLastChangedHandle });
-    this.observer.subscribe({ eventName: 'handlePointerDown', function: this.handleHandlePointerDown });
-    this.observer.subscribe({ eventName: 'handlePointerUp', function: this.handleHandlePointerUp });
+    this.observer.subscribe({ eventName: 'handlePointerDown', function: this.handlePointerDown });
+    this.observer.subscribe({ eventName: 'handlePointerUp', function: this.handlePointerUp });
     if (indexOfLastChangedHandle) {
-      this.handleHandlePointerDown({ index: indexOfLastChangedHandle });
-      this.handleHandlePointerUp({ index: indexOfLastChangedHandle });
+      this.handlePointerDown({ index: indexOfLastChangedHandle });
+      this.handlePointerUp({ index: indexOfLastChangedHandle });
     }
     this.activateTransitions();
   }
@@ -86,8 +86,8 @@ class View {
     }
 
     if (indexOfLastChangedHandle !== undefined) {
-      this.handleHandlePointerDown({ index: indexOfLastChangedHandle });
-      this.handleHandlePointerUp({ index: indexOfLastChangedHandle });
+      this.handlePointerDown({ index: indexOfLastChangedHandle });
+      this.handlePointerUp({ index: indexOfLastChangedHandle });
     }
   };
 
@@ -152,7 +152,7 @@ class View {
       : new HorizontalCalculator({ getLineSize, getLineLocation });
   }
 
-  private handleHandlePointerDown = (eventBody: { index: number }):void => {
+  private handlePointerDown = (eventBody: { index: number }):void => {
     const { index } = eventBody;
     this.handles.map((item) => item.removeWasActive());
     this.handles[index].activate();
@@ -163,7 +163,7 @@ class View {
     }
   };
 
-  private handleHandlePointerUp = (eventBody: { index: number }):void => {
+  private handlePointerUp = (eventBody: { index: number }):void => {
     const { index } = eventBody;
     this.handles.map((item) => item.deactivate());
     this.handles[index].addWasActive();

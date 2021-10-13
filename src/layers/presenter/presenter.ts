@@ -50,9 +50,9 @@ class Presenter {
   };
 
   private subscribeToView = () => {
-    this.view.subscribe({ eventName: 'handleMove', function: this.handleHandleMove });
-    this.view.subscribe({ eventName: 'handleIncrement', function: this.handleHandleIncrement });
-    this.view.subscribe({ eventName: 'handleDecrement', function: this.handleHandleDecrement });
+    this.view.subscribe({ eventName: 'handleMove', function: this.handlePointerMove });
+    this.view.subscribe({ eventName: 'handleIncrement', function: this.handleIncrement });
+    this.view.subscribe({ eventName: 'handleDecrement', function: this.handleDecrement });
     this.view.subscribe({ eventName: 'lineClick', function: this.handleLineClick });
     this.view.subscribe({ eventName: 'scaleItemClick', function: this.handleScaleItemClick });
     this.view.subscribe({ eventName: 'lineResize', function: this.handleLineResize });
@@ -90,17 +90,17 @@ class Presenter {
     this.view = new View(({ slider, ...eventBody } as IView));
   };
 
-  private handleHandleMove = (eventBody: { index: number, newValue: number }): void => {
+  private handlePointerMove = (eventBody: { index: number, newValue: number }): void => {
     const { newValue, index } = eventBody;
     this.model.customSetters.setCurrentValueByIndex({ index, newValue });
   };
 
-  private handleHandleIncrement = (eventBody: { index: number }): void => {
+  private handleIncrement = (eventBody: { index: number }): void => {
     const { index } = eventBody;
     this.model.customSetters.incrementCurrentValueByIndex(index);
   };
 
-  private handleHandleDecrement = (eventBody: { index: number }): void => {
+  private handleDecrement = (eventBody: { index: number }): void => {
     const { index } = eventBody;
     this.model.customSetters.decrementCurrentValueByIndex(index);
   };
