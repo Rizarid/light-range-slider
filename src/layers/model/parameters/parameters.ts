@@ -146,6 +146,7 @@ class Parameters {
     if (this.valueChecker.checkBoolean(newValue)) {
       this.isInterval = newValue;
       this.adjustQuantityOfCurrentValues();
+      this.indexOfLastChangedHandle = undefined;
     }
 
     if (!this.isInit) this.sendUpdate();
