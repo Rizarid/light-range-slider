@@ -50,9 +50,9 @@ class Presenter {
   };
 
   private subscribeToView = () => {
-    this.view.subscribe({ eventName: 'handleMove', function: this.handlePointerMove });
-    this.view.subscribe({ eventName: 'handleIncrement', function: this.handleIncrement });
-    this.view.subscribe({ eventName: 'handleDecrement', function: this.handleDecrement });
+    this.view.subscribe({ eventName: 'pointerMove', function: this.handlePointerMove });
+    this.view.subscribe({ eventName: 'increment', function: this.handleIncrement });
+    this.view.subscribe({ eventName: 'decrement', function: this.handleDecrement });
     this.view.subscribe({ eventName: 'lineClick', function: this.handleLineClick });
     this.view.subscribe({ eventName: 'scaleItemClick', function: this.handleScaleItemClick });
     this.view.subscribe({ eventName: 'lineResize', function: this.handleLineResize });

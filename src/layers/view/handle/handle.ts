@@ -111,7 +111,7 @@ class Handle {
     const newValue = cursorLocationInPercent - this.cursorOffsetRelativeHandleAtStartDragging;
 
     const eventObject = {
-      eventName: 'handleMove',
+      eventName: 'pointerMove',
       eventBody: { index: this.index, newValue },
     };
 
@@ -123,7 +123,7 @@ class Handle {
 
     if (['ArrowRight', 'ArrowUp', 'ArrowLeft', 'ArrowDown'].includes(code, 0)) {
       const isIncrement = (['ArrowRight', 'ArrowUp'].includes(code, 0));
-      const eventName = isIncrement ? 'handleIncrement' : 'handleDecrement';
+      const eventName = isIncrement ? 'increment' : 'decrement';
 
       const eventObject = {
         eventName,
