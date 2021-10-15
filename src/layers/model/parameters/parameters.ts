@@ -223,14 +223,33 @@ class Parameters {
     this.observer.notify(eventObject);
   };
 
+  public getUpdateObject = (eventName: string): IUpdate => ({
+    eventName,
+    eventBody: {
+      extremeValues: this.extremeValues,
+      currentValues: this.currentValues,
+      margins: this.currentValues.map((item) => this.valueToPercent(item)),
+      step: this.step,
+      scaleStep: this.scaleStep,
+      isVertical: this.isVertical,
+      isInterval: this.isInterval,
+      haveProgressBar: this.haveProgressBar,
+      haveScale: this.haveScale,
+      haveLabel: this.haveLabel,
+      isCollection: this.isCollection,
+      collection: this.collection,
+      indexOfLastChangedHandle: this.indexOfLastChangedHandle,
+    },
+  });
+
+  public setIndexOfLastChangedHandle = (newValue: number): void => {
+    this.indexOfLastChangedHandle = newValue;
+  };
+
   private getEventObject = (eventName?: string) => {
     if (eventName === 'valuesUpdate') return this.getUpdateObject('valuesUpdate');
     if (eventName === 'scaleUpdate') return this.getUpdateObject('scaleUpdate');
     return this.getUpdateObject('fullUpdate');
-  };
-
-  public setIndexOfLastChangedHandle = (newValue: number): void => {
-    this.indexOfLastChangedHandle = newValue;
   };
 
   private correctCurrentValueToInterval = (): void => {
@@ -273,25 +292,6 @@ class Parameters {
       this.currentValues = [minCurrentValue];
     }
   }
-
-  public getUpdateObject = (eventName: string): IUpdate => ({
-    eventName,
-    eventBody: {
-      extremeValues: this.extremeValues,
-      currentValues: this.currentValues,
-      margins: this.currentValues.map((item) => this.valueToPercent(item)),
-      step: this.step,
-      scaleStep: this.scaleStep,
-      isVertical: this.isVertical,
-      isInterval: this.isInterval,
-      haveProgressBar: this.haveProgressBar,
-      haveScale: this.haveScale,
-      haveLabel: this.haveLabel,
-      isCollection: this.isCollection,
-      collection: this.collection,
-      indexOfLastChangedHandle: this.indexOfLastChangedHandle,
-    },
-  });
 
   private notifyCallbacks = (updateObject: IUpdateBody): void => {
     try {

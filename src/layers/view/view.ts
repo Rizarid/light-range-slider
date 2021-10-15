@@ -1,5 +1,5 @@
 import {
-  IView, ICreateElements, ICallback, IScale, IEventObject, IUpdateBody,
+  IView, ICreateElements, ICallback, IScale, IUpdateBody,
 } from '../interfaces/interfaces';
 import { Observer } from '../observer/observer';
 import { Handle } from './handle/handle';

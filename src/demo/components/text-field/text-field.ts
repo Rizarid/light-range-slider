@@ -17,8 +17,6 @@ class TextField {
     this.isCollection = this.body.classList.contains('text-field_collection');
   }
 
-  private getBody = (parent: HTMLElement): HTMLElement => parent.querySelector('.js-text-field');
-
   public update = (value: number | string[]): void => {
     if (Array.isArray(value)) {
       this.field.value = value.join(', ');
@@ -30,6 +28,8 @@ class TextField {
     this.field.disabled = isDisabled;
     this.field.readOnly = isDisabled;
   };
+
+  private getBody = (parent: HTMLElement): HTMLElement => parent.querySelector('.js-text-field');
 
   private getField = (): HTMLInputElement => this.body.querySelector('.js-text-field__field');
 

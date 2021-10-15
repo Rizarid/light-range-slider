@@ -14,11 +14,11 @@ class Toggle {
     this.addListener();
   }
 
-  private getBody = (parent: HTMLElement): HTMLElement => parent.querySelector('.js-toggle');
-
   public update = (checked: boolean): void => {
     this.checkbox.checked = checked;
   };
+
+  private getBody = (parent: HTMLElement): HTMLElement => parent.querySelector('.js-toggle');
 
   private createEvent = () => {
     this.onChange = new CustomEvent('parameterChanged', { bubbles: true, detail: { parameter: '', value: false } });
