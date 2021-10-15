@@ -12,11 +12,10 @@ class Observer {
       throw new Error('callback must be a function');
     }
 
-    this.subscribers.map((item) => {
+    this.subscribers.forEach((item) => {
       if (item.function === callback.function) {
         throw new Error('observer already in the list');
       }
-      return null;
     });
 
     this.subscribers.push(callback);
@@ -29,9 +28,8 @@ class Observer {
   public notify = (eventObject: IEventObject): void => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { eventName, eventBody } = eventObject;
-    this.subscribers.map((item) => {
+    this.subscribers.forEach((item) => {
       if (item.eventName === eventName) item.function(eventBody);
-      return null;
     });
   };
 }

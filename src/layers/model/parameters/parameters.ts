@@ -236,12 +236,11 @@ class Parameters {
   private correctCurrentValueToInterval = (): void => {
     const [minValue, maxValue] = this.extremeValues;
 
-    this.currentValues.map((item, index) => {
+    this.currentValues.forEach((item, index): void => {
       if (item <= minValue) {
         this.indexOfLastChangedHandle = index;
         this.currentValues[index] = minValue;
       }
-      return null;
     });
 
     for (let index = 1; index >= 0; index -= 1) {

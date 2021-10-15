@@ -100,14 +100,13 @@ class ValueChecker {
       this.checkIsArray(newValue);
 
       if (newValue.length) {
-        newValue.map((item) => {
+        newValue.forEach((item) => {
           const isNumber = typeof item === 'number';
           const isString = typeof item === 'string';
           const isObject = typeof item === 'object';
           if (!(isNumber || isString || isObject)) {
             throw new Error(`Expected array of numbers or strings or objects, passed array contain ${typeof item} element`);
           }
-          return null;
         });
       }
 

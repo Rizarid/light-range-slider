@@ -37,7 +37,7 @@ class Scale {
   public getBody = (): HTMLElement => this.body;
 
   public adjustMarginToSize = (): void => {
-    this.items.map((item) => {
+    this.items.forEach((item) => {
       const margin = this.calculator.getElementMargin(item);
       const marginInPercent = this.calculator.pxToPercentages(margin);
       const adjustedMarginToSize = this.calculator.getAdjustedMarginToSize(
@@ -45,7 +45,6 @@ class Scale {
       );
 
       this.calculator.setElementsMargin(item, adjustedMarginToSize);
-      return null;
     });
   };
 
@@ -98,10 +97,9 @@ class Scale {
   };
 
   private addListeners = (): void => {
-    this.items.map((item) => {
+    this.items.forEach((item) => {
       item.addEventListener('click', this.handleScaleItemClick);
       item.addEventListener('keydown', this.handleScaleItemKeyDown);
-      return null;
     });
   };
 
