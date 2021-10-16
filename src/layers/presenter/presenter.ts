@@ -46,7 +46,6 @@ class Presenter {
   private subscribeToModel = () => {
     this.model.subscribe({ eventName: 'fullUpdate', function: this.handleFullUpdateEvent });
     this.model.subscribe({ eventName: 'valuesUpdate', function: this.handleUpdate });
-    this.model.subscribe({ eventName: 'scaleUpdate', function: this.handleScaleUpdate });
   };
 
   private subscribeToView = () => {
@@ -80,10 +79,6 @@ class Presenter {
 
   private handleUpdate = (eventBody: IUpdateBody) => {
     this.view.update(eventBody);
-  };
-
-  private handleScaleUpdate = (eventBody: IUpdateBody) => {
-    this.view.scaleUpdate(eventBody);
   };
 
   private createView = (slider: HTMLElement, eventBody: IUpdateBody): void => {

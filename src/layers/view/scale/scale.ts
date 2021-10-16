@@ -48,10 +48,6 @@ class Scale {
     });
   };
 
-  public remove = (): void => {
-    this.body.remove();
-  };
-
   private createScale(): void {
     this.body = document.createElement('div');
     this.body.className = 'light-range-slider__scale';

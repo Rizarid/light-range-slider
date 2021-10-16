@@ -248,7 +248,6 @@ class Parameters {
 
   private getEventObject = (eventName?: string) => {
     if (eventName === 'valuesUpdate') return this.getUpdateObject('valuesUpdate');
-    if (eventName === 'scaleUpdate') return this.getUpdateObject('scaleUpdate');
     return this.getUpdateObject('fullUpdate');
   };
 

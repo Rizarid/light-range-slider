@@ -91,16 +91,6 @@ class View {
     }
   };
 
-  public scaleUpdate = (options: IUpdateBody): void => {
-    const { haveScale, ...scaleOptions } = options;
-    const { calculator, observer } = this;
-
-    if (haveScale) {
-      this.scale.remove();
-      this.createScale(({ calculator, observer, ...scaleOptions }) as IScale);
-    }
-  };
-
   public setIsResizeBlocked = (newValue: boolean): void => {
     this.line.setIsResizeBlocked(newValue);
   };
