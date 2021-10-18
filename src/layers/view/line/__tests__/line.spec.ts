@@ -1,7 +1,7 @@
 import { expect } from "chai"
 import { Line } from '../line'
 import { HorizontalCalculator } from '../../orientation-calculator/horizontal-calculator'
-import { Observer } from "../../../observers/change-observer"
+import { Observer } from "../../../observer/observer"
 
 
 describe("Line", function(): void {
