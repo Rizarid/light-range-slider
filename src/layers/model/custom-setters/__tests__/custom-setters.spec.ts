@@ -9,12 +9,14 @@ const Parameters = function() {
   this.checkExtremeValues = [300, 400];
   this.currentValues = [350];
   this.isInterval = false;
+  this.indexOfLastChangedHandle = undefined;
   this.getStep = () => this.step;
   this.getExtremeValues = () => this.extremeValues;
   this.getCurrentValues = () => this.currentValues;
   this.getIsInterval = () => this.isInterval;
   this.setCurrentValues = (value: number[]) => this.checkValue = value;
   this.setExtremeValues = (value: number[]) => this.checkValue = value;
+  this.setIndexOfLastChangedHandle = (index: number) => this.indexOfLastChangedHandle = index;
 }
 
 describe("CustomSetters", function (): void{

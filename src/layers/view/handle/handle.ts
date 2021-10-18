@@ -84,7 +84,7 @@ class Handle {
     target.addEventListener('pointermove', this.handlePointerMove);
 
     const eventObject = {
-      eventName: 'handlePointerDown',
+      eventName: 'pointerDown',
       eventBody: { index: this.index },
     };
 
@@ -99,7 +99,7 @@ class Handle {
     this.cursorOffsetRelativeHandleAtStartDragging = 0;
 
     const eventObject = {
-      eventName: 'handlePointerUp',
+      eventName: 'pointerUp',
       eventBody: { index: this.index },
     };
 

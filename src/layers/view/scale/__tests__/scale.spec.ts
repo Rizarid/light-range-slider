@@ -1,7 +1,7 @@
 import { expect } from "chai"
 import { Scale } from '../scale'
 import { HorizontalCalculator } from '../../orientation-calculator/horizontal-calculator'
-import { Observer } from "../../../observers/change-observer"
+import { Observer } from "../../../observer/observer"
 
 describe("Scale", function(): void {
   let scale: Scale
@@ -50,7 +50,7 @@ describe("Scale", function(): void {
   })
 
   it('Should return scale item by parameter isCollection = false', function() {
-    const item = scale.getScaleItem({ value: 250, extremeValues: [200, 300], collection: [] });
+    const item = scale.getScaleItem({ value: 250, extremeValues: [200, 300], collection: [], scaleStep: 10 });
 
     expect(item.tagName).to.equal('DIV');
     expect(item.className).to.equal('light-range-slider__scale-item');

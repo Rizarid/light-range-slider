@@ -1,7 +1,7 @@
 import { expect } from "chai"
 import { Handle } from '../handle'
 import { HorizontalCalculator } from '../../orientation-calculator/horizontal-calculator'
-import { Observer } from "../../../observers/change-observer"
+import { Observer } from "../../../observer/observer"
 
 describe("Handle", function(): void {
   let handle: Handle
@@ -62,7 +62,7 @@ describe("Handle", function(): void {
   it('Should active pointerdown event', function() {
 
     const eventObject = {
-      eventName: 'handlePointerDown',
+      eventName: 'pointerDown',
       eventBody: { index: 0 },
     };
 
@@ -81,8 +81,8 @@ describe("Handle", function(): void {
 
   it('Should active pointermove event', function() {
     const eventObject = {
-      eventName: 'handleMove',
-      eventBody: { handlesIndex: 0, newValue: 75 },
+      eventName: 'pointerMove',
+      eventBody: { index: 0, newValue: 75 },
     };
 
     const body = document.querySelector('body');
@@ -105,7 +105,7 @@ describe("Handle", function(): void {
 
   it('Should active pointerup event', function() {
     const eventObject = {
-      eventName: 'handlePointerUp',
+      eventName: 'pointerUp',
       eventBody: { index: 0 },
     };
     

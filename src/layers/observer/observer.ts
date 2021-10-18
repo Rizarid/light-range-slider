@@ -13,16 +13,20 @@ class Observer {
     }
 
     this.subscribers.forEach((item) => {
-      if (item.function === callback.function) {
-        throw new Error('observer already in the list');
-      }
+      const isFunctionsEqual = item.function === callback.function;
+      const isNamesEqual = item.eventName === callback.eventName;
+      if (isFunctionsEqual && isNamesEqual) throw new Error('observer already in the list');
     });
 
     this.subscribers.push(callback);
   }
 
   public unsubscribe(callback: ICallback): void {
-    this.subscribers = this.subscribers.filter((item) => item.function !== callback.function);
+    this.subscribers = this.subscribers.filter((item) => {
+      const isFunctionsEqual = item.function === callback.function;
+      const isNamesEqual = item.eventName === callback.eventName;
+      return !isFunctionsEqual || !isNamesEqual;
+    });
   }
 
   public notify = (eventObject: IEventObject): void => {

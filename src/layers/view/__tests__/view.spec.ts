@@ -14,6 +14,10 @@ describe("View", function(): void {
     this.getLocation = (): number => 50;
     this.updated = false;
     this.update = () => this.updated = true; 
+    this.addWasActive = (): void => this.body.classList.add('light-range-slider__handle_was-active');
+    this.removeWasActive = (): void => this.body.classList.remove('light-range-slider__handle_was-active');
+    this.activate = ():void => this.body.classList.add('light-range-slider__handle_active');
+    this.deactivate = ():void => this.body.classList.remove('light-range-slider__handle_active');
   }
 
   let body: HTMLElement = document.querySelector("body");
@@ -34,7 +38,8 @@ describe("View", function(): void {
       haveProgressBar: true,
       haveScale: true,
       haveLabel: true,
-      collection: []
+      collection: [],
+      indexOfLastChangedHandle: 0
     })
 
     view.line = new Element();
@@ -82,24 +87,24 @@ describe("View", function(): void {
 
   it('Should change classes of handles and labels after events pointerdown and pointerup', function() {
     let eventObject = {
-      eventName: 'handlePointerDown',
+      eventName: 'pointerDown',
       eventBody: { index: 0 },
     };
 
     view.observer.notify(eventObject);
 
     expect(view.handles[0].getBody().className).to.equal('element light-range-slider__handle_active');
-    expect(view.labels[0].getBody().className).to.equal('element light-range-slider__label_active');
+    expect(view.labels[0].getBody().className).to.equal('element light-range-slider__handle_active');
 
     eventObject = {
-      eventName: 'handlePointerUp',
+      eventName: 'pointerUp',
       eventBody: { index: 0 },
     };
 
     view.observer.notify(eventObject);
 
     expect(view.handles[0].getBody().className).to.equal('element light-range-slider__handle_was-active');
-    expect(view.labels[0].getBody().className).to.equal('element light-range-slider__label_was-active');
+    expect(view.labels[0].getBody().className).to.equal('element light-range-slider__handle_was-active');
 
   })
 })

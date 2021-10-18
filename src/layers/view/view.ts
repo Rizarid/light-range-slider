@@ -49,8 +49,8 @@ class View {
     }
 
     this.update({ margins, currentValues, collection, indexOfLastChangedHandle });
-    this.observer.subscribe({ eventName: 'handlePointerDown', function: this.handlePointerDown });
-    this.observer.subscribe({ eventName: 'handlePointerUp', function: this.handlePointerUp });
+    this.observer.subscribe({ eventName: 'pointerDown', function: this.handlePointerDown });
+    this.observer.subscribe({ eventName: 'pointerUp', function: this.handlePointerUp });
     if (indexOfLastChangedHandle) {
       this.handlePointerDown({ index: indexOfLastChangedHandle });
       this.handlePointerUp({ index: indexOfLastChangedHandle });

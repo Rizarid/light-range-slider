@@ -34,7 +34,6 @@ describe("ValueChecker", function (): void{
     expect(valueChecker.checkStepAndScaleStep('10', [0, 100], false)).to.be.false;
     expect(valueChecker.checkStepAndScaleStep(0, [0, 100], false)).to.be.false;
     expect(valueChecker.checkStepAndScaleStep(-5, [0, 100], false)).to.be.false;
-    expect(valueChecker.checkStepAndScaleStep(70, [0, 100], false)).to.be.false;
     expect(valueChecker.checkStepAndScaleStep(5, [0, 10], true)).to.be.false;
 
     expect(valueChecker.checkStepAndScaleStep(5, [0, 100], false)).to.be.true;

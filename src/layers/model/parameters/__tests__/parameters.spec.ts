@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Observer } from "../../../observers/change-observer";
+import { Observer } from "../../../observer/observer";
 import { Parameters } from "../parameters";
 
 describe("Parameters", function (): void{
@@ -147,7 +147,8 @@ describe("Parameters", function (): void{
         haveScale: true,     
         haveLabel: true,
         isCollection: false,
-        collection: []
+        collection: [],
+        indexOfLastChangedHandle: undefined
       }
     }
 
@@ -165,20 +166,20 @@ describe("Parameters", function (): void{
         haveScale: true,     
         haveLabel: true,
         isCollection: false,
-        collection: []
+        collection: [],
+        indexOfLastChangedHandle: undefined
       }
     }
 
-    let testValue: { eventName: string, eventBody };
+    let testValue: { eventBody };
     const callback = (event: { eventName: string, eventBody }):void => { testValue = event };
-    parameters.subscribe({ function: callback });
+    parameters.subscribe({ eventName: 'valuesUpdate', function: callback });
+    parameters.subscribe({ eventName: 'fullUpdate', function: callback });
 
     parameters.setCurrentValues([320, 370]);
-
-    expect(testValue).to.deep.equal(valuesUpdate);
+    expect(testValue).to.deep.equal(valuesUpdate.eventBody);
 
     parameters.setIsInterval(false);
-
-    expect(testValue).to.deep.equal(fullUpdate);
+    expect(testValue).to.deep.equal(fullUpdate.eventBody);
   })
 })
