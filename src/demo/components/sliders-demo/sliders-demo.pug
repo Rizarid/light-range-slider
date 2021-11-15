@@ -3,9 +3,9 @@ include ../toggle/toggle.pug
 
 mixin slidersDemo(modifier = '')
 
-  - const classes = modifier ? `sliders-demo js-sliders-demo sliders-demo_${modifier}` : 'sliders-demo js-sliders-demo'
+  - const modifierClass = modifier ? `sliders-demo_${modifier}` : ''
   
-  div(class = classes)
+  div(class = ['sliders-demo', 'js-sliders-demo', modifierClass])
     .sliders-demo__area.js-sliders-demo__area 
       .sliders-demo__slider.js-sliders-demo__slider
     
@@ -23,7 +23,7 @@ mixin slidersDemo(modifier = '')
       .sliders-demo__scale-step-container.js-sliders-demo__scale-step-container
         +textField({ title: 'step of scale', name: 'scaleStep' })
       .sliders-demo__collection-container.js-sliders-demo__collection-container
-        +textField({ title: 'collection', name: 'collection', modifier: 'collection' })
+        +textField({ title: 'collection', name: 'collection', isCollection: true })
       .sliders-demo__is-vertical-container.js-sliders-demo__is-vertical-container
         +toggle({ text: 'vertical', name: 'isVertical' })
       .sliders-demo__is-interval-container.js-sliders-demo__is-interval-container

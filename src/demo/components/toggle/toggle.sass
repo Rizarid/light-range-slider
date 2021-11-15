@@ -17,8 +17,8 @@
     width: 40px
     height: 20px
     border-radius: 10px
-    border: 1px solid $dark-shade-25
-    background-color: #fff
+    border: 1px solid $color-font-dark-25
+    background-color: $color-main-bg
     box-sizing: border-box
     padding: 4px
     display: flex
@@ -29,7 +29,7 @@
   &__circle
     width: 12px
     height: 12px
-    background: $dark-shade-25
+    background: $color-font-dark-25
     border-radius: 10px
     transition: 0.5s
     margin-left: 0
@@ -38,13 +38,13 @@
     font-weight: $normal
     font-size: 13.8px
     line-height: 24px
-    color: $dark-shade-75
+    color: $color-font-dark-75
     margin: 0
     margin-left: 10px
     cursor: pointer
 
   & input:checked ~ &__switch
-    border-color: $purple
+    border-color: $color-primary
     
     & .toggle__circle
       +gradient

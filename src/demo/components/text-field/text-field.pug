@@ -1,8 +1,8 @@
-mixin textField({ title = '', className = '', name = 'text-field', type = 'text', placeholder = '', modifier = '' })
+mixin textField({ title, name = 'text-field', type = 'text', placeholder = '', isCollection = false })
 
-  - const classes = (className) ? `${className} text-field js-text-field text-field_${modifier}` : `text-field js-text-field text-field_${modifier}`
+  - const collectionClass = (isCollection) ? 'text-field_collection' : ''
 
-  div(class = classes)
+  div(class = ['text-field', 'js-text-field', collectionClass])
     if title
       h3.text-field__title #{ title }
 
