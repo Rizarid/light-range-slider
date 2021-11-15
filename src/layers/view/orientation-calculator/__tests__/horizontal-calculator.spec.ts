@@ -50,7 +50,7 @@ describe("HorizontalCalculator", function (): void{
     const div: HTMLElement = document.querySelector(".slider");
     div.style.marginLeft = "100px";
 
-    expect(calculator.getElementsLocation(div)).to.equal(100);
+    expect(Math.round(calculator.getElementsLocation(div) * 100) / 100).to.equal(100);
 
   })
 
