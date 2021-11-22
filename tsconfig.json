@@ -1,5 +1,4 @@
 {
-
   "exclude": [
     "src/**/*.spec.*",
     "node_modules",
@@ -7,5 +6,6 @@
     "**/__mocks__/*"
   ],
   "include": ["src/**/*.ts", "src/**/*.js", "test/**/*.ts", "src/layers/view/label"],
-  "CommonJS": "ES5"
+  "CommonJS": "ES5",
+  "strict": true
 }

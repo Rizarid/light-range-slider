@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/dot-notation */
-
 import * as $ from 'jquery';
 
 import { ISliderOptions, IUpdateBody, IChangeParameterObject } from '../../../layers/interfaces/interfaces';
@@ -48,7 +46,6 @@ class SlidersDemo {
     this.createControllers();
     this.addListeners();
     this.createSlider(slidersOptions);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     this.$slider['changeParameter']('callbacks', [this.handleSliderUpdate]);
   }
 
@@ -90,8 +87,7 @@ class SlidersDemo {
 
   private handleParameterChanged = (event: CustomEvent) => {
     const { parameter, value } = (event.detail as IChangeParameterObject);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    this.$slider['changeParameter'](parameter, value);
+    this.$slider.changeParameter(parameter, value);
   };
 
   private handleSliderUpdate = (event: IUpdateBody) => {

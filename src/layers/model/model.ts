@@ -1,7 +1,4 @@
-/* eslint-disable no-console */
-import {
-  IModel, ICallback,
-} from '../interfaces/interfaces';
+import { IModel, ICallback } from '../interfaces/interfaces';
 import { Observer } from '../observer/observer';
 import { Calculator } from './calculator/calculator';
 import { CustomSetters } from './custom-setters/custom-setters';

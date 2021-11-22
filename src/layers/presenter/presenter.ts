@@ -1,6 +1,4 @@
-import {
-  IPresenter, IChangeParameterObject, IUpdateBody, IView,
-} from '../interfaces/interfaces';
+import { IPresenter, IChangeParameterObject, IUpdateBody, IView } from '../interfaces/interfaces';
 import { Model } from '../model/model';
 import { View } from '../view/view';
 
@@ -39,7 +37,6 @@ class Presenter {
       callbacks: this.model.parameters.setCallbacks,
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     parameterHandlers[parameter](value);
   };
 

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { IUpdateBody } from '../../interfaces/interfaces';
 
 class ValueChecker {

@@ -296,7 +296,6 @@ class Parameters {
     try {
       if (this.callbacks.length) this.callbacks.map((item) => item(updateObject));
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error);
     }
   };

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/dot-notation */
-
 import * as $ from 'jquery';
 
 import { Presenter } from '../layers/presenter/presenter';

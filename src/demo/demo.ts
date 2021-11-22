@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import '../lite-range-slider/lite-range-slider';
 import SlidersDemo from './components/sliders-demo/sliders-demo';
 import './demo.sass';

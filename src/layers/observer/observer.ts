@@ -30,7 +30,6 @@ class Observer {
   }
 
   public notify = (eventObject: IEventObject): void => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { eventName, eventBody } = eventObject;
     this.subscribers.forEach((item) => {
       if (item.eventName === eventName) item.function(eventBody);
