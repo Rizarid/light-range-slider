@@ -50,8 +50,6 @@
     "eslint-loader": "^4.0.2",
     "eslint-plugin-fsd": "^1.0.1",
     "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.24.0",
     "gh-pages": "^3.2.3",
     "global-jsdom": "^8.1.0",
     "html-loader": "^2.1.2",
@@ -87,13 +85,11 @@
     "terser-webpack-plugin": "^5.1.4",
     "ts-loader": "^9.2.3",
     "typescript": "^4.3.5",
-    "use-resize-observer": "^7.0.1",
     "webpack": "^5.45.1",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
-    "@juggle/resize-observer": "^3.3.1",
     "css-element-queries": "^1.2.3",
     "jquery": "^3.6.0"
   },
