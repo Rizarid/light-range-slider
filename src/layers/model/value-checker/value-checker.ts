@@ -94,20 +94,23 @@ class ValueChecker {
     }
   };
 
-  public checkCollection = (newValue: number[] | string[] | HTMLElement[]): boolean => {
+  public checkCollection = (
+    newValue: number[] | string[] | HTMLElement[],
+    isCollection: boolean,
+  ): boolean => {
     try {
       this.checkIsArray(newValue);
-
-      if (newValue.length) {
-        newValue.forEach((item) => {
-          const isNumber = typeof item === 'number';
-          const isString = typeof item === 'string';
-          const isObject = typeof item === 'object';
-          if (!(isNumber || isString || isObject)) {
-            throw new Error(`Expected array of numbers or strings or objects, passed array contain ${typeof item} element`);
-          }
-        });
+      if ((newValue.length < 2) && isCollection) {
+        throw new Error('The length of the array collection must not be less than 2');
       }
+      newValue.forEach((item) => {
+        const isNumber = typeof item === 'number';
+        const isString = typeof item === 'string';
+        const isObject = typeof item === 'object';
+        if (!(isNumber || isString || isObject)) {
+          throw new Error(`Expected array of numbers or strings or objects, passed array contain ${typeof item} element`);
+        }
+      });
 
       return true;
     } catch (error) {

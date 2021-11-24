@@ -79,7 +79,7 @@ class Parameters {
 
   public setExtremeValues = (newValue: number[]): void => {
     if (this.valueChecker.checkExtremeValues(newValue)) {
-      this.extremeValues = newValue;
+      if (!this.isCollection || this.isInit) this.extremeValues = newValue;
       if (!this.isInit) {
         this.correctCurrentValueToInterval();
         this.correctStepToRange();
@@ -193,27 +193,32 @@ class Parameters {
   public getCollection = (): string[] | number[] | HTMLElement[] => this.collection;
 
   public setCollection = (newValue: string[] | number[] | HTMLElement[]): void => {
-    if (this.valueChecker.checkCollection(newValue)) {
+    if (this.valueChecker.checkCollection(newValue, this.isCollection)) {
       this.collection = newValue;
-      if (this.isCollection) this.setExtremeValues([0, this.collection.length - 1]);
-      this.sendUpdate();
+      if (this.isCollection) {
+        this.extremeValues = [0, this.collection.length - 1];
+        this.correctCurrentValueToInterval();
+      }
     }
+
+    if (!this.isInit) this.sendUpdate();
   };
 
   public getIsCollection = (): boolean => this.isCollection;
 
   public setIsCollection = (newValue: boolean): void => {
     if (this.valueChecker.checkIsCollection(newValue, this.collection)) {
-      if (!newValue) {
-        this.isCollection = newValue;
-        this.sendUpdate();
-      } else {
+      if (!newValue) this.isCollection = newValue;
+      else {
         this.step = 1;
         this.scaleStep = 1;
         this.currentValues = this.currentValues.map((item) => Math.round(item));
         this.isCollection = newValue;
-        this.setExtremeValues([0, this.collection.length - 1]);
+        this.extremeValues = [0, this.collection.length - 1];
+        this.correctCurrentValueToInterval();
       }
+
+      this.sendUpdate();
     }
   };
 
