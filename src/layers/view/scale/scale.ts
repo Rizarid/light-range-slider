@@ -137,12 +137,12 @@ class Scale {
 
   private handleScaleItemClick = (event: PointerEvent): void => {
     const { target } = event;
-    const newValue = (target as HTMLElement).innerHTML;
-
-    this.observer.notify({
-      eventName: SliderEventName.scaleItemClick,
-      eventBody: { newValue },
-    });
+    if (target instanceof HTMLElement) {
+      this.observer.notify({
+        eventName: SliderEventName.scaleItemClick,
+        eventBody: { newValue: target.innerHTML },
+      });
+    }
   };
 
   private handleScaleItemKeyDown = (event: KeyboardEvent): void => {

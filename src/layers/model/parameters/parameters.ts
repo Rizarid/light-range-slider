@@ -11,7 +11,7 @@ class Parameters {
 
   private callbacks: ((updateObject: IUpdateBody) => void)[] = [];
 
-  private collection: string[] | number[] | HTMLElement[] = [];
+  private collection: string[] | number[] = [];
 
   private step: number;
 
@@ -190,9 +190,9 @@ class Parameters {
     this.sendUpdate();
   };
 
-  public getCollection = (): string[] | number[] | HTMLElement[] => this.collection;
+  public getCollection = (): string[] | number[] => this.collection;
 
-  public setCollection = (newValue: string[] | number[] | HTMLElement[]): void => {
+  public setCollection = (newValue: string[] | number[]): void => {
     if (this.valueChecker.checkCollection(newValue, this.isCollection)) {
       this.collection = newValue;
       if (this.isCollection) {

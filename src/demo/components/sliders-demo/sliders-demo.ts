@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
 
-import { ISliderOptions, IUpdateBody, IChangeParameterObject } from '../../../layers/interfaces/interfaces';
+import { ISliderOptions, IUpdateBody, IChangeParameterObject, CustomEventType } from '../../../layers/interfaces/interfaces';
 import './sliders-demo.sass';
 import TextField from '../text-field/text-field';
 import Toggle from '../toggle/toggle';
@@ -11,8 +11,6 @@ class SlidersDemo {
   private $slider: JQuery;
 
   private controlPanel: HTMLFormElement;
-
-  private onUpdate: CustomEvent;
 
   private min: TextField;
 
@@ -74,16 +72,16 @@ class SlidersDemo {
 
   private createSlider = (slidersOptions: ISliderOptions) => {
     this.$slider = $(this.body).find('.js-sliders-demo__slider');
-    (this.$slider['rangeSlider'] as (slidersOptions: ISliderOptions) => JQuery)(slidersOptions);
+    this.$slider['rangeSlider'](slidersOptions);
   };
 
   private addListeners = () => {
     this.controlPanel.addEventListener('parameterChanged', this.handleParameterChanged);
   };
 
-  private handleParameterChanged = (event: CustomEvent) => {
-    const { parameter, value } = (event.detail as IChangeParameterObject);
-    this.$slider.changeParameter(parameter, value);
+  private handleParameterChanged = (event: CustomEvent<CustomEventType>) => {
+    const { parameter, value } = event.detail;
+    this.$slider['changeParameter'](parameter, value);
   };
 
   private handleSliderUpdate = (event: IUpdateBody) => {
@@ -102,7 +100,7 @@ class SlidersDemo {
     this.currentMax.disable(!isInterval);
     this.step.update(step);
     this.scaleStep.update(scaleStep);
-    this.collection.update((collection as string[]));
+    this.collection.update((collection));
 
     this.isVertical.update(isVertical);
     this.isInterval.update(isInterval);

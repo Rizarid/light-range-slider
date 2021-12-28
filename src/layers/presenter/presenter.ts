@@ -106,7 +106,7 @@ class Presenter {
   };
 
   private createView = (slider: HTMLElement, eventBody: IUpdateBody): void => {
-    this.view = new View(({ slider, ...eventBody } as IView));
+    this.view = new View(({ slider, ...eventBody }));
   };
 
   private handlePointerMove = (eventBody: { index: number, newValue: number }): void => {

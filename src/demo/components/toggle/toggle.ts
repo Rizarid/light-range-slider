@@ -5,7 +5,7 @@ class Toggle {
 
   private checkbox: HTMLInputElement;
 
-  private onChange: CustomEvent;
+  private onChange: CustomEvent<{ parameter: string, value: boolean }>;
 
   constructor(parent: HTMLElement) {
     this.body = this.getBody(parent);
@@ -31,7 +31,7 @@ class Toggle {
   };
 
   private handleToggleChange = (): void => {
-    const { detail } = (this.onChange as { detail: { parameter: string, value: boolean } });
+    const { detail } = this.onChange;
     detail.parameter = this.checkbox.name;
     detail.value = this.checkbox.checked;
     this.body.dispatchEvent(this.onChange);

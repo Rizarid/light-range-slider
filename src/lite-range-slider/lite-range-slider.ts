@@ -5,9 +5,8 @@ import { ISliderOptions, IOutsideUpdate } from '../layers/interfaces/interfaces'
 import './lite-range-slider.sass';
 
 $.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
-  const This = (this as JQuery);
   const defaults = {
-    slider: This[0],
+    slider: this[0],
     extremeValues: [0, 100],
     currentValues: [50],
     step: 1,
@@ -24,15 +23,15 @@ $.fn['rangeSlider'] = function (options: ISliderOptions = {}): JQuery {
 
   const slider = new Presenter($.extend(defaults, options));
 
-  This['changeParameter'] = (
+  this['changeParameter'] = (
     parameter: string,
-    value: (number[] | number | boolean | string[] | HTMLElement[] |
+    value: (number[] | number | boolean | string[] |
     ((updateObject: IOutsideUpdate) => void)[]),
   ): JQuery => {
     const eventObject = { parameter, value };
     slider.changeParameter(eventObject);
-    return This;
+    return this;
   };
 
-  return This;
+  return this;
 };

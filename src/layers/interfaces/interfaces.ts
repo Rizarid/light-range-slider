@@ -4,7 +4,7 @@ interface IModel {
   extremeValues: number[],
   currentValues: number[],
   callbacks: ((updateObject: IUpdateBody) => void)[],
-  collection: string[] | number[] | HTMLElement[]
+  collection: string[] | number[]
   step : number,
   scaleStep: number,
   isVertical: boolean,
@@ -19,7 +19,7 @@ interface IParameters {
   extremeValues: number[],
   currentValues: number[],
   callbacks: ((updateObject: IUpdateBody) => void)[],
-  collection: string[] | number[] | HTMLElement[]
+  collection: string[] | number[]
   step : number,
   scaleStep: number,
   isVertical: boolean,
@@ -34,7 +34,7 @@ interface IParameters {
 interface IUpdateCallback { function: (eventObject: IUpdateBody) => void }
 
 interface IUpdate {
-  eventName: string,
+  eventName: UpdateEvantName,
   eventBody: IUpdateBody,
 }
 
@@ -55,18 +55,18 @@ enum SliderEventName {
 }
 
 interface IUpdateBody {
-  extremeValues?: number[],
-  currentValues?: number[],
-  margins?: number[],
-  step?: number,
-  scaleStep?: number,
-  isVertical?: boolean,
-  isInterval?: boolean,
-  haveProgressBar?: boolean,
-  haveScale?: boolean,
-  haveLabel?: boolean,
-  collection?: string[] | number[] | HTMLElement[],
-  isCollection?: boolean,
+  extremeValues: number[],
+  currentValues: number[],
+  margins: number[],
+  step: number,
+  scaleStep: number,
+  isVertical: boolean,
+  isInterval: boolean,
+  haveProgressBar: boolean,
+  haveScale: boolean,
+  haveLabel: boolean,
+  collection: string[] | number[],
+  isCollection: boolean,
   indexOfLastChangedHandle: number,
 }
 
@@ -103,12 +103,12 @@ interface ILabel {
   isCollection: boolean
 }
 
-interface ILabelAddContent { value: number, collection: string[] | number[] | HTMLElement[] }
+interface ILabelAddContent { value: number, collection: string[] | number[] }
 
 interface ILabelUpdate {
   margin: number,
   value: number,
-  collection: string[] | number[] | HTMLElement[],
+  collection: string[] | number[],
 }
 
 interface IScale {
@@ -116,20 +116,20 @@ interface IScale {
   extremeValues: number[],
   calculator: IOrientationCalculator,
   isCollection: boolean,
-  collection: string[] | number[] | HTMLElement[],
+  collection: string[] | number[],
   observer: Observer,
 }
 
 interface ICreateScaleItems{
   scaleStep: number,
   extremeValues: number[],
-  collection: string[] | number[] | HTMLElement[],
+  collection: string[] | number[],
 }
 
 interface IScaleAddContent {
   target: HTMLElement,
   value: number,
-  collection: string[] | number[] | HTMLElement[],
+  collection: string[] | number[],
   scaleStep: number,
   endsOfInterval: 'start' | 'end' | 'none', 
 }
@@ -137,7 +137,7 @@ interface IScaleAddContent {
 interface IGetScaleItem {
   value: number,
   extremeValues: number[],
-  collection: string[] | number[] | HTMLElement[],
+  collection: string[] | number[],
   scaleStep: number,
   endsOfInterval: 'start' | 'end' | 'none',
 }
@@ -158,13 +158,13 @@ interface IPresenter {
   haveScale: boolean,
   haveLabel: boolean,
   callbacks: ((updateObject: IUpdateBody) => void)[]
-  collection: string[] | number[] | HTMLElement[],
+  collection: string[] | number[],
   isCollection: boolean
 }
 
 interface IChangeParameterObject {
   parameter: string,
-  value: (number[] | number | boolean | string[] | HTMLElement[] |
+  value: (number[] | number | boolean | string[] |
   ((updateObject: IOutsideUpdate) => void)[]),
 }
 
@@ -180,7 +180,7 @@ interface ISliderOptions {
   haveScale?: boolean,
   haveLabel?: boolean,
   callbacks?: ((updateObject: IOutsideUpdate) => void)[]
-  collection?: string[] | number[] | HTMLElement[],
+  collection?: string[] | number[],
   isCollection?: boolean
 }
 
@@ -194,7 +194,7 @@ interface IView {
   haveProgressBar: boolean,
   haveScale: boolean,
   haveLabel: boolean,
-  collection: string[] | number[] | HTMLElement[],
+  collection: string[] | number[],
   isCollection: boolean,
   indexOfLastChangedHandle: number,
 }
@@ -210,7 +210,7 @@ interface ICreateElements {
 interface IViewUpdate {
   margins: number[],
   currentValues: number[],
-  collection: string[] | number[] | HTMLElement[]
+  collection: string[] | number[],
 }
 
 interface IScaleUpdateBody {
@@ -218,7 +218,7 @@ interface IScaleUpdateBody {
   scaleStep: number,
   haveScale: boolean,
   isCollection: boolean,
-  collection: string[] | number[] | HTMLElement[]
+  collection: string[] | number[],
 }
 interface IScaleUpdate {
   eventName: string,
@@ -264,11 +264,16 @@ interface IOrientationCalculatorProps {
   getLineLocation: () => number
 }
 
+type CustomEventType = {
+  parameter: string,
+  value: number | string[] | number[]
+}
+
 export {
   IModel, IUpdateCallback, IUpdate, IUpdateBody, IEventObject, IViewEvent, IOutsideUpdate,
   IHandle, ICallback, ILabel, ILabelAddContent, ILabelUpdate, IScale, ICreateScaleItems,
   IScaleAddContent, IGetScaleItem, IClickEventObject, IProgressBar, IPresenter,
   IChangeParameterObject, ISliderOptions, IView, ICreateElements, ISetCurrentValueByIndex,
   IViewUpdate, IScaleUpdate, IScaleUpdateBody, ILine, IParameters, UpdateEvantName,
-  SliderEventName, IOrientationCalculator, IOrientationCalculatorProps
+  SliderEventName, IOrientationCalculator, IOrientationCalculatorProps, CustomEventType
 };

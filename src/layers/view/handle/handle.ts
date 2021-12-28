@@ -72,7 +72,7 @@ class Handle {
 
   private handlePointerDown = (event: PointerEvent): void => {
     const { target, pointerId } = event;
-    ((target as HTMLElement).setPointerCapture as (pointerId: number) => void)(pointerId);
+    if (target instanceof HTMLElement) target.setPointerCapture(pointerId);
     this.body.classList.add('light-range-slider__handle_active');
 
     const cursorLocationInPercent = this.getCursorLocationInPercent(event);
@@ -93,8 +93,7 @@ class Handle {
   private handlePointerUp = (event: PointerEvent): void => {
     const { target, pointerId } = event;
     target.removeEventListener('pointermove', this.handlePointerMove);
-
-    ((target as HTMLElement).releasePointerCapture as (pointerId: number) => void)(pointerId);
+    if (target instanceof HTMLElement) target.releasePointerCapture(pointerId);
     this.cursorOffsetRelativeHandleAtStartDragging = 0;
 
     this.observer.notify({
