@@ -14,6 +14,9 @@ class Handle {
 
   private observer: Observer;
 
+  private ARROWS_KEYBORD_CODES = ['ArrowRight', 'ArrowUp', 'ArrowLeft', 'ArrowDown'];
+  private RIGHT_AND_UP_ARROWS_KEYBORD_CODES = ['ArrowRight', 'ArrowUp'];
+
   constructor(options: IHandle) {
     const { index, calculator, observer } = options;
 
@@ -121,8 +124,8 @@ class Handle {
   private handleKeyDown = (event: KeyboardEvent): void => {
     const { code } = event;
 
-    if (['ArrowRight', 'ArrowUp', 'ArrowLeft', 'ArrowDown'].includes(code, 0)) {
-      const isIncrement = (['ArrowRight', 'ArrowUp'].includes(code, 0));
+    if (this.ARROWS_KEYBORD_CODES.includes(code, 0)) {
+      const isIncrement = (this.RIGHT_AND_UP_ARROWS_KEYBORD_CODES.includes(code, 0));
       const eventName = isIncrement 
         ? SliderEventName.increment 
         : SliderEventName.decrement;
