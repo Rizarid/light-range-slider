@@ -8,17 +8,11 @@ class Observer {
   private subscribers: ICallback[] = [];
 
   public subscribe(callback: ICallback): void {
-    if (typeof (callback.function) !== 'function') {
-      throw new Error('callback must be a function');
-    }
-
-    this.subscribers.forEach((item) => {
-      const isFunctionsEqual = item.function === callback.function;
-      const isNamesEqual = item.eventName === callback.eventName;
-      if (isFunctionsEqual && isNamesEqual) throw new Error('observer already in the list');
-    });
-
-    this.subscribers.push(callback);
+    const isCallbackEqual = this.subscribers.some((item) => (
+      (item.function === callback.function) && (item.eventName === callback.eventName)
+    ))
+    if (isCallbackEqual) throw new Error('observer already in the list');
+    else this.subscribers.push(callback);
   }
 
   public unsubscribe(callback: ICallback): void {
