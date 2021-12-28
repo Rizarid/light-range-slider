@@ -117,6 +117,7 @@ interface IScaleAddContent {
   value: number,
   collection: string[] | number[] | HTMLElement[],
   scaleStep: number,
+  endsOfInterval: 'start' | 'end' | 'none', 
 }
 
 interface IGetScaleItem {
@@ -124,6 +125,7 @@ interface IGetScaleItem {
   extremeValues: number[],
   collection: string[] | number[] | HTMLElement[],
   scaleStep: number,
+  endsOfInterval: 'start' | 'end' | 'none',
 }
 
 interface IClickEventObject { pageX: number, pageY: number }

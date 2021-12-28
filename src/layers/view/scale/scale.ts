@@ -54,14 +54,29 @@ class Scale {
   }
 
   private getScaleItem = (options: IGetScaleItem): HTMLElement => {
-    const { value, extremeValues, collection, scaleStep } = options;
+    const { 
+      value,
+      extremeValues,
+      collection,
+      scaleStep,
+      endsOfInterval = 'none'
+    } = options;
     const [minValue, maxValue] = extremeValues;
 
     const item = document.createElement('div');
-    item.className = 'light-range-slider__scale-item';
+    if (endsOfInterval !== 'none'){
+      if (endsOfInterval === 'start') {
+        item.className = 'light-range-slider__scale-item light-range-slider__scale-item_interval-start'
+      } else {
+        item.className = 'light-range-slider__scale-item light-range-slider__scale-item_interval-end'
+      } 
+    } else {
+      item.className = 'light-range-slider__scale-item'
+    }
+
     item.tabIndex = 0;
 
-    this.addContent({ target: item, value, collection, scaleStep });
+    this.addContent({ target: item, value, collection, scaleStep, endsOfInterval });
     const marginInPercent = this.calcMarginOfScaleItem(value, minValue, maxValue);
     this.calculator.setElementsMargin(item, marginInPercent);
 
@@ -83,12 +98,30 @@ class Scale {
     const { extremeValues, scaleStep, collection } = options;
     this.items = [];
 
-    for (let i = extremeValues[0]; i < extremeValues[1]; i += scaleStep) {
-      this.items.push(this.getScaleItem({ value: i, extremeValues, collection, scaleStep }));
+    this.items.push(this.getScaleItem({
+      value: extremeValues[0],
+      extremeValues,
+      collection,
+      scaleStep,
+      endsOfInterval: 'start'
+    }));
+
+    for (let i = extremeValues[0] + scaleStep; i < extremeValues[1]; i += scaleStep) {
+      this.items.push(this.getScaleItem({
+        value: i,
+        extremeValues,
+        collection,
+        scaleStep,
+        endsOfInterval: 'none',
+      }));
     }
 
     this.items.push(this.getScaleItem({
-      value: extremeValues[1], extremeValues, collection, scaleStep,
+      value: extremeValues[1],
+      extremeValues,
+      collection,
+      scaleStep,
+      endsOfInterval: 'end',
     }));
   };
 
@@ -124,9 +157,11 @@ class Scale {
   };
 
   private addContentByNotIsCollection = (options: IScaleAddContent): void => {
-    const { target, value, scaleStep } = options;
+    const { target, value, scaleStep, endsOfInterval } = options;
     const accuracy = 10 ** this.getNumberOfDecimalPlaces(scaleStep);
-    target.innerHTML = (Math.round(value * accuracy) / accuracy).toString();
+    target.innerHTML = (endsOfInterval === 'none')
+      ? (Math.round(value * accuracy) / accuracy).toString()
+      : value.toString();
   };
 }
 

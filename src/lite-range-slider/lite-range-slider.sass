@@ -75,6 +75,11 @@
     transition: color 0.5s
     user-select: none
 
+    &_interval-start,
+    &_interval-end
+      margin-top: 13px
+      font-weight: bold
+
     &:hover 
       color: #4eb7a8
 
@@ -118,3 +123,11 @@
       width: fit-content
       position: absolute
       right: 0
+
+    & .light-range-slider__scale-item_interval-start
+      margin-top: 8px
+      font-weight: bold
+
+    & .light-range-slider__scale-item_interval-end
+      margin-top: -5px
+      font-weight: bold
