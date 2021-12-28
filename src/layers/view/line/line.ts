@@ -1,5 +1,5 @@
 import { Observer } from '../../observer/observer';
-import { ILine } from '../../interfaces/interfaces';
+import { ILine, SliderEventName } from '../../interfaces/interfaces';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
 
@@ -59,7 +59,7 @@ class Line {
     const valueInPercentage = this.calculator.pxToPercentages(valueInPx);
 
     const eventObject = {
-      eventName: 'lineClick',
+      eventName: SliderEventName.lineClick,
       eventBody: { newValue: valueInPercentage },
     };
 

@@ -1,5 +1,5 @@
 import {
-  IParameters, ICallback, IUpdateBody, IUpdate,
+  IParameters, ICallback, IUpdateBody, IUpdate, UpdateEvantName,
 } from '../../interfaces/interfaces';
 import { Observer } from '../../observer/observer';
 import { ValueChecker } from '../value-checker/value-checker';
@@ -105,7 +105,7 @@ class Parameters {
       }
     }
 
-    if (!this.isInit) this.sendUpdate('valuesUpdate');
+    if (!this.isInit) this.sendUpdate(UpdateEvantName.valuesUpdate);
   };
 
   public getStep = (): number => this.step;
@@ -222,13 +222,13 @@ class Parameters {
     }
   };
 
-  public sendUpdate = (eventName?: string): void => {
+  public sendUpdate = (eventName?: UpdateEvantName): void => {
     const eventObject = this.getEventObject(eventName);
     this.notifyCallbacks(eventObject.eventBody);
     this.observer.notify(eventObject);
   };
 
-  public getUpdateObject = (eventName: string): IUpdate => ({
+  public getUpdateObject = (eventName: UpdateEvantName): IUpdate => ({
     eventName,
     eventBody: {
       extremeValues: this.extremeValues,
@@ -251,9 +251,11 @@ class Parameters {
     this.indexOfLastChangedHandle = newValue;
   };
 
-  private getEventObject = (eventName?: string) => {
-    if (eventName === 'valuesUpdate') return this.getUpdateObject('valuesUpdate');
-    return this.getUpdateObject('fullUpdate');
+  private getEventObject = (eventName?: UpdateEvantName ) => {
+    if (eventName === UpdateEvantName.valuesUpdate) {
+      return this.getUpdateObject(UpdateEvantName.valuesUpdate);
+    }
+    return this.getUpdateObject(UpdateEvantName.fullUpdate);
   };
 
   private correctCurrentValueToInterval = (): void => {

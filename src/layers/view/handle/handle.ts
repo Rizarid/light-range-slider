@@ -1,4 +1,4 @@
-import { IHandle } from '../../interfaces/interfaces';
+import { IHandle, SliderEventName } from '../../interfaces/interfaces';
 import { Observer } from '../../observer/observer';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
@@ -84,7 +84,7 @@ class Handle {
     target.addEventListener('pointermove', this.handlePointerMove);
 
     const eventObject = {
-      eventName: 'pointerDown',
+      eventName: SliderEventName.pointerDown,
       eventBody: { index: this.index },
     };
 
@@ -99,7 +99,7 @@ class Handle {
     this.cursorOffsetRelativeHandleAtStartDragging = 0;
 
     const eventObject = {
-      eventName: 'pointerUp',
+      eventName: SliderEventName.pointerUp,
       eventBody: { index: this.index },
     };
 
@@ -111,7 +111,7 @@ class Handle {
     const newValue = cursorLocationInPercent - this.cursorOffsetRelativeHandleAtStartDragging;
 
     const eventObject = {
-      eventName: 'pointerMove',
+      eventName: SliderEventName.pointerMove,
       eventBody: { index: this.index, newValue },
     };
 
@@ -123,7 +123,9 @@ class Handle {
 
     if (['ArrowRight', 'ArrowUp', 'ArrowLeft', 'ArrowDown'].includes(code, 0)) {
       const isIncrement = (['ArrowRight', 'ArrowUp'].includes(code, 0));
-      const eventName = isIncrement ? 'increment' : 'decrement';
+      const eventName = isIncrement 
+        ? SliderEventName.increment 
+        : SliderEventName.decrement;
 
       const eventObject = {
         eventName,

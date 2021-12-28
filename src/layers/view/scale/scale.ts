@@ -1,6 +1,6 @@
 import { Observer } from '../../observer/observer';
 import {
-  IScale, ICreateScaleItems, IScaleAddContent, IGetScaleItem,
+  IScale, ICreateScaleItems, IScaleAddContent, IGetScaleItem, SliderEventName,
 } from '../../interfaces/interfaces';
 import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
 import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
@@ -137,7 +137,7 @@ class Scale {
     const newValue = (target as HTMLElement).innerHTML;
 
     const eventObject = {
-      eventName: 'scaleItemClick',
+      eventName: SliderEventName.scaleItemClick,
       eventBody: { newValue },
     };
 

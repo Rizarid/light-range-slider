@@ -1,5 +1,5 @@
 import {
-  IView, ICreateElements, ICallback, IScale, IUpdateBody,
+  IView, ICreateElements, ICallback, IScale, IUpdateBody, SliderEventName,
 } from '../interfaces/interfaces';
 import { Observer } from '../observer/observer';
 import { Handle } from './handle/handle';
@@ -59,8 +59,14 @@ class View {
     }
 
     this.update({ margins, currentValues, collection, indexOfLastChangedHandle });
-    this.observer.subscribe({ eventName: 'pointerDown', function: this.handlePointerDown });
-    this.observer.subscribe({ eventName: 'pointerUp', function: this.handlePointerUp });
+    this.observer.subscribe({
+      eventName: SliderEventName.pointerDown,
+      function: this.handlePointerDown
+    });
+    this.observer.subscribe({
+      eventName: SliderEventName.pointerUp,
+      function: this.handlePointerUp
+    });
     if (indexOfLastChangedHandle) {
       this.handlePointerDown({ index: indexOfLastChangedHandle });
       this.handlePointerUp({ index: indexOfLastChangedHandle });

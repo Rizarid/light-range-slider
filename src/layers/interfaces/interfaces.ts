@@ -40,6 +40,22 @@ interface IUpdate {
   eventBody: IUpdateBody,
 }
 
+enum UpdateEvantName {
+  valuesUpdate = 'valuesUpdate',
+  fullUpdate = 'fullUpdate',
+}
+
+enum SliderEventName {
+  pointerDown = 'pointerDown',
+  pointerMove = 'pointerMove',
+  pointerUp = 'pointerUp',
+  increment = 'increment',
+  decrement = 'decrement',
+  lineClick = 'lineClick',
+  scaleItemClick = 'scaleItemClick',
+  lineResize = 'lineResize',
+}
+
 interface IUpdateBody {
   extremeValues?: number[],
   currentValues?: number[],
@@ -223,5 +239,6 @@ export {
   IHandle, ICallback, ILabel, ILabelAddContent, ILabelUpdate, IScale, ICreateScaleItems,
   IScaleAddContent, IGetScaleItem, IClickEventObject, IProgressBar, IPresenter,
   IChangeParameterObject, ISliderOptions, IView, ICreateElements, ISetCurrentValueByIndex,
-  IViewUpdate, IScaleUpdate, IScaleUpdateBody, ILine, IParameters,
+  IViewUpdate, IScaleUpdate, IScaleUpdateBody, ILine, IParameters, UpdateEvantName,
+  SliderEventName
 };

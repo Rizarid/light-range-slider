@@ -1,4 +1,4 @@
-import { IPresenter, IChangeParameterObject, IUpdateBody, IView } from '../interfaces/interfaces';
+import { IPresenter, IChangeParameterObject, IUpdateBody, IView, UpdateEvantName, SliderEventName } from '../interfaces/interfaces';
 import { Model } from '../model/model';
 import { View } from '../view/view';
 
@@ -10,7 +10,10 @@ class Presenter {
   constructor(options: IPresenter) {
     const { slider, ...modelOptions } = options;
     this.model = new Model(modelOptions);
-    this.createView(slider, this.model.parameters.getUpdateObject('').eventBody);
+    this.createView(
+      slider, 
+      this.model.parameters.getUpdateObject(UpdateEvantName.fullUpdate).eventBody
+    );
     this.subscribeToModel();
     this.subscribeToView();
     setTimeout(() => { this.view.setIsResizeBlocked(false); }, 1);
@@ -41,17 +44,41 @@ class Presenter {
   };
 
   private subscribeToModel = () => {
-    this.model.subscribe({ eventName: 'fullUpdate', function: this.handleFullUpdateEvent });
-    this.model.subscribe({ eventName: 'valuesUpdate', function: this.handleUpdate });
+    this.model.subscribe({
+      eventName: UpdateEvantName.fullUpdate,
+      function: this.handleFullUpdateEvent
+    });
+    this.model.subscribe({
+      eventName: UpdateEvantName.valuesUpdate,
+      function: this.handleUpdate
+    });
   };
 
   private subscribeToView = () => {
-    this.view.subscribe({ eventName: 'pointerMove', function: this.handlePointerMove });
-    this.view.subscribe({ eventName: 'increment', function: this.handleIncrement });
-    this.view.subscribe({ eventName: 'decrement', function: this.handleDecrement });
-    this.view.subscribe({ eventName: 'lineClick', function: this.handleLineClick });
-    this.view.subscribe({ eventName: 'scaleItemClick', function: this.handleScaleItemClick });
-    this.view.subscribe({ eventName: 'lineResize', function: this.handleLineResize });
+    this.view.subscribe({
+      eventName: SliderEventName.pointerMove,
+      function: this.handlePointerMove
+    });
+    this.view.subscribe({
+      eventName: SliderEventName.increment,
+      function: this.handleIncrement
+    });
+    this.view.subscribe({
+      eventName: SliderEventName.decrement,
+      function: this.handleDecrement,
+    });
+    this.view.subscribe({
+      eventName: SliderEventName.lineClick,
+      function: this.handleLineClick,
+    });
+    this.view.subscribe({
+      eventName: SliderEventName.scaleItemClick,
+      function: this.handleScaleItemClick
+    });
+    this.view.subscribe({
+      eventName: SliderEventName.lineResize,
+      function: this.handleLineResize
+    });
   };
 
   private handleCurrentMin = (currentMin: number): void => {
