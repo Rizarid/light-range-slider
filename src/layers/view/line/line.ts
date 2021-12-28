@@ -14,12 +14,10 @@ class Line {
 
   private resizeObserver: ResizeObserver = new ResizeObserver(() => {
     if (!this.isResizeBlocked) {
-      const eventObject = {
-        eventName: 'lineResize',
+      this.observer.notify({
+        eventName: SliderEventName.lineResize,
         eventBody: {},
-      };
-
-      this.observer.notify(eventObject);
+      });
     }
   });
 
@@ -58,12 +56,10 @@ class Line {
     const valueInPx = this.calculator.getCursorLocation(event);
     const valueInPercentage = this.calculator.pxToPercentages(valueInPx);
 
-    const eventObject = {
+    this.observer.notify({
       eventName: SliderEventName.lineClick,
       eventBody: { newValue: valueInPercentage },
-    };
-
-    this.observer.notify(eventObject);
+    });
   };
 }
 

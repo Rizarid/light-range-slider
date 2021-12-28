@@ -86,12 +86,10 @@ class Handle {
 
     target.addEventListener('pointermove', this.handlePointerMove);
 
-    const eventObject = {
+    this.observer.notify({
       eventName: SliderEventName.pointerDown,
       eventBody: { index: this.index },
-    };
-
-    this.observer.notify(eventObject);
+    });
   };
 
   private handlePointerUp = (event: PointerEvent): void => {
@@ -101,24 +99,20 @@ class Handle {
     ((target as HTMLElement).releasePointerCapture as (pointerId: number) => void)(pointerId);
     this.cursorOffsetRelativeHandleAtStartDragging = 0;
 
-    const eventObject = {
+    this.observer.notify({
       eventName: SliderEventName.pointerUp,
       eventBody: { index: this.index },
-    };
-
-    this.observer.notify(eventObject);
+    });
   };
 
   private handlePointerMove = (event: PointerEvent): void => {
     const cursorLocationInPercent = this.getCursorLocationInPercent(event);
     const newValue = cursorLocationInPercent - this.cursorOffsetRelativeHandleAtStartDragging;
 
-    const eventObject = {
+    this.observer.notify({
       eventName: SliderEventName.pointerMove,
       eventBody: { index: this.index, newValue },
-    };
-
-    this.observer.notify(eventObject);
+    });
   };
 
   private handleKeyDown = (event: KeyboardEvent): void => {
@@ -130,12 +124,10 @@ class Handle {
         ? SliderEventName.increment 
         : SliderEventName.decrement;
 
-      const eventObject = {
+      this.observer.notify({
         eventName,
         eventBody: { index: this.index },
-      };
-
-      this.observer.notify(eventObject);
+      });
       event.preventDefault();
       event.stopPropagation();
     }
