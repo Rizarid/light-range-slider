@@ -14,8 +14,7 @@ class Model {
   private observer: Observer = new Observer();
 
   constructor(options: IModel) {
-    const { observer } = this;
-    this.parameters = new Parameters({ ...options, observer });
+    this.parameters = new Parameters({ ...options, observer: this.observer });
     this.calculator = new Calculator(this.parameters);
     this.customSetters = new CustomSetters(this.parameters, this.calculator);
   }

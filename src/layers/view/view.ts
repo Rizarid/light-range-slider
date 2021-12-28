@@ -32,19 +32,29 @@ class View {
       slider, extremeValues, currentValues, margins, scaleStep, isVertical, haveScale,
       haveLabel, collection, isCollection, haveProgressBar, indexOfLastChangedHandle,
     } = options;
-    const { observer } = this;
 
     this.body = slider;
     this.modifySlidersClass(isVertical);
     this.switchCalculator(isVertical);
 
-    this.createElements({ margins, currentValues, haveLabel, isCollection, haveProgressBar });
+    this.createElements({
+      margins,
+      currentValues,
+      haveLabel,
+      isCollection,
+      haveProgressBar
+    });
+
     this.appendElements(haveLabel, haveProgressBar);
 
     if (haveScale) {
-      const { calculator } = this;
       this.createScale({
-        scaleStep, extremeValues, calculator, isCollection, collection, observer,
+        scaleStep,
+        extremeValues,
+        calculator: this.calculator,
+        isCollection,
+        collection,
+        observer: this.observer,
       });
     }
 
@@ -108,18 +118,22 @@ class View {
   }
 
   private createElements(options: ICreateElements): void {
-    const { calculator, observer } = this;
     const { margins, currentValues, haveLabel, isCollection, haveProgressBar } = options;
 
-    this.line = new Line({ calculator, observer });
+    this.line = new Line({ calculator: this.calculator, observer: this.observer });
 
     this.handles = margins.map((item, index) => (
-      new Handle({ index, calculator, observer })
+      new Handle({ index, calculator: this.calculator, observer: this.observer })
     ));
 
-    if (haveProgressBar) this.progressBar = new ProgressBar({ calculator });
+    if (haveProgressBar) this.progressBar = new ProgressBar({
+      calculator: this.calculator
+    });
     if (haveLabel) {
-      this.labels = currentValues.map(() => new Label({ calculator, isCollection }));
+      this.labels = currentValues.map(() => new Label({
+        calculator: this.calculator,
+        isCollection
+      }));
     }
   }
 
@@ -135,11 +149,16 @@ class View {
   }
 
   private switchCalculator(isVertical: boolean): void {
-    const { getLineSize, getLineLocation } = this;
 
     this.calculator = isVertical
-      ? new VerticalCalculator({ getLineSize, getLineLocation })
-      : new HorizontalCalculator({ getLineSize, getLineLocation });
+      ? new VerticalCalculator({
+        getLineSize: this.getLineSize,
+        getLineLocation: this.getLineLocation,
+      })
+      : new HorizontalCalculator({
+        getLineSize: this.getLineSize,
+        getLineLocation: this.getLineLocation,
+      });
   }
 
   private handlePointerDown = (eventBody: { index: number }):void => {
