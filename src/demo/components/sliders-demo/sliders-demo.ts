@@ -77,10 +77,6 @@ class SlidersDemo {
     (this.$slider['rangeSlider'] as (slidersOptions: ISliderOptions) => JQuery)(slidersOptions);
   };
 
-  private createUpdateEvent = () => {
-    this.onUpdate = new CustomEvent('update');
-  };
-
   private addListeners = () => {
     this.controlPanel.addEventListener('parameterChanged', this.handleParameterChanged);
   };
