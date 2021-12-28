@@ -289,12 +289,13 @@ class Parameters {
   private adjustQuantityOfCurrentValues(): void {
     const [minCurrentValue] = this.currentValues;
     const maxValue = this.extremeValues[1];
+    const isCurrentValuesInIntervalMode = this.currentValues.length === 2
 
-    if (this.isInterval && (this.currentValues.length === 1)) {
+    if (this.isInterval && !isCurrentValuesInIntervalMode) {
       this.currentValues = [minCurrentValue, maxValue];
     }
 
-    if (!this.isInterval && (this.currentValues.length === 2)) {
+    if (!this.isInterval && isCurrentValuesInIntervalMode) {
       this.currentValues = [minCurrentValue];
     }
   }

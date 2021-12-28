@@ -1,11 +1,9 @@
-import { IProgressBar } from '../../interfaces/interfaces';
-import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
-import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
+import { IOrientationCalculator, IProgressBar } from '../../interfaces/interfaces';
 
 class ProgressBar {
   private body: HTMLElement;
 
-  private calculator: HorizontalCalculator | VerticalCalculator;
+  private calculator: IOrientationCalculator;
 
   constructor(options: IProgressBar) {
     const { calculator } = options;

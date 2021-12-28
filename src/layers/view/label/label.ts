@@ -1,11 +1,14 @@
-import { ILabel, ILabelAddContent, ILabelUpdate } from '../../interfaces/interfaces';
-import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
-import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
+import {
+  ILabel,
+  ILabelAddContent,
+  ILabelUpdate,
+  IOrientationCalculator
+} from '../../interfaces/interfaces';
 
 class Label {
   private body: HTMLElement;
 
-  private calculator: HorizontalCalculator | VerticalCalculator;
+  private calculator: IOrientationCalculator;
 
   private addContent: (options: ILabelAddContent) => void;
 
