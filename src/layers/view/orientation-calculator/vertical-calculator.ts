@@ -1,12 +1,16 @@
-interface IVerticalCalculator { getLineSize: () => number, getLineLocation: () => number }
+import {
+  IOrientationCalculator,
+  IOrientationCalculatorProps
+} from "../../interfaces/interfaces";
+
 interface IEventObject { pageX: number, pageY: number }
 
-class VerticalCalculator {
+class VerticalCalculator implements IOrientationCalculator {
   private getLineSize: () => number;
 
   private getLineLocation: () => number;
 
-  constructor(options: IVerticalCalculator) {
+  constructor(options: IOrientationCalculatorProps) {
     const { getLineLocation, getLineSize } = options;
     this.getLineLocation = getLineLocation;
     this.getLineSize = getLineSize;

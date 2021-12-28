@@ -1,5 +1,5 @@
 import {
-  IView, ICreateElements, ICallback, IScale, IUpdateBody, SliderEventName,
+  IView, ICreateElements, ICallback, IScale, IUpdateBody, SliderEventName, IOrientationCalculator,
 } from '../interfaces/interfaces';
 import { Observer } from '../observer/observer';
 import { Handle } from './handle/handle';
@@ -23,7 +23,7 @@ class View {
 
   private scale: Scale;
 
-  private calculator: HorizontalCalculator | VerticalCalculator;
+  private calculator: IOrientationCalculator;
 
   private observer: Observer = new Observer();
 

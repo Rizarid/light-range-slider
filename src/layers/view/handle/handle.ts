@@ -1,7 +1,5 @@
-import { IHandle, SliderEventName } from '../../interfaces/interfaces';
+import { IHandle, IOrientationCalculator, SliderEventName } from '../../interfaces/interfaces';
 import { Observer } from '../../observer/observer';
-import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
-import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
 
 class Handle {
   private body: HTMLElement;
@@ -10,7 +8,7 @@ class Handle {
 
   private cursorOffsetRelativeHandleAtStartDragging: number;
 
-  private calculator: HorizontalCalculator | VerticalCalculator;
+  private calculator: IOrientationCalculator;
 
   private observer: Observer;
 

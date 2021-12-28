@@ -1,12 +1,16 @@
-interface IHorizontalCalculator { getLineSize: () => number, getLineLocation: () => number }
+import {
+  IOrientationCalculator,
+  IOrientationCalculatorProps
+} from "../../interfaces/interfaces";
+
 interface IClickEventObject { pageX: number, pageY: number }
 
-class HorizontalCalculator {
+class HorizontalCalculator implements IOrientationCalculator {
   private getLineSize: () => number;
 
   private getLineLocation: () => number;
 
-  constructor(options: IHorizontalCalculator) {
+  constructor(options: IOrientationCalculatorProps) {
     const { getLineLocation, getLineSize } = options;
     this.getLineLocation = getLineLocation;
     this.getLineSize = getLineSize;

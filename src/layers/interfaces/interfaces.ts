@@ -1,6 +1,4 @@
 import { Observer } from '../observer/observer';
-import { HorizontalCalculator } from '../view/orientation-calculator/horizontal-calculator';
-import { VerticalCalculator } from '../view/orientation-calculator/vertical-calculator';
 
 interface IModel {
   extremeValues: number[],
@@ -85,13 +83,13 @@ interface IViewEvent {
 interface IOutsideUpdate { currentValues: number[] }
 
 interface ILine {
-  calculator: HorizontalCalculator | VerticalCalculator,
+  calculator:  IOrientationCalculator,
   observer: Observer,
 }
 
 interface IHandle {
   index: number,
-  calculator: HorizontalCalculator | VerticalCalculator,
+  calculator: IOrientationCalculator,
   observer: Observer,
 }
 
@@ -101,7 +99,7 @@ interface ICallback {
 }
 
 interface ILabel {
-  calculator: HorizontalCalculator | VerticalCalculator,
+  calculator: IOrientationCalculator,
   isCollection: boolean
 }
 
@@ -116,7 +114,7 @@ interface ILabelUpdate {
 interface IScale {
   scaleStep: number,
   extremeValues: number[],
-  calculator: HorizontalCalculator | VerticalCalculator,
+  calculator: IOrientationCalculator,
   isCollection: boolean,
   collection: string[] | number[] | HTMLElement[],
   observer: Observer,
@@ -146,7 +144,7 @@ interface IGetScaleItem {
 
 interface IClickEventObject { pageX: number, pageY: number }
 
-interface IProgressBar { calculator: HorizontalCalculator | VerticalCalculator }
+interface IProgressBar { calculator: IOrientationCalculator }
 
 interface IPresenter {
   slider: HTMLElement,
@@ -234,11 +232,43 @@ interface ISetCurrentValueByIndex {
   isConverted?: boolean
 }
 
+interface IOrientationCalculator {
+  getElementsSize: (target: HTMLElement) => number;
+
+  getCursorLocation: (eventObject: IClickEventObject) => number;
+
+  getElementsLocation: (target: HTMLElement) => number;
+
+  getElementMargin: (target: HTMLElement) => number ;
+
+  setElementsMargin: (target: HTMLElement, newValueInPercent: number) => void;
+
+  setProgressBarMargin: (target: HTMLElement, newValueInPercent: number) => void;
+
+  setElementsSize: (target: HTMLElement, newValueInPercent: number) => void;
+
+  getAdjustedMarginToSize: (target: HTMLElement, marginInPercent: number) => number;
+
+  getNotAdjustedMarginToSize: (
+    target: HTMLElement, 
+    adjustedMarginInPercent: number,
+  ) => number;
+
+  pxToPercentages(value: number): number;
+
+  percentagesToPx(value: number): number;
+}
+
+interface IOrientationCalculatorProps {
+  getLineSize: () => number,
+  getLineLocation: () => number
+}
+
 export {
   IModel, IUpdateCallback, IUpdate, IUpdateBody, IEventObject, IViewEvent, IOutsideUpdate,
   IHandle, ICallback, ILabel, ILabelAddContent, ILabelUpdate, IScale, ICreateScaleItems,
   IScaleAddContent, IGetScaleItem, IClickEventObject, IProgressBar, IPresenter,
   IChangeParameterObject, ISliderOptions, IView, ICreateElements, ISetCurrentValueByIndex,
   IViewUpdate, IScaleUpdate, IScaleUpdateBody, ILine, IParameters, UpdateEvantName,
-  SliderEventName
+  SliderEventName, IOrientationCalculator, IOrientationCalculatorProps
 };

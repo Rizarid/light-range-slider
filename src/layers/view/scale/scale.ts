@@ -1,16 +1,19 @@
 import { Observer } from '../../observer/observer';
 import {
-  IScale, ICreateScaleItems, IScaleAddContent, IGetScaleItem, SliderEventName,
+  IScale,
+  ICreateScaleItems,
+  IScaleAddContent,
+  IGetScaleItem,
+  SliderEventName,
+  IOrientationCalculator,
 } from '../../interfaces/interfaces';
-import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
-import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
 
 class Scale {
   private body: HTMLElement;
 
   private items: HTMLElement[];
 
-  private calculator: HorizontalCalculator | VerticalCalculator;
+  private calculator:IOrientationCalculator;
 
   private observer: Observer;
 

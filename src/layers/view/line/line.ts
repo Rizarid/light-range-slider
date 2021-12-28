@@ -1,14 +1,12 @@
 import { Observer } from '../../observer/observer';
-import { ILine, SliderEventName } from '../../interfaces/interfaces';
-import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
-import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
+import { ILine, IOrientationCalculator, SliderEventName } from '../../interfaces/interfaces';
 
 class Line {
   private body: HTMLElement;
 
   private isResizeBlocked = true;
 
-  private calculator: HorizontalCalculator | VerticalCalculator;
+  private calculator: IOrientationCalculator;
 
   private observer: Observer;
 
