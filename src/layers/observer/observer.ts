@@ -1,16 +1,12 @@
-interface IEventObject { eventName: string, eventBody: any }
-interface ICallback {
-  eventName: string,
-  function: (eventBody: any) => void
-}
+import { ICallback, IUpdate, ISliderEvent, IObserver } from '../interfaces/interfaces';
 
-class Observer {
+class Observer implements IObserver {
   private subscribers: ICallback[] = [];
 
   public subscribe(callback: ICallback): void {
     const isCallbackEqual = this.subscribers.some((item) => (
       (item.function === callback.function) && (item.eventName === callback.eventName)
-    ))
+    ));
     if (isCallbackEqual) throw new Error('observer already in the list');
     else this.subscribers.push(callback);
   }
@@ -23,7 +19,7 @@ class Observer {
     });
   }
 
-  public notify = (eventObject: IEventObject): void => {
+  public notify = (eventObject: IUpdate | ISliderEvent): void => {
     const { eventName, eventBody } = eventObject;
     this.subscribers.forEach((item) => {
       if (item.eventName === eventName) item.function(eventBody);

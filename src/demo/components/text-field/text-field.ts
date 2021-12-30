@@ -1,14 +1,12 @@
 import { CustomEventType } from '../../../layers/interfaces/interfaces';
 import './text-field.sass';
 
-
-
 class TextField {
   private body: HTMLElement;
 
   private field: HTMLInputElement;
 
-  private onChange: CustomEvent<CustomEventType>
+  private onChange: CustomEvent<CustomEventType>;
 
   private isCollection: boolean;
 

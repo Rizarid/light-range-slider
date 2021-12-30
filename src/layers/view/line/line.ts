@@ -1,5 +1,9 @@
-import { Observer } from '../../observer/observer';
-import { ILine, IOrientationCalculator, SliderEventName } from '../../interfaces/interfaces';
+import {
+  ILine,
+  IOrientationCalculator,
+  SliderEventName,
+  IObserver,
+} from '../../interfaces/interfaces';
 
 class Line {
   private body: HTMLElement;
@@ -8,7 +12,7 @@ class Line {
 
   private calculator: IOrientationCalculator;
 
-  private observer: Observer;
+  private observer: IObserver;
 
   private resizeObserver: ResizeObserver = new ResizeObserver(() => {
     if (!this.isResizeBlocked) {

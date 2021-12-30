@@ -1,5 +1,12 @@
 import {
-  IView, ICreateElements, ICallback, IScale, IUpdateBody, SliderEventName, IOrientationCalculator,
+  IView,
+  ICreateElements,
+  ICallback,
+  IScale,
+  SliderEventName,
+  IOrientationCalculator,
+  IViewUpdateData,
+  IObserver,
 } from '../interfaces/interfaces';
 import { Observer } from '../observer/observer';
 import { Handle } from './handle/handle';
@@ -25,7 +32,7 @@ class View {
 
   private calculator: IOrientationCalculator;
 
-  private observer: Observer = new Observer();
+  private observer: IObserver = new Observer();
 
   constructor(options: IView) {
     const {
@@ -42,7 +49,7 @@ class View {
       currentValues,
       haveLabel,
       isCollection,
-      haveProgressBar
+      haveProgressBar,
     });
 
     this.appendElements(haveLabel, haveProgressBar);
@@ -61,11 +68,11 @@ class View {
     this.update({ margins, currentValues, collection, indexOfLastChangedHandle });
     this.observer.subscribe({
       eventName: SliderEventName.pointerDown,
-      function: this.handlePointerDown
+      function: this.handlePointerDown,
     });
     this.observer.subscribe({
       eventName: SliderEventName.pointerUp,
-      function: this.handlePointerUp
+      function: this.handlePointerUp,
     });
     if (indexOfLastChangedHandle) {
       this.handlePointerDown({ index: indexOfLastChangedHandle });
@@ -88,7 +95,7 @@ class View {
 
   public getLineLocation = (): number => this.line.getLocation();
 
-  public update = (options: IUpdateBody): void => {
+  public update = (options: IViewUpdateData): void => {
     const { margins, currentValues, collection, indexOfLastChangedHandle } = options;
     this.handles.map((item, index) => item.update(margins[index]));
     if (this.progressBar) this.progressBar.update(margins);
@@ -132,13 +139,16 @@ class View {
       new Handle({ index, calculator: this.calculator, observer: this.observer })
     ));
 
-    if (haveProgressBar) this.progressBar = new ProgressBar({
-      calculator: this.calculator
-    });
+    if (haveProgressBar) {
+      this.progressBar = new ProgressBar({
+        calculator: this.calculator,
+      });
+    }
+
     if (haveLabel) {
       this.labels = currentValues.map(() => new Label({
         calculator: this.calculator,
-        isCollection
+        isCollection,
       }));
     }
   }
@@ -155,7 +165,6 @@ class View {
   }
 
   private switchCalculator(isVertical: boolean): void {
-
     this.calculator = isVertical
       ? new VerticalCalculator({
         getLineSize: this.getLineSize,

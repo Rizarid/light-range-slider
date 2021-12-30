@@ -1,4 +1,12 @@
-import { IPresenter, IChangeParameterObject, IUpdateBody, IView, UpdateEvantName, SliderEventName } from '../interfaces/interfaces';
+import {
+  IPresenter,
+  IChangeParameterObject,
+  IUpdateBody,
+  ISliderEventBody,
+  UpdateEvantName,
+  SliderEventName,
+  IParameterHandlers,
+} from '../interfaces/interfaces';
 import { Model } from '../model/model';
 import { View } from '../view/view';
 
@@ -11,8 +19,8 @@ class Presenter {
     const { slider, ...modelOptions } = options;
     this.model = new Model(modelOptions);
     this.createView(
-      slider, 
-      this.model.parameters.getUpdateObject(UpdateEvantName.fullUpdate).eventBody
+      slider,
+      this.model.parameters.getUpdateObject(UpdateEvantName.fullUpdate).eventBody,
     );
     this.subscribeToModel();
     this.subscribeToView();
@@ -21,7 +29,7 @@ class Presenter {
 
   public changeParameter = (eventObject: IChangeParameterObject): void => {
     const { parameter, value } = eventObject;
-    const parameterHandlers = {
+    const parameterHandlers: IParameterHandlers = {
       extremeValues: this.model.parameters.setExtremeValues,
       min: this.model.customSetters.setMinValue,
       max: this.model.customSetters.setMaxValue,
@@ -46,22 +54,22 @@ class Presenter {
   private subscribeToModel = () => {
     this.model.subscribe({
       eventName: UpdateEvantName.fullUpdate,
-      function: this.handleFullUpdateEvent
+      function: this.handleFullUpdateEvent,
     });
     this.model.subscribe({
       eventName: UpdateEvantName.valuesUpdate,
-      function: this.handleUpdate
+      function: this.handleUpdate,
     });
   };
 
   private subscribeToView = () => {
     this.view.subscribe({
       eventName: SliderEventName.pointerMove,
-      function: this.handlePointerMove
+      function: this.handlePointerMove,
     });
     this.view.subscribe({
       eventName: SliderEventName.increment,
-      function: this.handleIncrement
+      function: this.handleIncrement,
     });
     this.view.subscribe({
       eventName: SliderEventName.decrement,
@@ -73,11 +81,11 @@ class Presenter {
     });
     this.view.subscribe({
       eventName: SliderEventName.scaleItemClick,
-      function: this.handleScaleItemClick
+      function: this.handleScaleItemClick,
     });
     this.view.subscribe({
       eventName: SliderEventName.lineResize,
-      function: this.handleLineResize
+      function: this.handleLineResize,
     });
   };
 
@@ -109,27 +117,39 @@ class Presenter {
     this.view = new View(({ slider, ...eventBody }));
   };
 
-  private handlePointerMove = (eventBody: { index: number, newValue: number }): void => {
+  private handlePointerMove = (eventBody: ISliderEventBody): void => {
     const { newValue, index } = eventBody;
-    this.model.customSetters.setCurrentValueByIndex({ index, newValue });
+    if (typeof newValue === 'number') {
+      this.model.customSetters.setCurrentValueByIndex({ index, newValue });
+    } else {
+      throw new Error(
+        `received a parameter with the ${typeof newValue} type instead of a number`,
+      );
+    }
   };
 
-  private handleIncrement = (eventBody: { index: number }): void => {
+  private handleIncrement = (eventBody: ISliderEventBody): void => {
     const { index } = eventBody;
     this.model.customSetters.incrementCurrentValueByIndex(index);
   };
 
-  private handleDecrement = (eventBody: { index: number }): void => {
+  private handleDecrement = (eventBody: ISliderEventBody): void => {
     const { index } = eventBody;
     this.model.customSetters.decrementCurrentValueByIndex(index);
   };
 
-  private handleLineClick = (eventBody: { newValue: number }): void => {
+  private handleLineClick = (eventBody: ISliderEventBody): void => {
     const { newValue } = eventBody;
-    this.model.customSetters.setNearestCurrentValue(newValue);
+    if (typeof newValue === 'number') {
+      this.model.customSetters.setNearestCurrentValue(newValue);
+    } else {
+      throw new Error(
+        `received a parameter with the ${typeof newValue} type instead of a number`,
+      );
+    }
   };
 
-  private handleScaleItemClick = (eventBody: { newValue: number }): void => {
+  private handleScaleItemClick = (eventBody: ISliderEventBody): void => {
     const { newValue } = eventBody;
     const isCollection = this.model.parameters.getIsCollection();
 

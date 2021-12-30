@@ -1,7 +1,7 @@
 import {
   IOrientationCalculator,
-  IOrientationCalculatorProps
-} from "../../interfaces/interfaces";
+  IOrientationCalculatorProps,
+} from '../../interfaces/interfaces';
 
 interface IClickEventObject { pageX: number, pageY: number }
 

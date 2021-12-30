@@ -1,5 +1,9 @@
-import { IHandle, IOrientationCalculator, SliderEventName } from '../../interfaces/interfaces';
-import { Observer } from '../../observer/observer';
+import {
+  IHandle,
+  IOrientationCalculator,
+  SliderEventName,
+  IObserver,
+} from '../../interfaces/interfaces';
 
 class Handle {
   private body: HTMLElement;
@@ -10,9 +14,10 @@ class Handle {
 
   private calculator: IOrientationCalculator;
 
-  private observer: Observer;
+  private observer: IObserver;
 
   private ARROWS_KEYBORD_CODES = ['ArrowRight', 'ArrowUp', 'ArrowLeft', 'ArrowDown'];
+
   private RIGHT_AND_UP_ARROWS_KEYBORD_CODES = ['ArrowRight', 'ArrowUp'];
 
   constructor(options: IHandle) {
@@ -117,8 +122,8 @@ class Handle {
 
     if (this.ARROWS_KEYBORD_CODES.includes(code, 0)) {
       const isIncrement = (this.RIGHT_AND_UP_ARROWS_KEYBORD_CODES.includes(code, 0));
-      const eventName = isIncrement 
-        ? SliderEventName.increment 
+      const eventName = isIncrement
+        ? SliderEventName.increment
         : SliderEventName.decrement;
 
       this.observer.notify({

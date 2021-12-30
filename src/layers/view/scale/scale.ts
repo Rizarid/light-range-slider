@@ -6,6 +6,7 @@ import {
   IGetScaleItem,
   SliderEventName,
   IOrientationCalculator,
+  IObserver,
 } from '../../interfaces/interfaces';
 
 class Scale {
@@ -15,7 +16,7 @@ class Scale {
 
   private calculator:IOrientationCalculator;
 
-  private observer: Observer;
+  private observer: IObserver;
 
   private addContent: (options: IScaleAddContent) => void;
 
@@ -57,24 +58,24 @@ class Scale {
   }
 
   private getScaleItem = (options: IGetScaleItem): HTMLElement => {
-    const { 
+    const {
       value,
       extremeValues,
       collection,
       scaleStep,
-      endsOfInterval = 'none'
+      endsOfInterval = 'none',
     } = options;
     const [minValue, maxValue] = extremeValues;
 
     const item = document.createElement('div');
-    if (endsOfInterval !== 'none'){
+    if (endsOfInterval !== 'none') {
       if (endsOfInterval === 'start') {
-        item.className = 'light-range-slider__scale-item light-range-slider__scale-item_interval-start'
+        item.className = 'light-range-slider__scale-item light-range-slider__scale-item_interval-start';
       } else {
-        item.className = 'light-range-slider__scale-item light-range-slider__scale-item_interval-end'
-      } 
+        item.className = 'light-range-slider__scale-item light-range-slider__scale-item_interval-end';
+      }
     } else {
-      item.className = 'light-range-slider__scale-item'
+      item.className = 'light-range-slider__scale-item';
     }
 
     item.tabIndex = 0;
@@ -106,7 +107,7 @@ class Scale {
       extremeValues,
       collection,
       scaleStep,
-      endsOfInterval: 'start'
+      endsOfInterval: 'start',
     }));
 
     for (let i = extremeValues[0] + scaleStep; i < extremeValues[1]; i += scaleStep) {

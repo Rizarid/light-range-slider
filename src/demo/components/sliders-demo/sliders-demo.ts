@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
 
-import { ISliderOptions, IUpdateBody, IChangeParameterObject, CustomEventType } from '../../../layers/interfaces/interfaces';
+import { ISliderOptions, IUpdateBody, CustomEventType, JQuery } from '../../../layers/interfaces/interfaces';
 import './sliders-demo.sass';
 import TextField from '../text-field/text-field';
 import Toggle from '../toggle/toggle';
@@ -44,7 +44,7 @@ class SlidersDemo {
     this.createControllers();
     this.addListeners();
     this.createSlider(slidersOptions);
-    this.$slider['changeParameter']('callbacks', [this.handleSliderUpdate]);
+    this.$slider.changeParameter('callbacks', [this.handleSliderUpdate]);
   }
 
   private getTarget = (targetSelector: string): HTMLElement => (
@@ -71,8 +71,8 @@ class SlidersDemo {
   };
 
   private createSlider = (slidersOptions: ISliderOptions) => {
-    this.$slider = $(this.body).find('.js-sliders-demo__slider');
-    this.$slider['rangeSlider'](slidersOptions);
+    this.$slider = $(this.body).find('.js-sliders-demo__slider') as JQuery;
+    this.$slider.rangeSlider(slidersOptions);
   };
 
   private addListeners = () => {

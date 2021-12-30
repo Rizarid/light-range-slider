@@ -2,7 +2,7 @@ import {
   ILabel,
   ILabelAddContent,
   ILabelUpdate,
-  IOrientationCalculator
+  IOrientationCalculator,
 } from '../../interfaces/interfaces';
 
 class Label {

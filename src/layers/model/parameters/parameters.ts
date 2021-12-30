@@ -1,7 +1,6 @@
 import {
-  IParameters, ICallback, IUpdateBody, IUpdate, UpdateEvantName,
+  IParameters, IUpdateBody, IUpdate, UpdateEvantName, IObserver,
 } from '../../interfaces/interfaces';
-import { Observer } from '../../observer/observer';
 import { ValueChecker } from '../value-checker/value-checker';
 
 class Parameters {
@@ -29,7 +28,7 @@ class Parameters {
 
   private isCollection: boolean;
 
-  private observer: Observer;
+  private observer: IObserver;
 
   private indexOfLastChangedHandle: number;
 
@@ -62,14 +61,6 @@ class Parameters {
     this.adjustQuantityOfCurrentValues();
 
     this.isInit = false;
-  }
-
-  public subscribe(callback: ICallback): void {
-    this.observer.subscribe(callback);
-  }
-
-  public unsubscribe(callback: ICallback): void {
-    this.observer.subscribe(callback);
   }
 
   public getExtremeValues = (): number[] => {
@@ -251,7 +242,7 @@ class Parameters {
     this.indexOfLastChangedHandle = newValue;
   };
 
-  private getEventObject = (eventName?: UpdateEvantName ) => {
+  private getEventObject = (eventName?: UpdateEvantName) => {
     if (eventName === UpdateEvantName.valuesUpdate) {
       return this.getUpdateObject(UpdateEvantName.valuesUpdate);
     }
@@ -289,7 +280,7 @@ class Parameters {
   private adjustQuantityOfCurrentValues(): void {
     const [minCurrentValue] = this.currentValues;
     const maxValue = this.extremeValues[1];
-    const isCurrentValuesInIntervalMode = this.currentValues.length === 2
+    const isCurrentValuesInIntervalMode = (this.currentValues.length === 2);
 
     if (this.isInterval && !isCurrentValuesInIntervalMode) {
       this.currentValues = [minCurrentValue, maxValue];

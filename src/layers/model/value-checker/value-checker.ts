@@ -68,7 +68,10 @@ class ValueChecker {
     }
   };
 
-  public checkIsCollection = (newValue: boolean, collection: any[]): boolean => {
+  public checkIsCollection = (
+    newValue: boolean,
+    collection: number[] | string[],
+  ): boolean => {
     try {
       this.checkType(newValue, 'boolean');
       if (newValue && (collection.length < 2)) {

@@ -1,4 +1,4 @@
-import { IModel, ICallback } from '../interfaces/interfaces';
+import { IModel, ICallback, IObserver } from '../interfaces/interfaces';
 import { Observer } from '../observer/observer';
 import { Calculator } from './calculator/calculator';
 import { CustomSetters } from './custom-setters/custom-setters';
@@ -11,7 +11,7 @@ class Model {
 
   private calculator: Calculator;
 
-  private observer: Observer = new Observer();
+  private observer: IObserver = new Observer();
 
   constructor(options: IModel) {
     this.parameters = new Parameters({ ...options, observer: this.observer });

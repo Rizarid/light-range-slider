@@ -1,4 +1,25 @@
-import { Observer } from '../observer/observer';
+interface IChangeParameter {
+  changeParameter: (
+    parameter: string,
+    value: (number[] | number | boolean | string[] |
+    ((updateObject: IOutsideUpdate) => void)[]),
+  ) => JQuery
+}
+
+interface JQuery {
+  rangeSlider?(options: ISliderOptions): JQuery,
+  changeParameter?: (
+    parameter: string,
+    value: (number[] | number | boolean | string[] |
+    ((updateObject: IOutsideUpdate) => void)[]),
+  ) => JQuery
+}
+
+interface IObserver {
+  subscribe: (callback: ICallback) => void,
+  unsubscribe: (callback: ICallback) => void,
+  notify: (eventObject: IUpdate | ISliderEvent) => void,
+}
 
 interface IModel {
   extremeValues: number[],
@@ -28,7 +49,7 @@ interface IParameters {
   haveScale: boolean,
   haveLabel: boolean,
   isCollection: boolean,
-  observer: Observer
+  observer: IObserver
 }
 
 interface IUpdateCallback { function: (eventObject: IUpdateBody) => void }
@@ -41,17 +62,6 @@ interface IUpdate {
 enum UpdateEvantName {
   valuesUpdate = 'valuesUpdate',
   fullUpdate = 'fullUpdate',
-}
-
-enum SliderEventName {
-  pointerDown = 'pointerDown',
-  pointerMove = 'pointerMove',
-  pointerUp = 'pointerUp',
-  increment = 'increment',
-  decrement = 'decrement',
-  lineClick = 'lineClick',
-  scaleItemClick = 'scaleItemClick',
-  lineResize = 'lineResize',
 }
 
 interface IUpdateBody {
@@ -70,6 +80,27 @@ interface IUpdateBody {
   indexOfLastChangedHandle: number,
 }
 
+interface ISliderEvent {
+  eventName: SliderEventName,
+  eventBody: ISliderEventBody,
+}
+
+enum SliderEventName {
+  pointerDown = 'pointerDown',
+  pointerMove = 'pointerMove',
+  pointerUp = 'pointerUp',
+  increment = 'increment',
+  decrement = 'decrement',
+  lineClick = 'lineClick',
+  scaleItemClick = 'scaleItemClick',
+  lineResize = 'lineResize',
+}
+
+interface ISliderEventBody {
+  index?: number,
+  newValue?: number | string,
+}
+
 interface IEventObject { eventName: string, eventBody }
 
 interface IViewEvent {
@@ -83,19 +114,19 @@ interface IViewEvent {
 interface IOutsideUpdate { currentValues: number[] }
 
 interface ILine {
-  calculator:  IOrientationCalculator,
-  observer: Observer,
+  calculator: IOrientationCalculator,
+  observer: IObserver,
 }
 
 interface IHandle {
   index: number,
   calculator: IOrientationCalculator,
-  observer: Observer,
+  observer: IObserver,
 }
 
 interface ICallback {
-  eventName: string,
-  function: (eventBody: any) => void
+  eventName: UpdateEvantName | SliderEventName,
+  function: (eventBody: IUpdateBody | ISliderEventBody) => void
 }
 
 interface ILabel {
@@ -117,7 +148,7 @@ interface IScale {
   calculator: IOrientationCalculator,
   isCollection: boolean,
   collection: string[] | number[],
-  observer: Observer,
+  observer: IObserver,
 }
 
 interface ICreateScaleItems{
@@ -131,7 +162,7 @@ interface IScaleAddContent {
   value: number,
   collection: string[] | number[],
   scaleStep: number,
-  endsOfInterval: 'start' | 'end' | 'none', 
+  endsOfInterval: 'start' | 'end' | 'none',
 }
 
 interface IGetScaleItem {
@@ -163,9 +194,28 @@ interface IPresenter {
 }
 
 interface IChangeParameterObject {
-  parameter: string,
+  parameter: Parameters,
   value: (number[] | number | boolean | string[] |
   ((updateObject: IOutsideUpdate) => void)[]),
+}
+
+enum Parameters {
+  extremeValues = 'extremeValues',
+  min = 'min',
+  max = 'max',
+  currentValues = 'currentValues',
+  currentMin = 'currentMin',
+  currentMax = 'currentMax',
+  step = 'step',
+  scaleStep = 'scaleStep',
+  isVertical = 'isVertical',
+  isInterval = 'isInterval',
+  haveProgressBar = 'haveProgressBar',
+  haveLabel = 'haveLabel',
+  haveScale = 'haveScale',
+  isCollection = 'isCollection',
+  collection = 'collection',
+  callbacks = 'callbacks',
 }
 
 interface ISliderOptions {
@@ -199,6 +249,13 @@ interface IView {
   indexOfLastChangedHandle: number,
 }
 
+interface IViewUpdateData {
+  margins: number[],
+  currentValues: number[],
+  collection: string[] | number[],
+  indexOfLastChangedHandle: number,
+}
+
 interface ICreateElements {
   margins: number[],
   currentValues: number[],
@@ -229,7 +286,7 @@ interface ISetCurrentValueByIndex {
   index: number,
   newValue: number,
   isPercent?: boolean,
-  isConverted?: boolean
+  isConverted?: boolean,
 }
 
 interface IOrientationCalculator {
@@ -250,7 +307,7 @@ interface IOrientationCalculator {
   getAdjustedMarginToSize: (target: HTMLElement, marginInPercent: number) => number;
 
   getNotAdjustedMarginToSize: (
-    target: HTMLElement, 
+    target: HTMLElement,
     adjustedMarginInPercent: number,
   ) => number;
 
@@ -267,6 +324,25 @@ interface IOrientationCalculatorProps {
 type CustomEventType = {
   parameter: string,
   value: number | string[] | number[]
+};
+
+interface IParameterHandlers {
+  extremeValues: (newValue: number[]) => void,
+  min: (newValue: number) => void,
+  max: (newValue: number) => void,
+  currentValues: (newValue: number[]) => void,
+  currentMin: (currentMin: number) => void,
+  currentMax: (newValue: number) => void,
+  step: (newValue: number) => void,
+  scaleStep: (newValue: number) => void,
+  isVertical: (newValue: boolean) => void,
+  isInterval: (newValue: boolean) => void,
+  haveProgressBar: (newValue: boolean) => void,
+  haveLabel: (newValue: boolean) => void,
+  haveScale: (newValue: boolean) => void,
+  isCollection: (newValue: boolean) => void,
+  collection: (newValue: number[] | string[]) => void,
+  callbacks: (newValue: ((updateObject: IUpdateBody) => void)[]) => void,
 }
 
 export {
@@ -275,5 +351,7 @@ export {
   IScaleAddContent, IGetScaleItem, IClickEventObject, IProgressBar, IPresenter,
   IChangeParameterObject, ISliderOptions, IView, ICreateElements, ISetCurrentValueByIndex,
   IViewUpdate, IScaleUpdate, IScaleUpdateBody, ILine, IParameters, UpdateEvantName,
-  SliderEventName, IOrientationCalculator, IOrientationCalculatorProps, CustomEventType
+  SliderEventName, IOrientationCalculator, IOrientationCalculatorProps, CustomEventType,
+  ISliderEvent, ISliderEventBody, IViewUpdateData, IObserver, IChangeParameter, JQuery,
+  IParameterHandlers,
 };
