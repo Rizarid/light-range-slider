@@ -93,8 +93,6 @@ interface ISliderEventBody {
   newValue?: number | string,
 }
 
-interface IEventObject { eventName: string, eventBody }
-
 interface IViewEvent {
   eventName: string,
   eventBody: {
@@ -118,7 +116,7 @@ interface IHandle {
 
 interface ICallback {
   eventName: UpdateEvantName | SliderEventName,
-  function: (eventBody: IUpdateBody | ISliderEventBody) => void
+  function: ((eventBody: IUpdateBody) => void) | ((eventBody: ISliderEventBody) => void),
 }
 
 interface ILabel {
@@ -373,7 +371,7 @@ interface IParameterHandlers {
 }
 
 export {
-  IModel, IUpdateCallback, IUpdate, IUpdateBody, IEventObject, IViewEvent, IOutsideUpdate,
+  IModel, IUpdateCallback, IUpdate, IUpdateBody, IViewEvent, IOutsideUpdate,
   IHandle, ICallback, ILabel, ILabelAddContent, ILabelUpdate, IScale, ICreateScaleItems,
   IScaleAddContent, IGetScaleItem, IClickEventObject, IProgressBar, IPresenter,
   IChangeParameterObject, ISliderOptions, IView, ICreateElements, ISetCurrentValueByIndex,

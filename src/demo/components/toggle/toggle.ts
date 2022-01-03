@@ -8,8 +8,12 @@ class Toggle {
   private onChange: CustomEvent<{ parameter: string, value: boolean }>;
 
   constructor(parent: HTMLElement) {
-    this.body = this.getBody(parent);
-    this.checkbox = this.getCheckbox();
+    const body = this.getBody(parent);
+    if (body) this.body = body;
+
+    const checkbox = this.getCheckbox();
+    if (checkbox) this.checkbox = checkbox;
+
     this.createEvent();
     this.addListener();
   }
@@ -18,13 +22,17 @@ class Toggle {
     this.checkbox.checked = checked;
   };
 
-  private getBody = (parent: HTMLElement): HTMLElement => parent.querySelector('.js-toggle');
+  private getBody = (parent: HTMLElement): HTMLElement | null => (
+    parent.querySelector('.js-toggle')
+  );
 
   private createEvent = () => {
     this.onChange = new CustomEvent('parameterChanged', { bubbles: true, detail: { parameter: '', value: false } });
   };
 
-  private getCheckbox = (): HTMLInputElement => this.body.querySelector('.js-toggle__checkbox');
+  private getCheckbox = (): HTMLInputElement | null => (
+    this.body.querySelector('.js-toggle__checkbox')
+  );
 
   private addListener = (): void => {
     this.checkbox.addEventListener('change', this.handleToggleChange);

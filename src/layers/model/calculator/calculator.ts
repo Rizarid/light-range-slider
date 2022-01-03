@@ -39,7 +39,11 @@ class Calculator {
 
   private getNumberOfDecimalPlaces = (value: number): number => {
     const str = value.toString();
-    return str.includes('.', 0) ? str.split('.').pop().length : 0;
+    if (str.includes('.', 0)) {
+      const lastElementOfSplitedStr = str.split('.').pop();
+      if (lastElementOfSplitedStr !== undefined) return lastElementOfSplitedStr.length;
+    }
+    return 0;
   };
 
   private checkForExceedingTheLastStep = (valueInRange: number): boolean => {

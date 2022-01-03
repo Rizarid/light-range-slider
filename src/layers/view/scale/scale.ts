@@ -94,7 +94,11 @@ class Scale {
 
   private getNumberOfDecimalPlaces = (value: number): number => {
     const str = value.toString();
-    return str.includes('.', 0) ? str.split('.').pop().length : 0;
+    if (str.includes('.', 0)) {
+      const lastElementOfSplitedStr = str.split('.').pop();
+      if (lastElementOfSplitedStr !== undefined) return lastElementOfSplitedStr.length;
+    }
+    return 0;
   };
 
   private createScaleItems = (options: ICreateScaleItems): void => {
@@ -135,7 +139,7 @@ class Scale {
     });
   };
 
-  private handleScaleItemClick = (event: PointerEvent): void => {
+  private handleScaleItemClick = (event: MouseEvent): void => {
     const { target } = event;
     if (target instanceof HTMLElement) {
       this.observer.notify({
@@ -146,9 +150,8 @@ class Scale {
   };
 
   private handleScaleItemKeyDown = (event: KeyboardEvent): void => {
-    const { code, target } = event;
-    if (code === 'Enter') {
-      target.dispatchEvent(new Event('click'));
+    if ((event.code === 'Enter' && (event.target !== null))) {
+      event.target.dispatchEvent(new Event('click'));
     }
   };
 

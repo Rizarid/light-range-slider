@@ -87,7 +87,9 @@ class Handle {
       cursorLocationInPercent - adjustedHandlesMarginToSize
     );
 
-    target.addEventListener('pointermove', this.handlePointerMove);
+    if (target instanceof HTMLElement) {
+      target.addEventListener('pointermove', this.handlePointerMove);
+    }
 
     this.observer.notify({
       eventName: SliderEventName.pointerDown,
@@ -97,7 +99,9 @@ class Handle {
 
   private handlePointerUp = (event: PointerEvent): void => {
     const { target, pointerId } = event;
-    target.removeEventListener('pointermove', this.handlePointerMove);
+    if (target instanceof HTMLElement) {
+      target.removeEventListener('pointermove', this.handlePointerMove);
+    }
     if (target instanceof HTMLElement) target.releasePointerCapture(pointerId);
     this.cursorOffsetRelativeHandleAtStartDragging = 0;
 

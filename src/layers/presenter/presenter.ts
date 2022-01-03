@@ -146,7 +146,7 @@ class Presenter {
 
   private handlePointerMove = (eventBody: ISliderEventBody): void => {
     const { newValue, index } = eventBody;
-    if (typeof newValue === 'number') {
+    if ((typeof index === 'number') && (typeof newValue === 'number')) {
       this.model.customSetters.setCurrentValueByIndex({ index, newValue });
     } else {
       throw new Error(
@@ -157,12 +157,16 @@ class Presenter {
 
   private handleIncrement = (eventBody: ISliderEventBody): void => {
     const { index } = eventBody;
-    this.model.customSetters.incrementCurrentValueByIndex(index);
+    if (typeof index === 'number') {
+      this.model.customSetters.incrementCurrentValueByIndex(index);
+    }
   };
 
   private handleDecrement = (eventBody: ISliderEventBody): void => {
     const { index } = eventBody;
-    this.model.customSetters.decrementCurrentValueByIndex(index);
+    if (typeof index === 'number') {
+      this.model.customSetters.decrementCurrentValueByIndex(index);
+    }
   };
 
   private handleLineClick = (eventBody: ISliderEventBody): void => {

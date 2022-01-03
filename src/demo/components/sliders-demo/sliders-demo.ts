@@ -40,42 +40,73 @@ class SlidersDemo {
 
   constructor(target: HTMLElement, slidersOptions: ISliderOptions = {}) {
     this.body = target;
-    this.controlPanel = this.getControlPanel();
+    const controlPanel = this.getControlPanel();
+    if (controlPanel) this.controlPanel = controlPanel;
     this.createControllers();
     this.addListeners();
     this.createSlider(slidersOptions);
-    this.$slider.changeParameter({
-      parameter: Parameters.callbacks,
-      value: [this.handleSliderUpdate],
-    });
+    if (this.$slider.changeParameter !== undefined) {
+      this.$slider.changeParameter({
+        parameter: Parameters.callbacks,
+        value: [this.handleSliderUpdate],
+      });
+    }
   }
 
-  private getTarget = (targetSelector: string): HTMLElement => (
+  private getTarget = (targetSelector: string): HTMLElement | null => (
     this.body.querySelector(targetSelector)
   );
 
-  private getControlPanel = (): HTMLFormElement => this.body.querySelector('.js-sliders-demo__control-panel');
+  private getControlPanel = (): HTMLFormElement | null => (
+    this.body.querySelector('.js-sliders-demo__control-panel')
+  );
 
   private createControllers = ():void => {
-    this.min = new TextField(this.getTarget('.js-sliders-demo__min-container'));
-    this.max = new TextField(this.getTarget('.js-sliders-demo__max-container'));
-    this.currentMin = new TextField(this.getTarget('.js-sliders-demo__current-min-container'));
-    this.currentMax = new TextField(this.getTarget('.js-sliders-demo__current-max-container'));
-    this.step = new TextField(this.getTarget('.js-sliders-demo__step-container'));
-    this.scaleStep = new TextField(this.getTarget('.js-sliders-demo__scale-step-container'));
-    this.collection = new TextField(this.getTarget('.js-sliders-demo__collection-container'));
+    const min = this.getTarget('.js-sliders-demo__min-container');
+    if (min) this.min = new TextField(min);
 
-    this.isVertical = new Toggle(this.getTarget('.js-sliders-demo__is-vertical-container'));
-    this.isInterval = new Toggle(this.getTarget('.js-sliders-demo__is-interval-container'));
-    this.isCollection = new Toggle(this.getTarget('.js-sliders-demo__is-collection-container'));
-    this.haveProgressBar = new Toggle(this.getTarget('.js-sliders-demo__have-progress-bar-container'));
-    this.haveLabel = new Toggle(this.getTarget('.js-sliders-demo__have-label-container'));
-    this.haveScale = new Toggle(this.getTarget('.js-sliders-demo__have-scale-container'));
+    const max = this.getTarget('.js-sliders-demo__max-container');
+    if (max) this.max = new TextField(max);
+
+    const currentMin = this.getTarget('.js-sliders-demo__current-min-container');
+    if (currentMin) this.currentMin = new TextField(currentMin);
+
+    const currentMax = this.getTarget('.js-sliders-demo__current-max-container');
+    if (currentMax) this.currentMax = new TextField(currentMax);
+
+    const step = this.getTarget('.js-sliders-demo__step-container');
+    if (step) this.step = new TextField(step);
+
+    const scaleStep = this.getTarget('.js-sliders-demo__scale-step-container');
+    if (scaleStep) this.scaleStep = new TextField(scaleStep);
+
+    const collection = this.getTarget('.js-sliders-demo__collection-container');
+    if (collection) this.collection = new TextField(collection);
+
+    const isVertical = this.getTarget('.js-sliders-demo__is-vertical-container');
+    if (isVertical) this.isVertical = new Toggle(isVertical);
+
+    const isInterval = this.getTarget('.js-sliders-demo__is-interval-container');
+    if (isInterval) this.isInterval = new Toggle(isInterval);
+
+    const isCollection = this.getTarget('.js-sliders-demo__is-collection-container');
+    if (isCollection) this.isCollection = new Toggle(isCollection);
+
+    const haveProgressBar = this.getTarget('.js-sliders-demo__have-progress-bar-container');
+    if (haveProgressBar) this.haveProgressBar = new Toggle(haveProgressBar);
+
+    const haveLabel = this.getTarget('.js-sliders-demo__have-label-container');
+    if (haveLabel) this.haveLabel = new Toggle(haveLabel);
+
+    const haveScale = this.getTarget('.js-sliders-demo__have-scale-container');
+    if (haveScale) this.haveScale = new Toggle(haveScale);
   };
 
   private createSlider = (slidersOptions: ISliderOptions) => {
     this.$slider = $(this.body).find('.js-sliders-demo__slider') as JQuery;
-    this.$slider.rangeSlider(slidersOptions);
+    if (this.$slider.rangeSlider !== undefined) {
+      this.$slider.rangeSlider(slidersOptions);
+    }
   };
 
   private addListeners = () => {
@@ -83,7 +114,9 @@ class SlidersDemo {
   };
 
   private handleParameterChanged = (event: CustomEvent<IChangeParameterObject>) => {
-    this.$slider.changeParameter(event.detail);
+    if (this.$slider.changeParameter) {
+      this.$slider.changeParameter(event.detail);
+    }
   };
 
   private handleSliderUpdate = (event: IUpdateBody) => {

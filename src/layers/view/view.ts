@@ -7,6 +7,7 @@ import {
   IOrientationCalculator,
   IViewUpdateData,
   IObserver,
+  ISliderEventBody,
 } from '../interfaces/interfaces';
 import { Observer } from '../observer/observer';
 import { Handle } from './handle/handle';
@@ -176,25 +177,29 @@ class View {
       });
   }
 
-  private handlePointerDown = (eventBody: { index: number }):void => {
+  private handlePointerDown = (eventBody: ISliderEventBody):void => {
     const { index } = eventBody;
-    this.handles.map((item) => item.removeWasActive());
-    this.handles[index].activate();
+    if (typeof index === 'number') {
+      this.handles.map((item) => item.removeWasActive());
+      this.handles[index].activate();
 
-    if (this.labels) {
-      this.labels.map((item) => item.removeWasActive());
-      this.labels[index].activate();
+      if (this.labels) {
+        this.labels.map((item) => item.removeWasActive());
+        this.labels[index].activate();
+      }
     }
   };
 
-  private handlePointerUp = (eventBody: { index: number }):void => {
+  private handlePointerUp = (eventBody: ISliderEventBody):void => {
     const { index } = eventBody;
-    this.handles.map((item) => item.deactivate());
-    this.handles[index].addWasActive();
+    if (typeof index === 'number') {
+      this.handles.map((item) => item.deactivate());
+      this.handles[index].addWasActive();
 
-    if (this.labels) {
-      this.labels.map((item) => item.deactivate());
-      this.labels[index].addWasActive();
+      if (this.labels) {
+        this.labels.map((item) => item.deactivate());
+        this.labels[index].addWasActive();
+      }
     }
   };
 

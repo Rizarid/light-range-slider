@@ -8,6 +8,8 @@
   "include": ["src/**/*.ts", "src/**/*.js", "test/**/*.ts", "src/layers/view/label"],
   "CommonJS": "ES5",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "strictFunctionTypes":false,
   }
 }

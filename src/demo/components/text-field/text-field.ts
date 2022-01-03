@@ -11,8 +11,12 @@ class TextField {
   private isCollection: boolean;
 
   constructor(parent: HTMLElement) {
-    this.body = this.getBody(parent);
-    this.field = this.getField();
+    const body = this.getBody(parent);
+    if (body) this.body = body;
+
+    const field = this.getField();
+    if (field) this.field = field;
+
     this.createEvent();
     this.addListener();
     this.isCollection = this.body.classList.contains('text-field_collection');
@@ -30,9 +34,13 @@ class TextField {
     this.field.readOnly = isDisabled;
   };
 
-  private getBody = (parent: HTMLElement): HTMLElement => parent.querySelector('.js-text-field');
+  private getBody = (parent: HTMLElement): HTMLElement | null => (
+    parent.querySelector('.js-text-field')
+  );
 
-  private getField = (): HTMLInputElement => this.body.querySelector('.js-text-field__field');
+  private getField = (): HTMLInputElement | null => (
+    this.body.querySelector('.js-text-field__field')
+  );
 
   private createEvent = () => {
     const parameters: IChangeParameterObject = { parameter: Parameters.step, value: 0 };
