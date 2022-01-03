@@ -1,18 +1,10 @@
 interface IChangeParameter {
-  changeParameter: (
-    parameter: string,
-    value: (number[] | number | boolean | string[] |
-    ((updateObject: IOutsideUpdate) => void)[]),
-  ) => JQuery
+  changeParameter: (changeParameterObject: IChangeParameterObject) => JQuery
 }
 
 interface JQuery {
   rangeSlider?(options: ISliderOptions): JQuery,
-  changeParameter?: (
-    parameter: string,
-    value: (number[] | number | boolean | string[] |
-    ((updateObject: IOutsideUpdate) => void)[]),
-  ) => JQuery
+  changeParameter?: (changeParameterObject: IChangeParameterObject) => JQuery
 }
 
 interface IObserver {
@@ -193,11 +185,11 @@ interface IPresenter {
   isCollection: boolean
 }
 
-interface IChangeParameterObject {
-  parameter: Parameters,
-  value: (number[] | number | boolean | string[] |
-  ((updateObject: IOutsideUpdate) => void)[]),
-}
+type IChangeParameterObject = IChangeArrayOfNumberParameterObject
+| IChangeArrayOfNumberOrStringParameterObject
+| IChangeNumberParameterObject
+| IChangeBooleanParameterObject
+| IChangeFunctionParameterObject;
 
 enum Parameters {
   extremeValues = 'extremeValues',
@@ -216,6 +208,41 @@ enum Parameters {
   isCollection = 'isCollection',
   collection = 'collection',
   callbacks = 'callbacks',
+}
+
+interface IChangeArrayOfNumberParameterObject {
+  parameter: Parameters.extremeValues | Parameters.currentValues,
+  value: number[],
+}
+
+interface IChangeArrayOfNumberOrStringParameterObject {
+  parameter: Parameters.collection,
+  value: number[] | string[],
+}
+
+interface IChangeNumberParameterObject {
+  parameter: Parameters.min
+  | Parameters.max
+  | Parameters.currentMin
+  | Parameters.currentMax
+  | Parameters.step
+  | Parameters.scaleStep,
+  value: number,
+}
+
+interface IChangeBooleanParameterObject {
+  parameter: Parameters.isVertical
+  | Parameters.isInterval
+  | Parameters.isCollection
+  | Parameters.haveLabel
+  | Parameters.haveProgressBar
+  | Parameters.haveScale,
+  value: boolean
+}
+
+interface IChangeFunctionParameterObject {
+  parameter: Parameters.callbacks
+  value: ((updateObject: IUpdateBody) => void)[],
 }
 
 interface ISliderOptions {
@@ -353,5 +380,5 @@ export {
   IViewUpdate, IScaleUpdate, IScaleUpdateBody, ILine, IParameters, UpdateEvantName,
   SliderEventName, IOrientationCalculator, IOrientationCalculatorProps, CustomEventType,
   ISliderEvent, ISliderEventBody, IViewUpdateData, IObserver, IChangeParameter, JQuery,
-  IParameterHandlers,
+  IParameterHandlers, Parameters,
 };

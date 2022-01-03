@@ -1,4 +1,3 @@
-import { Observer } from '../../observer/observer';
 import {
   IScale,
   ICreateScaleItems,

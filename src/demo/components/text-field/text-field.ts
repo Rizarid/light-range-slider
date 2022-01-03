@@ -1,4 +1,4 @@
-import { CustomEventType } from '../../../layers/interfaces/interfaces';
+import { CustomEventType, IChangeParameterObject, Parameters } from '../../../layers/interfaces/interfaces';
 import './text-field.sass';
 
 class TextField {
@@ -35,7 +35,8 @@ class TextField {
   private getField = (): HTMLInputElement => this.body.querySelector('.js-text-field__field');
 
   private createEvent = () => {
-    this.onChange = new CustomEvent('parameterChanged', { bubbles: true, detail: { parameter: '', value: 0 } });
+    const parameters: IChangeParameterObject = { parameter: Parameters.step, value: 0 };
+    this.onChange = new CustomEvent('parameterChanged', { bubbles: true, detail: parameters });
   };
 
   private addListener = (): void => {

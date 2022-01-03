@@ -5,7 +5,7 @@ import {
   ISliderEventBody,
   UpdateEvantName,
   SliderEventName,
-  IParameterHandlers,
+  Parameters,
 } from '../interfaces/interfaces';
 import { Model } from '../model/model';
 import { View } from '../view/view';
@@ -28,27 +28,54 @@ class Presenter {
   }
 
   public changeParameter = (eventObject: IChangeParameterObject): void => {
-    const { parameter, value } = eventObject;
-    const parameterHandlers: IParameterHandlers = {
-      extremeValues: this.model.parameters.setExtremeValues,
-      min: this.model.customSetters.setMinValue,
-      max: this.model.customSetters.setMaxValue,
-      currentValues: this.model.parameters.setCurrentValues,
-      currentMin: this.handleCurrentMin,
-      currentMax: this.handleCurrentMax,
-      step: this.model.parameters.setStep,
-      scaleStep: this.model.parameters.setScaleStep,
-      isVertical: this.model.parameters.setIsVertical,
-      isInterval: this.model.parameters.setIsInterval,
-      haveProgressBar: this.model.parameters.setHaveProgressBar,
-      haveLabel: this.model.parameters.setHaveLabel,
-      haveScale: this.model.parameters.setHaveScale,
-      isCollection: this.model.parameters.setIsCollection,
-      collection: this.model.parameters.setCollection,
-      callbacks: this.model.parameters.setCallbacks,
-    };
-
-    parameterHandlers[parameter](value);
+    if (eventObject.parameter === Parameters.extremeValues) {
+      this.model.parameters.setExtremeValues(eventObject.value);
+    }
+    if (eventObject.parameter === Parameters.min) {
+      this.model.customSetters.setMinValue(eventObject.value);
+    }
+    if (eventObject.parameter === Parameters.max) {
+      this.model.customSetters.setMaxValue(eventObject.value);
+    }
+    if (eventObject.parameter === Parameters.currentValues) {
+      this.model.parameters.setCurrentValues(eventObject.value);
+    }
+    if (eventObject.parameter === Parameters.currentMin) {
+      this.handleCurrentMin(eventObject.value);
+    }
+    if (eventObject.parameter === Parameters.currentMax) {
+      this.handleCurrentMax(eventObject.value);
+    }
+    if (eventObject.parameter === Parameters.step) {
+      this.model.parameters.setStep(eventObject.value);
+    }
+    if (eventObject.parameter === Parameters.scaleStep) {
+      this.model.parameters.setScaleStep(eventObject.value);
+    }
+    if (eventObject.parameter === Parameters.isVertical) {
+      this.model.parameters.setIsVertical(eventObject.value);
+    }
+    if (eventObject.parameter === Parameters.isInterval) {
+      this.model.parameters.setIsInterval(eventObject.value);
+    }
+    if (eventObject.parameter === Parameters.isCollection) {
+      this.model.parameters.setIsCollection(eventObject.value);
+    }
+    if (eventObject.parameter === Parameters.haveLabel) {
+      this.model.parameters.setHaveLabel(eventObject.value);
+    }
+    if (eventObject.parameter === Parameters.haveProgressBar) {
+      this.model.parameters.setHaveProgressBar(eventObject.value);
+    }
+    if (eventObject.parameter === Parameters.haveScale) {
+      this.model.parameters.setHaveScale(eventObject.value);
+    }
+    if (eventObject.parameter === Parameters.collection) {
+      this.model.parameters.setCollection(eventObject.value);
+    }
+    if (eventObject.parameter === Parameters.callbacks) {
+      this.model.parameters.setCallbacks(eventObject.value);
+    }
   };
 
   private subscribeToModel = () => {

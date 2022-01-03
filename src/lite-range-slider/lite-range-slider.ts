@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 
 import { Presenter } from '../layers/presenter/presenter';
-import { ISliderOptions, IOutsideUpdate } from '../layers/interfaces/interfaces';
+import { ISliderOptions, IOutsideUpdate, Parameters, IChangeParameterObject } from '../layers/interfaces/interfaces';
 import './lite-range-slider.sass';
 
 $.fn.extend({
@@ -25,12 +25,8 @@ $.fn.extend({
     const slider = new Presenter($.extend(defaults, options));
 
     this.extend({
-      changeParameter: (
-        parameter: string,
-        value: (number[] | number | boolean | string[] |
-        ((updateObject: IOutsideUpdate) => void)[]),
-      ) => {
-        slider.changeParameter({ parameter, value });
+      changeParameter: (cangeParameterObject: IChangeParameterObject) => {
+        slider.changeParameter(cangeParameterObject);
         return this;
       },
     });
