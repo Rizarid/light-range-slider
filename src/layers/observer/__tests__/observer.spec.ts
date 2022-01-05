@@ -18,10 +18,6 @@ describe("Observer", function (): void{
     expect(observer.subscribers[0].function).to.equal(testCallback);
   })
 
-  it("should send throw not function", function() {
-    expect( () => observer.subscribe({ eventName: 'test', function: 'testCallback' })).to.throw();
-  })
-
   it("should send throw observer already", function() {
     observer.subscribe({ eventName: 'test', function: testCallback });
     expect( () => observer.subscribe({ eventName: 'test', function: testCallback })).to.throw();

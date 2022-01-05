@@ -67,10 +67,10 @@ describe("ValueChecker", function (): void{
   })
 
   it("Should check new values for collection" , function() {
-    expect(valueChecker.checkCollection('one')).to.be.false;
-    expect(valueChecker.checkCollection([true, false, true])).to.be.false;
+    expect(valueChecker.checkCollection('one', true)).to.be.false;
+    expect(valueChecker.checkCollection([true, false, true], true)).to.be.false;
 
-    expect(valueChecker.checkCollection(['one', 'two', 'three'])).to.be.true;
-    expect(valueChecker.checkCollection([10, 20, 30])).to.be.true; 
+    expect(valueChecker.checkCollection(['one', 'two', 'three'], true)).to.be.true;
+    expect(valueChecker.checkCollection([10, 20, 30], true)).to.be.true; 
   })
 })

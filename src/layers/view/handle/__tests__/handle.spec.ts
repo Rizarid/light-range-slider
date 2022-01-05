@@ -49,16 +49,6 @@ describe("Handle", function(): void {
     expect(state.margin).to.equal(245);
   })
 
-  it('Should return cursor location in percents', function() {
-    const cursorLocation = handle.getCursorLocationInPercent(({ pageX: 300 } as PointerEvent));
-    expect(cursorLocation).to.equal(50);
-  })
-
-  it('Should return not adjusted margin to element size', function() {
-    const cursorLocation = handle.getNotAdjustedMargin(handle.getBody());
-    expect(cursorLocation).to.equal(55);
-  })
-
   it('Should active pointerdown event', function() {
 
     const eventObject = {

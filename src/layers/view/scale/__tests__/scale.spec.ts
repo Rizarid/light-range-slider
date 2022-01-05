@@ -45,40 +45,6 @@ describe("Scale", function(): void {
     expect(scale.getBody().className).to.equal('light-range-slider__scale');
   })
 
-  it('Should return margin', function() {
-    expect(scale.calcMarginOfScaleItem(250, 200, 300)).to.equal(50);
-  })
-
-  it('Should return scale item by parameter isCollection = false', function() {
-    const item = scale.getScaleItem({ value: 250, extremeValues: [200, 300], collection: [], scaleStep: 10 });
-
-    expect(item.tagName).to.equal('DIV');
-    expect(item.className).to.equal('light-range-slider__scale-item');
-    expect(item.innerText).to.equal('250');
-    expect(state.margin).to.equal(50);
-  
-  })
-
-  it('Should return scale item by parameter isCollection = true', function() {
-    
-    scale = new Scale({ 
-      scaleStep: 1, 
-      extremeValues: [0, 2], 
-      calculator: (calculator as HorizontalCalculator),
-      observer: (observer as Observer),
-      isCollection: true,
-      collection: ['one', 'two', 'free']
-    })
-
-    const item = scale.getScaleItem({ value: 1, extremeValues: [0, 2], collection: ['one', 'two', 'free'] });
-
-    expect(item.tagName).to.equal('DIV');
-    expect(item.className).to.equal('light-range-slider__scale-item');
-    expect(item.innerText).to.equal('two');
-    expect(state.margin).to.equal(50);
-  
-  })
-
   it('Should contain 11 div items in scale.items', function() {
     expect(scale.items.length).to.equal(11);
   })

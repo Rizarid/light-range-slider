@@ -1,6 +1,7 @@
-import "chai"
-import { HorizontalCalculator } from "../orientation-calculator/horizontal-calculator"
-import { VerticalCalculator } from "../orientation-calculator/vertical-calculator"
+import { expect } from 'chai';
+import { ISliderEvent, Parameters, SliderEventName } from '../../interfaces/interfaces';
+import { HorizontalCalculator } from '../orientation-calculator/horizontal-calculator';
+import { VerticalCalculator } from '../orientation-calculator/vertical-calculator';
 import { View } from '../view'
 
 describe("View", function(): void {
@@ -55,11 +56,6 @@ describe("View", function(): void {
     body.innerHTML = ''
   })
 
-  it('Should create 5 div elements with classes "element"', function() {
-    view.appendElements(true, true);
-    expect(document.querySelectorAll('.element').length).to.equal(4);
-  })
-
   it('Should return line size', function() {
     expect(view.getLineSize()).to.equal(500);
   })
@@ -69,25 +65,21 @@ describe("View", function(): void {
   })
 
   it('Should update elements', function() {
-    view.update({ margins: [60], currentValues: [360], collection: []})
+    view.update({
+      margins: [60],
+      currentValues: [360],
+      collection: [],
+      indexOfLastChangedHandle: 0,
+    })
     
     expect(view.handles[0].updated).to.be.true;
     expect(view.labels[0].updated).to.be.true;
     expect(view.progressBar.updated).to.be.true;
   })
 
-  it('Should switch HorizontalCalculator and VerticalCalculator', function() {
-    view.switchCalculator(false) 
-    expect(view.calculator instanceof HorizontalCalculator).to.be.true;
-
-    view.switchCalculator(true) 
-    expect(view.calculator instanceof VerticalCalculator).to.be.true;
-
-  })
-
   it('Should change classes of handles and labels after events pointerdown and pointerup', function() {
-    let eventObject = {
-      eventName: 'pointerDown',
+    let eventObject: ISliderEvent = {
+      eventName: SliderEventName.pointerDown,
       eventBody: { index: 0 },
     };
 
@@ -97,7 +89,7 @@ describe("View", function(): void {
     expect(view.labels[0].getBody().className).to.equal('element light-range-slider__handle_active');
 
     eventObject = {
-      eventName: 'pointerUp',
+      eventName: SliderEventName.pointerUp,
       eventBody: { index: 0 },
     };
 

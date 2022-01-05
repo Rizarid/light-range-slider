@@ -1,11 +1,19 @@
 import { expect } from 'chai';
 import { Presenter } from '../presenter';
+import {
+  Parameters,
+  IChangeNumberParameterObject,
+  IChangeArrayOfNumberParameterObject,
+  IChangeArrayOfNumberOrStringParameterObject,
+  IChangeBooleanParameterObject,
+  IChangeFunctionParameterObject,
+} from '../../interfaces/interfaces';
 import { View } from '../../view/view'
 
 describe('Presenter', function() {
   let presenter: Presenter;
 
-  const Parameters = function(){
+  const ModelParameters = function(){
     this.updateMethod = '';
     this.isCollection = false;
     this.collection = ['one', 'two', 'three'];
@@ -40,7 +48,7 @@ describe('Presenter', function() {
   }
 
   const FakeModel = function() {
-    this.parameters = new Parameters();
+    this.parameters = new ModelParameters();
     this.customSetters = new CustomSetters();
   }
 
@@ -77,8 +85,8 @@ describe('Presenter', function() {
   })
 
   it('should call method setExtremeValues from parameters', function() {
-    const eventObject = {
-      parameter: 'extremeValues',
+    const eventObject: IChangeArrayOfNumberParameterObject = {
+      parameter: Parameters.extremeValues,
       value: [500, 600],
     };
 
@@ -88,8 +96,8 @@ describe('Presenter', function() {
   })
 
   it('should call method setMinValue from customSetters', function() {
-    const eventObject = {
-      parameter: 'min',
+    const eventObject: IChangeNumberParameterObject = {
+      parameter: Parameters.min,
       value: 50 ,
     };
 
@@ -98,8 +106,8 @@ describe('Presenter', function() {
   })
 
   it('should call method setMaxValue from customSetters', function() {
-    const eventObject = {
-      parameter: 'max',
+    const eventObject: IChangeNumberParameterObject = {
+      parameter: Parameters.max,
       value: 500,
     };
 
@@ -108,8 +116,8 @@ describe('Presenter', function() {
   })
 
   it('should call method setCurrentValues from parameters', function() {
-    const eventObject = {
-      parameter: 'currentValues',
+    const eventObject: IChangeArrayOfNumberParameterObject = {
+      parameter: Parameters.currentValues,
       value: [40, 60],
     };
 
@@ -118,8 +126,8 @@ describe('Presenter', function() {
   })
 
   it('should call method setCurrentValueByIndex from customSetters', function() {
-    const eventObject = {
-      parameter: 'currentMin',
+    const eventObject: IChangeNumberParameterObject = {
+      parameter: Parameters.currentMin,
       value: 50,
     };
 
@@ -128,8 +136,8 @@ describe('Presenter', function() {
   })
 
   it('should call method setCurrentValueByIndex from customSetters', function() {
-    const eventObject = {
-      parameter: 'currentMax',
+    const eventObject: IChangeNumberParameterObject = {
+      parameter: Parameters.currentMax,
       value: 50,
     };
 
@@ -138,8 +146,8 @@ describe('Presenter', function() {
   })
 
   it('should call method setStep from parameters', function() {
-    const eventObject = {
-      parameter: 'step',
+    const eventObject: IChangeNumberParameterObject = {
+      parameter: Parameters.step,
       value: 5,
     };
 
@@ -148,8 +156,8 @@ describe('Presenter', function() {
   })
 
   it('should call method setScaleStep from parameters', function() {
-    const eventObject = {
-      parameter: 'scaleStep',
+    const eventObject: IChangeNumberParameterObject = {
+      parameter: Parameters.scaleStep,
       value: 10,
     };
 
@@ -158,8 +166,8 @@ describe('Presenter', function() {
   })
 
   it('should call method setIsVertical from parameters', function() {
-    const eventObject = {
-      parameter: 'isVertical',
+    const eventObject: IChangeBooleanParameterObject = {
+      parameter: Parameters.isVertical,
       value: false,
     };
 
@@ -168,8 +176,8 @@ describe('Presenter', function() {
   })
 
   it('should call method setIsInterval from parameters', function() {
-    const eventObject = {
-      parameter: 'isInterval',
+    const eventObject: IChangeBooleanParameterObject = {
+      parameter: Parameters.isInterval,
       value: false,
     };
 
@@ -178,8 +186,8 @@ describe('Presenter', function() {
   })
 
   it('should call method setHaveProgressBar from parameters', function() {
-    const eventObject = {
-      parameter: 'haveProgressBar',
+    const eventObject: IChangeBooleanParameterObject = {
+      parameter: Parameters.haveProgressBar,
       value: true,
     };
 
@@ -188,8 +196,8 @@ describe('Presenter', function() {
   })
 
   it('should call method setHaveLabel from parameters', function() {
-    const eventObject = {
-      parameter: 'haveLabel',
+    const eventObject: IChangeBooleanParameterObject = {
+      parameter: Parameters.haveLabel,
       value:true,
     };
 
@@ -198,8 +206,8 @@ describe('Presenter', function() {
   })
 
   it('should call method setHaveScale from parameters', function() {
-    const eventObject = {
-      parameter: 'haveScale',
+    const eventObject: IChangeBooleanParameterObject = {
+      parameter: Parameters.haveScale,
       value: true,
     };
 
@@ -208,8 +216,8 @@ describe('Presenter', function() {
   })
 
   it('should call method setIsCollection from parameters', function() {
-    const eventObject = {
-      parameter: 'isCollection',
+    const eventObject: IChangeBooleanParameterObject = {
+      parameter: Parameters.isCollection,
       value: false ,
     };
 
@@ -218,150 +226,12 @@ describe('Presenter', function() {
   })
 
   it('should call method setCollection from parameters', function() {
-    const eventObject = {
-      parameter: 'collection',
+    const eventObject: IChangeArrayOfNumberOrStringParameterObject = {
+      parameter: Parameters.collection,
       value: ['one', 'two', 'three'],
     };
 
     presenter.changeParameter(eventObject);
     expect(presenter.model.parameters.updateMethod).to.equal('setCollection');
-  })
-
-  it('should call method setCurrentValueByIndex from customSetters', function() {
-    const eventObject = {
-      eventName: 'pointerMove',
-      eventBody: { newValue: 60, index: 0 },
-    };
-
-    presenter.handlePointerMove(eventObject.eventBody);
-    expect(presenter.model.customSetters.updateMethod).to.equal('setCurrentValueByIndex');
-  })
-
-  it('should call method incrementCurrentValueByIndex from customSetters', function() {
-    const eventObject = {
-      eventName: 'increment',
-      eventBody: { newValue: 60, index: 0 },
-    };
-
-    presenter.handleIncrement(eventObject.eventBody);
-    expect(presenter.model.customSetters.updateMethod).to.equal('incrementCurrentValueByIndex');
-  })
-
-  it('should call method decrementCurrentValueByIndex from customSetters', function() {
-    const eventObject = {
-      eventName: 'decrement',
-      eventBody: { newValue: 60, index: 0 },
-    };
-
-    presenter.handleDecrement(eventObject.eventBody);
-    expect(presenter.model.customSetters.updateMethod).to.equal('decrementCurrentValueByIndex');
-  })
-
-  it('should call method setNearestCurrentValue from customSetters', function() {
-    const eventObject = {
-      eventName: 'lineClick',
-      eventBody: { newValue: 60 },
-    };
-
-    presenter.handleLineClick(eventObject.eventBody);
-    expect(presenter.model.customSetters.updateMethod).to.equal('setNearestCurrentValue');
-  })
-
-  it('should call method setNearestCurrentValue from customSetters', function() {
-    const eventObject = {
-      eventName: 'scaleItemClick',
-      eventBody: { newValue: 60 },
-    };
-
-    presenter.handleScaleItemClick(eventObject.eventBody);
-    expect(presenter.model.customSetters.updateMethod).to.equal('setNearestCurrentValue');
-  })
-
-  it('should call method setNearestCurrentValue from customSetters by isCollection = true', function() {
-    presenter.model.parameters.isCollection = true;
-
-    const eventObject = {
-      eventName: 'scaleItemClick',
-      eventBody: { newValue: 'two' },
-    };
-
-    presenter.handleScaleItemClick(eventObject);
-    expect(presenter.model.customSetters.updateMethod).to.equal('setNearestCurrentValue');
-  })
-
-  it('should call method sendUpdate from parameters', function() {
-    const eventObject = {
-      eventName: 'lineResize',
-      eventBody: { },
-    };
-
-    presenter.handleLineResize(eventObject);
-    expect(presenter.model.parameters.updateMethod).to.equal('sendUpdate');
-  })
-
-  it('should recreate view', function() {
-    const eventObject = {
-      eventName: 'fullUpdate',
-      eventBody: {
-        extremeValues: [0, 100],
-        currentValues: [30, 70],
-        margins: [30, 70],
-        step: 1,
-        scaleStep: 10,
-        isVertical:false,
-        haveScale: true,
-        isCollection: false,
-        isInterval: false,
-        haveProgressBar: true,
-        haveLabel: true,
-        collection: [],
-        indexOfLastChangedHandle: undefined
-      },
-    };
-
-    presenter.handleFullUpdateEvent(eventObject.eventBody);
-    expect(presenter.view instanceof View).to.be.true;
-
-  })
-
-  it('should update view', function() {
-    const eventObject = {
-      eventName: 'valuesUpdate',
-      eventBody: {
-        extremeValues: [0, 100],
-        currentValues: [30, 70],
-        margins: [30, 70],
-        step: 1,
-        scaleStep: 10,
-        isVertical:false,
-        haveScale: true,
-        isCollection: false,
-        isInterval: true,
-        haveProgressBar: true,
-        haveLabel: true,
-        collection: [],
-        indexOfLastChangedHandle: undefined
-      },
-    };
-
-    const eventBody = {
-      extremeValues: [0, 100],
-      currentValues: [30, 70],
-      margins: [30, 70],
-      step: 1,
-      scaleStep: 10,
-      isVertical:false,
-      haveScale: true,
-      isCollection: false,
-      isInterval: true,
-      haveProgressBar: true,
-      haveLabel: true,
-      collection: [],
-      indexOfLastChangedHandle: undefined
-    };
-
-    presenter.handleUpdate(eventObject.eventBody);
-    expect(presenter.view.eventBody).to.deep.equal(eventBody);
-
   })
 })

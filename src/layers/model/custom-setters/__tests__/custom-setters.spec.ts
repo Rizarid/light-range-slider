@@ -33,18 +33,6 @@ describe("CustomSetters", function (): void{
     parameters.isInterval = false;
   })
 
-  it("Should return near index" , function() {
-    expect(customSetters.getNearIndex(320)).to.equal(0);
-
-    parameters.currentValues = [330, 370];
-    parameters.isInterval = true;
-
-    expect(customSetters.getNearIndex(320)).to.equal(0);
-    expect(customSetters.getNearIndex(340)).to.equal(0);
-    expect(customSetters.getNearIndex(360)).to.equal(1);
-    expect(customSetters.getNearIndex(390)).to.equal(1);
-  })
-
   it("Should take value and set currentValue" , function() {
     customSetters.setNearestCurrentValue(320, false)
     expect(parameters.checkValue).to.deep.equal([320]);
@@ -108,6 +96,4 @@ describe("CustomSetters", function (): void{
     customSetters.setMaxValue(340);
     expect(parameters.checkValue).to.deep.equal([300, 340]);
   })
-
-
 })

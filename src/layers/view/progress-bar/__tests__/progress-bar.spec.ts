@@ -27,16 +27,6 @@ describe("ProgressBar", function(): void {
     expect(progressBar.getBody().className).to.equal('light-range-slider__progress-bar');
   })
 
-  it('Should return size of progressBar', function() {
-    expect(progressBar.getProgressBarSize([200])).to.equal(200);
-    expect(progressBar.getProgressBarSize([200, 300])).to.equal(100);
-  })
-
-  it('Should return margin of progressBar', function() {
-    expect(progressBar.getProgressBarMargin([200])).to.equal(0);
-    expect(progressBar.getProgressBarMargin([200, 300])).to.equal(200);
-  })
-
   it('Should update size and margin of progressBar', function() {
     progressBar.update([200, 300])
     expect(state.size).to.equal(100);

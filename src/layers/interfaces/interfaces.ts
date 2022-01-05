@@ -378,5 +378,7 @@ export {
   IViewUpdate, IScaleUpdate, IScaleUpdateBody, ILine, IParameters, UpdateEvantName,
   SliderEventName, IOrientationCalculator, IOrientationCalculatorProps, CustomEventType,
   ISliderEvent, ISliderEventBody, IViewUpdateData, IObserver, IChangeParameter, JQuery,
-  IParameterHandlers, Parameters,
+  IParameterHandlers, Parameters, IChangeNumberParameterObject, IChangeArrayOfNumberParameterObject,
+  IChangeArrayOfNumberOrStringParameterObject, IChangeBooleanParameterObject,
+  IChangeFunctionParameterObject,
 };
