@@ -115,7 +115,7 @@ interface IHandle {
 }
 
 interface ICallback {
-  eventName: UpdateEvantName | SliderEventName,
+  eventName: UpdateEvantName | SliderEventName | 'test',
   function: ((eventBody: IUpdateBody) => void) | ((eventBody: ISliderEventBody) => void),
 }
 
