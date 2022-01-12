@@ -20,6 +20,8 @@ class Line {
         eventName: SliderEventName.lineResize,
         eventBody: {},
       });
+      this.isResizeBlocked = true;
+      setTimeout(() => { this.isResizeBlocked = false; }, 100);
     }
   });
 

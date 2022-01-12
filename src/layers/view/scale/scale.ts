@@ -51,6 +51,20 @@ class Scale {
     });
   };
 
+  public checkScaleStep = (): void => {
+    const sizeOfOneCharth = this.getSizeOfOneCharth(this.items[1]);
+    const maxLengthOfItems = Math.max(...this.items.map((item) => item.innerText.length));
+    const segmentSize = this.calculator.segmentSize(this.items.length - 1);
+    const sizeOfBiggestItem = sizeOfOneCharth * maxLengthOfItems;
+
+    if (segmentSize < sizeOfBiggestItem) {
+      this.observer.notify({
+        eventName: SliderEventName.increaseScaleStep,
+        eventBody: {},
+      });
+    }
+  };
+
   private createScale(): void {
     this.body = document.createElement('div');
     this.body.className = 'light-range-slider__scale';
@@ -167,6 +181,10 @@ class Scale {
       ? (Math.round(value * accuracy) / accuracy).toString()
       : value.toString();
   };
+
+  private getSizeOfOneCharth = (item: HTMLElement) => (
+    this.calculator.getElementsSize(item) / item.innerText.length
+  );
 }
 
 export { Scale };

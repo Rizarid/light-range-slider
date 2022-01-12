@@ -74,6 +74,14 @@ class CustomSetters {
     this.setCurrentValueByIndex({ index, newValue, isPercent: false });
   };
 
+  public increaseScaleStep = (): void => {
+    const isCollection = this.parameters.getIsCollection();
+    if (!isCollection) {
+      const scaleStap = this.parameters.getScaleStep();
+      this.parameters.setScaleStep(scaleStap * 2);
+    } else this.parameters.setIsCollection(false);
+  };
+
   private getNearIndex = (newValue: number): number => {
     const currentValues = this.parameters.getCurrentValues();
     const distances = currentValues.map((item) => Math.abs(item - newValue));

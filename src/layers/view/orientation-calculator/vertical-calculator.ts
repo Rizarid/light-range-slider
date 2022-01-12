@@ -71,6 +71,10 @@ class VerticalCalculator implements IOrientationCalculator {
     return (value / 100) * this.getLineSize();
   }
 
+  public segmentSize = (numberOfSegments: number): number => (
+    this.getLineSize() / numberOfSegments
+  );
+
   private getReverseValueRelativeLine = (value: number): number => this.getLineSize() - value;
 }
 

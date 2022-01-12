@@ -86,6 +86,7 @@ enum SliderEventName {
   lineClick = 'lineClick',
   scaleItemClick = 'scaleItemClick',
   lineResize = 'lineResize',
+  increaseScaleStep = 'increaseScaleStep',
 }
 
 interface ISliderEventBody {
@@ -279,6 +280,7 @@ interface IViewUpdateData {
   currentValues: number[],
   collection: string[] | number[],
   indexOfLastChangedHandle: number,
+  haveScale: boolean,
 }
 
 interface ICreateElements {
@@ -339,6 +341,8 @@ interface IOrientationCalculator {
   pxToPercentages(value: number): number;
 
   percentagesToPx(value: number): number;
+
+  segmentSize: (numberOfSegments: number) => number;
 }
 
 interface IOrientationCalculatorProps {

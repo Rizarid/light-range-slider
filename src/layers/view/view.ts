@@ -66,7 +66,7 @@ class View {
       });
     }
 
-    this.update({ margins, currentValues, collection, indexOfLastChangedHandle });
+    this.update({ margins, currentValues, collection, indexOfLastChangedHandle, haveScale });
     this.observer.subscribe({
       eventName: SliderEventName.pointerDown,
       function: this.handlePointerDown,
@@ -80,7 +80,13 @@ class View {
       this.handlePointerUp({ index: indexOfLastChangedHandle });
     }
     this.activateTransitions();
+
+    if (haveScale) {
+      this.scale.checkScaleStep();
+    }
   }
+
+  public checkScaleStep = (): void => this.scale.checkScaleStep();
 
   public subscribe(callback: ICallback): void {
     this.observer.subscribe(callback);
@@ -97,7 +103,13 @@ class View {
   public getLineLocation = (): number => this.line.getLocation();
 
   public update = (options: IViewUpdateData): void => {
-    const { margins, currentValues, collection, indexOfLastChangedHandle } = options;
+    const {
+      margins,
+      currentValues,
+      collection,
+      indexOfLastChangedHandle,
+    } = options;
+
     this.handles.map((item, index) => item.update(margins[index]));
     if (this.progressBar) this.progressBar.update(margins);
 

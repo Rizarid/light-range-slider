@@ -19,7 +19,7 @@ class Observer implements IObserver {
     });
   }
 
-  public notify = (eventObject: IUpdate | ISliderEvent): void => {
+  public notify = async (eventObject: IUpdate | ISliderEvent) => {
     const { eventName, eventBody } = eventObject;
     this.subscribers.forEach((item) => {
       if (item.eventName === eventName) item.function(eventBody);

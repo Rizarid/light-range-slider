@@ -63,6 +63,10 @@ class HorizontalCalculator implements IOrientationCalculator {
   public percentagesToPx(value: number): number {
     return (value / 100) * this.getLineSize();
   }
+
+  public segmentSize = (numberOfSegments: number): number => (
+    this.getLineSize() / numberOfSegments
+  );
 }
 
 export { HorizontalCalculator };

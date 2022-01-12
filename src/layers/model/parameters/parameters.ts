@@ -116,6 +116,7 @@ class Parameters {
     if (this.valueChecker.checkStepAndScaleStep(newValue, this.extremeValues, this.isCollection)) {
       this.scaleStep = newValue;
       this.correctScaleStepToRange();
+      this.correctScaleStepToStap();
     }
 
     if (!this.isInit) this.sendUpdate();
@@ -275,6 +276,10 @@ class Parameters {
   private correctScaleStepToRange = (): void => {
     const range = this.getRange();
     this.scaleStep = (range < this.scaleStep) ? range : this.scaleStep;
+  };
+
+  private correctScaleStepToStap = (): void => {
+    this.scaleStep = this.step * Math.ceil(this.scaleStep / this.step);
   };
 
   private adjustQuantityOfCurrentValues(): void {

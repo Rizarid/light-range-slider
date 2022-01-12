@@ -114,6 +114,10 @@ class Presenter {
       eventName: SliderEventName.lineResize,
       function: this.handleLineResize,
     });
+    this.view.subscribe({
+      eventName: SliderEventName.increaseScaleStep,
+      function: this.handleIncreaseScaleStep,
+    });
   };
 
   private handleCurrentMin = (currentMin: number): void => {
@@ -134,6 +138,7 @@ class Presenter {
     this.createView(slider, eventBody);
     this.subscribeToView();
     setTimeout(() => { this.view.setIsResizeBlocked(false); }, 1);
+    if (eventBody.haveScale) this.view.checkScaleStep();
   };
 
   private handleUpdate = (eventBody: IUpdateBody) => {
@@ -192,6 +197,10 @@ class Presenter {
 
   private handleLineResize = () => {
     this.model.parameters.sendUpdate();
+  };
+
+  private handleIncreaseScaleStep = () => {
+    this.model.customSetters.increaseScaleStep();
   };
 }
 
