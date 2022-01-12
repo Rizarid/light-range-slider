@@ -39,6 +39,10 @@ class Calculator {
 
   private getNumberOfDecimalPlaces = (value: number): number => {
     const str = value.toString();
+    if (str.includes('e', 0)) {
+      const pos = str.indexOf('e', 0);
+      return Number(str.slice(pos + 2));
+    }
     if (str.includes('.', 0)) {
       const lastElementOfSplitedStr = str.split('.').pop();
       if (lastElementOfSplitedStr !== undefined) return lastElementOfSplitedStr.length;
