@@ -1,7 +1,6 @@
 import {
   IParameters, IUpdateBody, IUpdate, UpdateEvantName, IObserver,
 } from '../../interfaces/interfaces';
-import { ValueChecker } from '../value-checker/value-checker';
 
 class Parameters {
   private extremeValues: number[];
@@ -33,8 +32,6 @@ class Parameters {
   private indexOfLastChangedHandle: number;
 
   private isInit = true;
-
-  private valueChecker: ValueChecker = new ValueChecker();
 
   constructor(options: IParameters) {
     const {
@@ -69,13 +66,11 @@ class Parameters {
   };
 
   public setExtremeValues = (newValue: number[]): void => {
-    if (this.valueChecker.checkExtremeValues(newValue)) {
-      if (!this.isCollection || this.isInit) this.extremeValues = newValue;
-      if (!this.isInit) {
-        this.correctCurrentValueToInterval();
-        this.correctStepToRange();
-        this.correctScaleStepToRange();
-      }
+    if (!this.isCollection || this.isInit) this.extremeValues = newValue;
+    if (!this.isInit) {
+      this.correctCurrentValueToInterval();
+      this.correctStepToRange();
+      this.correctScaleStepToRange();
     }
 
     if (!this.isInit) this.sendUpdate();
@@ -87,13 +82,11 @@ class Parameters {
   };
 
   public setCurrentValues = (newValue: number[]): void => {
-    if (this.valueChecker.checkCurrentValues(newValue)) {
-      this.currentValues = newValue;
+    this.currentValues = newValue;
 
-      if (!this.isInit) {
-        this.correctCurrentValueToInterval();
-        this.adjustQuantityOfCurrentValues();
-      }
+    if (!this.isInit) {
+      this.correctCurrentValueToInterval();
+      this.adjustQuantityOfCurrentValues();
     }
 
     if (!this.isInit) this.sendUpdate(UpdateEvantName.valuesUpdate);
@@ -102,10 +95,8 @@ class Parameters {
   public getStep = (): number => this.step;
 
   public setStep = (newValue: number): void => {
-    if (this.valueChecker.checkStepAndScaleStep(newValue, this.extremeValues, this.isCollection)) {
-      this.step = newValue;
-      this.correctStepToRange();
-    }
+    this.step = newValue;
+    this.correctStepToRange();
 
     if (!this.isInit) this.sendUpdate();
   };
@@ -113,11 +104,9 @@ class Parameters {
   public getScaleStep = (): number => this.scaleStep;
 
   public setScaleStep = (newValue: number): void => {
-    if (this.valueChecker.checkStepAndScaleStep(newValue, this.extremeValues, this.isCollection)) {
-      this.scaleStep = newValue;
-      this.correctScaleStepToRange();
-      this.correctScaleStepToStap();
-    }
+    this.scaleStep = newValue;
+    this.correctScaleStepToRange();
+    this.correctScaleStepToStap();
 
     if (!this.isInit) this.sendUpdate();
   };
@@ -125,21 +114,16 @@ class Parameters {
   public getIsVertical = (): boolean => this.isVertical;
 
   public setIsVertical = (newValue: boolean): void => {
-    if (this.valueChecker.checkBoolean(newValue)) {
-      this.isVertical = newValue;
-    }
-
+    this.isVertical = newValue;
     if (!this.isInit) this.sendUpdate();
   };
 
   public getIsInterval = (): boolean => this.isInterval;
 
   public setIsInterval = (newValue: boolean): void => {
-    if (this.valueChecker.checkBoolean(newValue)) {
-      this.isInterval = newValue;
-      this.adjustQuantityOfCurrentValues();
-      this.indexOfLastChangedHandle = 0;
-    }
+    this.isInterval = newValue;
+    this.adjustQuantityOfCurrentValues();
+    this.indexOfLastChangedHandle = 0;
 
     if (!this.isInit) this.sendUpdate();
   };
@@ -147,10 +131,8 @@ class Parameters {
   public getHaveProgressBar = (): boolean => this.haveProgressBar;
 
   public setHaveProgressBar = (newValue: boolean): void => {
-    if (this.valueChecker.checkBoolean(newValue)) {
-      this.haveProgressBar = newValue;
-      this.adjustQuantityOfCurrentValues();
-    }
+    this.haveProgressBar = newValue;
+    this.adjustQuantityOfCurrentValues();
 
     if (!this.isInit) this.sendUpdate();
   };
@@ -158,39 +140,31 @@ class Parameters {
   public getHaveLabel = (): boolean => this.haveLabel;
 
   public setHaveLabel = (newValue: boolean): void => {
-    if (this.valueChecker.checkBoolean(newValue)) {
-      this.haveLabel = newValue;
-    }
-
+    this.haveLabel = newValue;
     if (!this.isInit) this.sendUpdate();
   };
 
   public getHaveScale = (): boolean => this.haveScale;
 
   public setHaveScale = (newValue: boolean): void => {
-    if (this.valueChecker.checkBoolean(newValue)) {
-      this.haveScale = newValue;
-    }
-
+    this.haveScale = newValue;
     if (!this.isInit) this.sendUpdate();
   };
 
   public getCallbacks = (): ((updateObject: IUpdateBody) => void)[] => this.callbacks;
 
   public setCallbacks = (newValue: ((updateObject: IUpdateBody) => void)[]): void => {
-    if (this.valueChecker.checkCallbacks(newValue)) this.callbacks = newValue;
+    this.callbacks = newValue;
     this.sendUpdate();
   };
 
   public getCollection = (): string[] | number[] => this.collection;
 
   public setCollection = (newValue: string[] | number[]): void => {
-    if (this.valueChecker.checkCollection(newValue, this.isCollection)) {
-      this.collection = newValue;
-      if (this.isCollection) {
-        this.extremeValues = [0, this.collection.length - 1];
-        this.correctCurrentValueToInterval();
-      }
+    this.collection = newValue;
+    if (this.isCollection) {
+      this.extremeValues = [0, this.collection.length - 1];
+      this.correctCurrentValueToInterval();
     }
 
     if (!this.isInit) this.sendUpdate();
@@ -199,19 +173,17 @@ class Parameters {
   public getIsCollection = (): boolean => this.isCollection;
 
   public setIsCollection = (newValue: boolean): void => {
-    if (this.valueChecker.checkIsCollection(newValue, this.collection)) {
-      if (!newValue) this.isCollection = newValue;
-      else {
-        this.step = 1;
-        this.scaleStep = 1;
-        this.currentValues = this.currentValues.map((item) => Math.round(item));
-        this.isCollection = newValue;
-        this.extremeValues = [0, this.collection.length - 1];
-        this.correctCurrentValueToInterval();
-      }
-
-      this.sendUpdate();
+    if (!newValue) this.isCollection = newValue;
+    else {
+      this.step = 1;
+      this.scaleStep = 1;
+      this.currentValues = this.currentValues.map((item) => Math.round(item));
+      this.isCollection = newValue;
+      this.extremeValues = [0, this.collection.length - 1];
+      this.correctCurrentValueToInterval();
     }
+
+    this.sendUpdate();
   };
 
   public sendUpdate = (eventName?: UpdateEvantName): void => {

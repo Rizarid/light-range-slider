@@ -11,7 +11,7 @@ $.fn.extend({
       extremeValues: [0, 100],
       currentValues: [50],
       step: 1,
-      scaleStep: 1,
+      scaleStep: 10,
       isVertical: false,
       isInterval: false,
       haveProgressBar: true,
