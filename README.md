@@ -1,5 +1,5 @@
 # Light range slider
-JQuery плагин реализующий функционал бегунка. Примеры использвания представлены на [demo](https://rizarid.github.io/light-range-slider/) странице.
+JQuery плагин реализующий функционал бегунка. Примеры использвания представлены на [DEMO](https://rizarid.github.io/light-range-slider/) странице.
 
 ## Архитектура проекта
 
