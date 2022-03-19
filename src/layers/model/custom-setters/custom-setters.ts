@@ -50,6 +50,13 @@ class CustomSetters {
     }
   };
 
+  public setStep = (newValue: number): void => {
+    this.parameters.setStep(newValue);
+    this.parameters.setCurrentValues(
+      this.parameters.getCurrentValues().map((item) => this.convertValue(item, false))
+    );
+  };
+
   public setNearestCurrentValue = (newValue: number, isPercent = true): void => {
     const value = this.convertValue(newValue, isPercent);
     const isInterval = this.parameters.getIsInterval();

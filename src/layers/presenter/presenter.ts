@@ -47,7 +47,7 @@ class Presenter {
       this.handleCurrentMax(eventObject.value);
     }
     if (eventObject.parameter === Parameters.step) {
-      this.model.parameters.setStep(eventObject.value);
+      this.model.customSetters.setStep(eventObject.value);
     }
     if (eventObject.parameter === Parameters.scaleStep) {
       this.model.parameters.setScaleStep(eventObject.value);

@@ -116,7 +116,10 @@ class View {
     if (this.labels) {
       this.labels.map((item, index) => {
         const oldValue = Number(item.getBody().textContent);
-        if (oldValue !== currentValues[index]) {
+        const isOldValueEquelZero = oldValue === 0;
+        const isOldValueEquelCurentValue = oldValue === currentValues[index] 
+
+        if (isOldValueEquelZero || !isOldValueEquelCurentValue) {
           item.update({
             margin: margins[index],
             value: currentValues[index],
