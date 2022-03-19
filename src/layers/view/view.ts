@@ -114,11 +114,16 @@ class View {
     if (this.progressBar) this.progressBar.update(margins);
 
     if (this.labels) {
-      this.labels.map((item, index) => item.update({
-        margin: margins[index],
-        value: currentValues[index],
-        collection,
-      }));
+      this.labels.map((item, index) => {
+        const oldValue = Number(item.getBody().textContent);
+        if (oldValue !== currentValues[index]) {
+          item.update({
+            margin: margins[index],
+            value: currentValues[index],
+            collection,
+          })
+        }
+      });
     }
 
     if (indexOfLastChangedHandle !== undefined) {

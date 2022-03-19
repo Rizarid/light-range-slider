@@ -107,9 +107,9 @@ class Parameters {
     if (this.valueChecker.checkStepAndScaleStep(newValue, this.extremeValues, this.isCollection)) {
       this.step = newValue;
       this.correctStepToRange();
-
-      if (!this.isInit) this.sendUpdate();
     }
+
+    if (!this.isInit) this.sendUpdate();
   };
 
   public getScaleStep = (): number => this.scaleStep;
@@ -119,10 +119,10 @@ class Parameters {
       this.scaleStep = newValue;
       this.correctScaleStepToRange();
       this.correctScaleStepToStap();
-      this.correctScaleStepToMaxSteps();
-
-      if (!this.isInit) this.sendUpdate();
+      this.correctScaleStepToMaxSteps();  
     }
+
+    if (!this.isInit) this.sendUpdate();
   };
 
   public getIsVertical = (): boolean => this.isVertical;
@@ -130,8 +130,9 @@ class Parameters {
   public setIsVertical = (newValue: boolean): void => {
     if (this.valueChecker.checkBoolean(newValue)) {
       this.isVertical = newValue;
-      if (!this.isInit) this.sendUpdate();
     }
+
+    if (!this.isInit) this.sendUpdate();
   };
 
   public getIsInterval = (): boolean => this.isInterval;
@@ -141,9 +142,9 @@ class Parameters {
       this.isInterval = newValue;
       this.adjustQuantityOfCurrentValues();
       this.indexOfLastChangedHandle = 0;
-
-      if (!this.isInit) this.sendUpdate();
     }
+
+    if (!this.isInit) this.sendUpdate();
   };
 
   public getHaveProgressBar = (): boolean => this.haveProgressBar;
@@ -152,9 +153,9 @@ class Parameters {
     if (this.valueChecker.checkBoolean(newValue)) {
       this.haveProgressBar = newValue;
       this.adjustQuantityOfCurrentValues();
-
-      if (!this.isInit) this.sendUpdate();
     }
+
+    if (!this.isInit) this.sendUpdate();
   };
 
   public getHaveLabel = (): boolean => this.haveLabel;
@@ -162,8 +163,9 @@ class Parameters {
   public setHaveLabel = (newValue: boolean): void => {
     if (this.valueChecker.checkBoolean(newValue)) {
       this.haveLabel = newValue;
-      if (!this.isInit) this.sendUpdate();
     }
+
+    if (!this.isInit) this.sendUpdate();
   };
 
   public getHaveScale = (): boolean => this.haveScale;
@@ -171,8 +173,9 @@ class Parameters {
   public setHaveScale = (newValue: boolean): void => {
     if (this.valueChecker.checkBoolean(newValue)) {
       this.haveScale = newValue;
-      if (!this.isInit) this.sendUpdate();
     }
+
+    if (!this.isInit) this.sendUpdate();
   };
 
   public getCallbacks = (): ((updateObject: IUpdateBody) => void)[] => this.callbacks;
@@ -209,15 +212,15 @@ class Parameters {
         this.extremeValues = [0, this.collection.length - 1];
         this.correctCurrentValueToInterval();
       }
-
-      this.sendUpdate();
     }
+
+    if (!this.isInit) this.sendUpdate();
   };
 
   public sendUpdate = (eventName?: UpdateEvantName): void => {
-    const eventObject = this.getEventObject(eventName);
-    this.notifyCallbacks(eventObject.eventBody);
-    this.observer.notify(eventObject);
+      const eventObject = this.getEventObject(eventName);
+      this.notifyCallbacks(eventObject.eventBody);
+      this.observer.notify(eventObject);
   };
 
   public getUpdateObject = (eventName: UpdateEvantName): IUpdate => ({

@@ -115,10 +115,10 @@ class Handle {
     const cursorLocationInPercent = this.getCursorLocationInPercent(event);
     const newValue = cursorLocationInPercent - this.cursorOffsetRelativeHandleAtStartDragging;
 
-    this.observer.notify({
-      eventName: SliderEventName.pointerMove,
-      eventBody: { index: this.index, newValue },
-    });
+      this.observer.notify({
+        eventName: SliderEventName.pointerMove,
+        eventBody: { index: this.index, newValue },
+      });
   };
 
   private handleKeyDown = (event: KeyboardEvent): void => {
