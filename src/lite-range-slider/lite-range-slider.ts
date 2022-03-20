@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
 
-import { Presenter } from '../layers/presenter/presenter';
+import { Presenter } from '../layers/presenter/Presenter';
 import { ISliderOptions, IChangeParameterObject } from '../layers/interfaces/interfaces';
 import './lite-range-slider.sass';
 
