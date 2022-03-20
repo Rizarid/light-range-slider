@@ -7,7 +7,7 @@ import {
   SliderEventName,
   Parameters,
 } from '../interfaces/interfaces';
-import { Model } from '../model/model';
+import { Model } from '../model/Model';
 import { View } from '../view/view';
 
 class Presenter {

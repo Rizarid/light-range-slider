@@ -1,4 +1,4 @@
-import { Parameters } from '../parameters/parameters';
+import { Parameters } from '../parameters/Parameters';
 
 class Calculator {
   private parameters: Parameters;

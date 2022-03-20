@@ -1,6 +1,6 @@
 import { ISetCurrentValueByIndex } from '../../interfaces/interfaces';
 import { Calculator } from '../calculator/Calculator';
-import { Parameters } from '../parameters/parameters';
+import { Parameters } from '../parameters/Parameters';
 
 class CustomSetters {
   private parameters: Parameters;
