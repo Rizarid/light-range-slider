@@ -52,15 +52,12 @@ class Scale {
   };
 
   public checkScaleStep = (): void => {
-    const sizeOfOneCharth = this.getSizeOfOneCharth(this.items[1]);
-    const maxLengthOfItems = Math.max(...this.items.map((item) => item.innerText.length));
-    const segmentSize = this.calculator.segmentSize(this.items.length - 1);
-    const sizeOfBiggestItem = sizeOfOneCharth * maxLengthOfItems;
+    const increaseCoeff = this.calculator.getIncreaseCoeff(this.items);
 
-    if (segmentSize < sizeOfBiggestItem) {
+    if (increaseCoeff > 1) {
       this.observer.notify({
         eventName: SliderEventName.increaseScaleStep,
-        eventBody: {},
+        eventBody: { increaseCoeff },
       });
     }
   };

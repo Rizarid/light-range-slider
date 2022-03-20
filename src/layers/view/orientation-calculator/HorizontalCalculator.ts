@@ -67,6 +67,11 @@ class HorizontalCalculator implements IOrientationCalculator {
   public segmentSize = (numberOfSegments: number): number => (
     this.getLineSize() / numberOfSegments
   );
+
+  public getIncreaseCoeff = (items: HTMLElement[]): number => {
+    const scaleSize = items.reduce((sum, item) => sum + this.getElementsSize(item), 0);
+    return (scaleSize * 1.2) / this.getLineSize();
+  };
 }
 
 export { HorizontalCalculator };

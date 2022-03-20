@@ -75,6 +75,11 @@ class VerticalCalculator implements IOrientationCalculator {
     this.getLineSize() / numberOfSegments
   );
 
+  public getIncreaseCoeff = (items: HTMLElement[]): number => {
+    const scaleSize = items.reduce((sum, item) => sum + this.getElementsSize(item), 0);
+    return (scaleSize * 1.2) / this.getLineSize();
+  };
+
   private getReverseValueRelativeLine = (value: number): number => this.getLineSize() - value;
 }
 

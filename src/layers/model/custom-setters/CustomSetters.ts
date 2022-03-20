@@ -81,11 +81,11 @@ class CustomSetters {
     this.setCurrentValueByIndex({ index, newValue, isPercent: false });
   };
 
-  public increaseScaleStep = (): void => {
+  public increaseScaleStep = (increaseCoeff: number): void => {
     const isCollection = this.parameters.getIsCollection();
     if (!isCollection) {
       const scaleStap = this.parameters.getScaleStep();
-      this.parameters.setScaleStep(scaleStap * 2);
+      this.parameters.setScaleStep(scaleStap * increaseCoeff);
     } else this.parameters.setIsCollection(false);
   };
 

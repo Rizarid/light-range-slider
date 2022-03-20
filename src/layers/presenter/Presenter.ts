@@ -199,8 +199,9 @@ class Presenter {
     this.model.parameters.sendUpdate();
   };
 
-  private handleIncreaseScaleStep = () => {
-    this.model.customSetters.increaseScaleStep();
+  private handleIncreaseScaleStep = (eventBody: ISliderEventBody) => {
+    const { increaseCoeff } = eventBody;
+    increaseCoeff && this.model.customSetters.increaseScaleStep(increaseCoeff);
   };
 }
 

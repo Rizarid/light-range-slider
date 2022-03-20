@@ -92,6 +92,7 @@ enum SliderEventName {
 interface ISliderEventBody {
   index?: number,
   newValue?: number | string,
+  increaseCoeff?: number,
 }
 
 interface IViewEvent {
@@ -345,6 +346,8 @@ interface IOrientationCalculator {
   percentagesToPx(value: number): number;
 
   segmentSize: (numberOfSegments: number) => number;
+
+  getIncreaseCoeff: (items: HTMLElement[]) => number;
 }
 
 interface IOrientationCalculatorProps {
