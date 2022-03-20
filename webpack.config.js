@@ -69,6 +69,7 @@ module.exports = {
   plugins: [
     autoprefixer,
     new HTMLWebpackPlugin({
+      favicon: './favicon.svg',
       template: 'src/demo/demo.pug',
       inject: 'head',
       chunks: ['demo', 'lite-range-slider'],
