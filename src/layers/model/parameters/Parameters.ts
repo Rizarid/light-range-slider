@@ -107,6 +107,7 @@ class Parameters {
     if (this.valueChecker.checkStepAndScaleStep(newValue, this.extremeValues, this.isCollection)) {
       this.step = newValue;
       this.correctStepToRange();
+      this.correctScaleStepToStap();
     }
 
     if (!this.isInit) this.sendUpdate();
