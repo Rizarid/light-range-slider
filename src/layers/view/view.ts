@@ -167,7 +167,9 @@ class View {
     }
 
     if (haveLabel) {
-      this.labels = currentValues.map(() => new Label({
+      this.labels = currentValues.map((item, index) => new Label({
+        index,
+        observer: this.observer,
         calculator: this.calculator,
         isCollection,
       }));

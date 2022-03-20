@@ -121,6 +121,8 @@ interface ICallback {
 }
 
 interface ILabel {
+  index: number,
+  observer: IObserver,
   calculator: IOrientationCalculator,
   isCollection: boolean
 }
