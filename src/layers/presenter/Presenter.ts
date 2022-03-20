@@ -8,7 +8,7 @@ import {
   Parameters,
 } from '../interfaces/interfaces';
 import { Model } from '../model/Model';
-import { View } from '../view/view';
+import { View } from '../view/View';
 
 class Presenter {
   private model: Model;

@@ -10,13 +10,13 @@ import {
   ISliderEventBody,
 } from '../interfaces/interfaces';
 import { Observer } from '../observer/Observer';
-import { Handle } from './handle/handle';
-import { Label } from './label/label';
-import { Line } from './line/line';
-import { HorizontalCalculator } from './orientation-calculator/horizontal-calculator';
-import { VerticalCalculator } from './orientation-calculator/vertical-calculator';
-import { ProgressBar } from './progress-bar/progress-bar';
-import { Scale } from './scale/scale';
+import { Handle } from './handle/Handle';
+import { Label } from './label/Label';
+import { Line } from './line/Line';
+import { HorizontalCalculator } from './orientation-calculator/HorizontalCalculator';
+import { VerticalCalculator } from './orientation-calculator/VerticalCalculator';
+import { ProgressBar } from './progress-bar/ProgressBar';
+import { Scale } from './scale/Scale';
 
 class View {
   private body: HTMLElement;
