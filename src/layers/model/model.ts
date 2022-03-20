@@ -1,8 +1,8 @@
 import { IModel, ICallback, IObserver } from '../interfaces/interfaces';
 import { Observer } from '../observer/observer';
 import { Calculator } from './calculator/Calculator';
-import { CustomSetters } from './custom-setters/custom-setters';
-import { Parameters } from './parameters/parameters';
+import { CustomSetters } from './custom-setters/CustomSetters';
+import { Parameters } from './parameters/Parameters';
 
 class Model {
   public parameters: Parameters;
