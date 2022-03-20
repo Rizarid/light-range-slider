@@ -1,6 +1,6 @@
 import "chai";
 import { expect } from "chai"
-import { VerticalCalculator } from "../vertical-calculator"
+import { VerticalCalculator } from "../VerticalCalculator"
 
 describe("VerticalCalculator", function (): void{
   let calculator: VerticalCalculator;

@@ -25,7 +25,6 @@ describe('Presenter', function() {
     this.setCurrentValues = (value) => {  this.updateMethod = 'setCurrentValues' }
     this.setMinCurrentValue = (value) => { this.updateMethod = 'setCurrentValues' }
     this.setMaxCurrentValue = (value) => { this.updateMethod = 'setCurrentValues' }
-    this.setStep = (value) => { this.updateMethod = 'setStep' }
     this.setScaleStep = (value) => { this.updateMethod = 'setScaleStep' }
     this.setIsVertical = (value) => { this.updateMethod = 'setIsVertical' }
     this.setIsInterval = (value) => { this.updateMethod = 'setIsInterval' }
@@ -45,6 +44,7 @@ describe('Presenter', function() {
     this.setNearestCurrentValue = (value) => { this.updateMethod = 'setNearestCurrentValue' }
     this.incrementCurrentValueByIndex = (value) => { this.updateMethod = 'incrementCurrentValueByIndex' }
     this.decrementCurrentValueByIndex = (value) => { this.updateMethod = 'decrementCurrentValueByIndex' }
+    this.setStep = (value) => { this.updateMethod = 'setStep' }
   }
 
   const FakeModel = function() {
@@ -152,7 +152,7 @@ describe('Presenter', function() {
     };
 
     presenter.changeParameter(eventObject);
-    expect(presenter.model.parameters.updateMethod).to.equal('setStep');
+    expect(presenter.model.customSetters.updateMethod).to.equal('setStep');
   })
 
   it('should call method setScaleStep from parameters', function() {

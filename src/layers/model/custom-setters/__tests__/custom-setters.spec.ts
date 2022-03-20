@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Calculator } from "../../calculator/calculator";
 
-import { CustomSetters } from "../custom-setters";
+import { CustomSetters } from "../CustomSetters";
 
 const Parameters = function() {
   this.checkValue = [];

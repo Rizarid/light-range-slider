@@ -1,7 +1,7 @@
-import { expect } from "chai"
-import { ProgressBar } from '../progress-bar'
-import { HorizontalCalculator } from '../../orientation-calculator/horizontal-calculator'
-import { VerticalCalculator } from '../../orientation-calculator/vertical-calculator'
+import { expect } from "chai";
+import { ProgressBar } from '../ProgressBar';
+import { HorizontalCalculator } from '../../orientation-calculator/HorizontalCalculator';
+import { VerticalCalculator } from '../../orientation-calculator/VerticalCalculator';
 
 describe("ProgressBar", function(): void {
   let progressBar: ProgressBar

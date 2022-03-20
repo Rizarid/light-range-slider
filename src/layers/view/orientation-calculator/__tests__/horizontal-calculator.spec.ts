@@ -1,6 +1,6 @@
 import "chai";
 import { expect } from "chai"
-import { HorizontalCalculator } from "../horizontal-calculator"
+import { HorizontalCalculator } from "../HorizontalCalculator"
 
 describe("HorizontalCalculator", function (): void{
   let calculator: HorizontalCalculator;
