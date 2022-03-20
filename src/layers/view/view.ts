@@ -9,7 +9,7 @@ import {
   IObserver,
   ISliderEventBody,
 } from '../interfaces/interfaces';
-import { Observer } from '../observer/observer';
+import { Observer } from '../observer/Observer';
 import { Handle } from './handle/handle';
 import { Label } from './label/label';
 import { Line } from './line/line';

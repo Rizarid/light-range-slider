@@ -1,5 +1,5 @@
 import { IModel, ICallback, IObserver } from '../interfaces/interfaces';
-import { Observer } from '../observer/observer';
+import { Observer } from '../observer/Observer';
 import { Calculator } from './calculator/Calculator';
 import { CustomSetters } from './custom-setters/CustomSetters';
 import { Parameters } from './parameters/Parameters';
