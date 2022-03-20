@@ -13,7 +13,7 @@ class CustomSetters {
   }
 
   public setMinValue = (newValue: number): void => {
-    const [minValue, maxValue] = this.parameters.getExtremeValues();
+    const maxValue = this.parameters.getExtremeValues()[1];
     this.parameters.setExtremeValues([newValue, maxValue]);
   };
 

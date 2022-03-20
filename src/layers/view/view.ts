@@ -110,11 +110,11 @@ class View {
       indexOfLastChangedHandle,
     } = options;
 
-    this.handles.map((item, index) => item.update(margins[index]));
+    this.handles.forEach((item, index) => item.update(margins[index]));
     if (this.progressBar) this.progressBar.update(margins);
 
     if (this.labels) {
-      this.labels.map((item, index) => {
+      this.labels.forEach((item, index) => {
         const oldValue = Number(item.getBody().textContent);
         const isOldValueEquelZero = oldValue === 0;
         const isOldValueEquelCurentValue = oldValue === currentValues[index];

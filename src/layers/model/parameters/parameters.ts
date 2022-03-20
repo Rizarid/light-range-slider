@@ -307,11 +307,7 @@ class Parameters {
   }
 
   private notifyCallbacks = (updateObject: IUpdateBody): void => {
-    try {
-      if (this.callbacks.length) this.callbacks.map((item) => item(updateObject));
-    } catch (error) {
-      console.error(error);
-    }
+    if (this.callbacks.length) this.callbacks.map((item) => item(updateObject));
   };
 
   private valueToPercent = (value: number): number => {

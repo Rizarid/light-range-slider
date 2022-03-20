@@ -117,7 +117,7 @@ interface IHandle {
 
 interface ICallback {
   eventName: UpdateEvantName | SliderEventName | 'test',
-  function: ((eventBody: IUpdateBody) => void) | ((eventBody: ISliderEventBody) => void),
+  function: ((eventBody: IUpdateBody | ISliderEventBody) => void),
 }
 
 interface ILabel {

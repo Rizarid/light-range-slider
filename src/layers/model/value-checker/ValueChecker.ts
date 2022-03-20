@@ -115,19 +115,24 @@ class ValueChecker {
     }
   };
 
-  private checkIsArray = (newValue: any[]): void => {
+  private checkIsArray = (
+    newValue: number[] | string[] | HTMLElement[] | ((updateObject: IUpdateBody) => void)[],
+  ): void => {
     if (!Array.isArray(newValue)) {
       throw new Error(`Expected array, but passed argument is ${typeof newValue}`);
     }
   };
 
-  private checkType = (newValue: any, type: string): void => {
+  private checkType = (
+    newValue: boolean | number | string | ((updateObject: IUpdateBody) => void),
+    type: string,
+  ): void => {
     if (typeof newValue !== type) {
       throw new Error(`Expected ${type} type, passed ${typeof newValue} type`);
     }
   };
 
-  private checkIsNaN = (newValue: any): void => {
+  private checkIsNaN = (newValue: number): void => {
     if (Number.isNaN(newValue)) throw new Error('Expected array of number, passed array contain NaN');
   };
 }
