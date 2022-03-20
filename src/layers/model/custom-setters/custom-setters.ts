@@ -1,5 +1,5 @@
 import { ISetCurrentValueByIndex } from '../../interfaces/interfaces';
-import { Calculator } from '../calculator/calculator';
+import { Calculator } from '../calculator/Calculator';
 import { Parameters } from '../parameters/parameters';
 
 class CustomSetters {
