@@ -1,5 +1,5 @@
 import '../lite-range-slider/lite-range-slider';
-import SlidersDemo from './components/sliders-demo/sliders-demo';
+import SlidersDemo from './components/sliders-demo/SlidersDemo';
 
 class Demo {
   private body: HTMLElement;

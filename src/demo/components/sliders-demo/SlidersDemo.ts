@@ -8,8 +8,8 @@ import {
   Parameters,
 } from '../../../layers/interfaces/interfaces';
 import './sliders-demo.sass';
-import TextField from '../text-field/text-field';
-import Toggle from '../toggle/toggle';
+import TextField from '../text-field/TextField';
+import Toggle from '../toggle/Toggle';
 
 class SlidersDemo {
   private body: HTMLElement;

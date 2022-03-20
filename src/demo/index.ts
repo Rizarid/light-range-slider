@@ -1,3 +1,3 @@
-import Demo from './demo';
+import Demo from './Demo';
 
 new Demo();
