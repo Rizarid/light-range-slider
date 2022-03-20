@@ -117,14 +117,14 @@ class View {
       this.labels.map((item, index) => {
         const oldValue = Number(item.getBody().textContent);
         const isOldValueEquelZero = oldValue === 0;
-        const isOldValueEquelCurentValue = oldValue === currentValues[index] 
+        const isOldValueEquelCurentValue = oldValue === currentValues[index];
 
         if (isOldValueEquelZero || !isOldValueEquelCurentValue) {
           item.update({
             margin: margins[index],
             value: currentValues[index],
             collection,
-          })
+          });
         }
       });
     }

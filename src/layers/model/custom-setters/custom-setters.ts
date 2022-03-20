@@ -53,7 +53,7 @@ class CustomSetters {
   public setStep = (newValue: number): void => {
     this.parameters.setStep(newValue);
     this.parameters.setCurrentValues(
-      this.parameters.getCurrentValues().map((item) => this.convertValue(item, false))
+      this.parameters.getCurrentValues().map((item) => this.convertValue(item, false)),
     );
   };
 

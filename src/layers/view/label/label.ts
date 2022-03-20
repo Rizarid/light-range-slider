@@ -4,7 +4,7 @@ import {
   ILabelUpdate,
   IOrientationCalculator,
   SliderEventName,
-  IObserver
+  IObserver,
 } from '../../interfaces/interfaces';
 
 class Label {
@@ -15,7 +15,6 @@ class Label {
   private calculator: IOrientationCalculator;
 
   private cursorOffsetRelativeHandleAtStartDragging: number;
-
 
   private observer: IObserver;
 
@@ -115,10 +114,10 @@ class Label {
     const cursorLocationInPercent = this.getCursorLocationInPercent(event);
     const newValue = cursorLocationInPercent - this.cursorOffsetRelativeHandleAtStartDragging;
 
-      this.observer.notify({
-        eventName: SliderEventName.pointerMove,
-        eventBody: { index: this.index, newValue },
-      });
+    this.observer.notify({
+      eventName: SliderEventName.pointerMove,
+      eventBody: { index: this.index, newValue },
+    });
   };
 
   private handleClick = (event: MouseEvent): void => {

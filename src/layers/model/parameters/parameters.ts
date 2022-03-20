@@ -79,7 +79,7 @@ class Parameters {
         this.correctScaleStepToMaxSteps();
       }
     }
-    
+
     if (!this.isInit) this.sendUpdate();
   };
 
@@ -98,7 +98,7 @@ class Parameters {
       }
 
       if (!this.isInit) this.sendUpdate(UpdateEvantName.valuesUpdate);
-    } 
+    }
   };
 
   public getStep = (): number => this.step;
@@ -119,7 +119,7 @@ class Parameters {
       this.scaleStep = newValue;
       this.correctScaleStepToRange();
       this.correctScaleStepToStap();
-      this.correctScaleStepToMaxSteps();  
+      this.correctScaleStepToMaxSteps();
     }
 
     if (!this.isInit) this.sendUpdate();
@@ -218,9 +218,9 @@ class Parameters {
   };
 
   public sendUpdate = (eventName?: UpdateEvantName): void => {
-      const eventObject = this.getEventObject(eventName);
-      this.notifyCallbacks(eventObject.eventBody);
-      this.observer.notify(eventObject);
+    const eventObject = this.getEventObject(eventName);
+    this.notifyCallbacks(eventObject.eventBody);
+    this.observer.notify(eventObject);
   };
 
   public getUpdateObject = (eventName: UpdateEvantName): IUpdate => ({
